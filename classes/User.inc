@@ -1,0 +1,140 @@
+<?php
+	require_once(GLOBAL_INCLUDES."/classes/SystemUser.inc");
+
+	class User extends SystemUser
+	{
+		private $id;
+		private $username;
+		private $password;
+		private $authenticationMethod;
+
+		private $roles;
+
+		public function __construct($id = null)
+		{
+			global $PDO;
+
+			if ($id)
+			{
+				# Load an existing user
+				if (is_numeric($id)) { $sql = "select * from users where id=$id"; }
+				else { $sql = "select * from users where username='$id'"; }
+
+				$result = $PDO->query($sql);
+				if ($user = $result->fetch())
+				{
+					$this->id = $user['id'];
+					$this->username = $user['username'];
+					# Passwords are one-way encrypted.  They should not be loaded by default
+					$this->authenticationMethod = $user['authenticationMethod'];
+
+
+					$result->closeCursor();
+				}
+				else { throw new Exception("unknownUser"); }
+			}
+		}
+		public function save()
+		{
+			# Check for required fields before saving
+			if (!$this->getUsername() || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
+
+			if ($this->getUserID()) { $this->update(); }
+			else { $this->insert(); }
+
+			$this->updateRoles();
+		}
+		private function update()
+		{
+			global $PDO;
+
+			$sql = "update users set username='{$this->getUsername()}',authenticationMethod='{$this->getAuthenticationMethod()}'";
+
+
+			$sql.=" where id={$this->id}";
+			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+		}
+
+		private function insert()
+		{
+			global $PDO;
+
+			$sql = "insert users set username='{$this->getUsername()}',authenticationMethod='{$this->getAuthenticationMethod()}'";
+
+
+			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$this->id = $PDO->lastInsertID();
+
+			# Save the initial password if we've added one
+			if ($this->password) { $this->savePassword(); }
+		}
+
+
+		private function updateRoles()
+		{
+			global $PDO;
+
+			$sql = "delete from user_roles where user_id={$this->id()}";
+			$PDO->exec($sql);
+
+			$roles = $this->getRoles();
+
+			$statement = $PDO->prepare("insert user_roles set user_id={$this->id},role=?");
+			foreach($roles as $role) { $statement->execute(array("$role")); }
+		}
+
+		protected function saveLocalPassword()
+		{
+			global $PDO;
+
+			$sql = "update users set password=md5('{$this->password}') where id={$this->id}";
+			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+		}
+
+		protected function authenticateDatabase($password)
+		{
+			global $PDO;
+
+			$sql = "select id from users where username='{$this->username}' and password=md5('$password')";
+			$result = $PDO->query($sql);
+			if ($user = $result->fetch()) { return true; }
+			else { return false; }
+			$result->closeCursor();
+		}
+
+		public function getId() { return $this->id; }
+		public function getUsername() { return $this->username; }
+		public function getPassword() { return $this->password; }
+		public function getAuthenticationMethod() { return $this->authenticationMethod; }
+		public function getFirstname() { return $this->firstname; }
+		public function getLastname() { return $this->lastname; }
+		public function getDepartment() { return $this->department; }
+		public function getPhone() { return $this->phone; }
+
+		public function getRoles()
+		{
+			global $PDO;
+
+			if (!$this->roles)
+			{
+				$this->roles = array();
+				$sql = "select role from user_roles left join roles on role_id=id where user_id={$this->getId()}";
+				if ($result = $PDO->query($sql))
+				{
+					foreach($result as $row) { $this->roles[] = $row['role']; }
+					$result->closeCursor();
+				}
+			}
+			return $this->roles;
+		}
+
+		public function setUsername($string) { $this->username = sanitizeString($string); }
+		public function setPassword($string) { $this->password = $string; }
+		public function setAuthenticationMethod($string) { $this->authenticationMethod = $string; }
+		public function setFirstname($string) { $this->firstname = sanitizeString($string); }
+		public function setLastname($string) { $this->lastname = sanitizeString($string); }
+		public function setDepartment($string) { $this->department = sanitizeString($string); }
+		public function setPhone($string) { $this->phone = sanitizeString($string); }
+		public function setRoles($array) { $this->roles = $array; }
+	}
+?>
