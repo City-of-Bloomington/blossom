@@ -98,13 +98,9 @@ $constructor
 			# You can (and maybe should) replace this \$fields code with your own custom SQL
 			# for each property of this class,
 			\$fields = array();
-			foreach(\$this as \$field=>\$value)
-			{
-				if (!is_numeric(\$field))
-				{
-					if (\$value) { \$fields[] = \"\$field='\$value'\"; } else { \$fields[] = \"\$field=null\"; }
-				}
-			}
+";
+			foreach($fields as $field) { $contents.="\t\t\t\$fields[] = \$this->$field[Field] ? \"$field[Field]='{\$this->$field[Field]}'\" : \"$field[Field]=null\";\n"; }
+$contents.= "
 			\$fields = implode(\",\",\$fields);
 
 
