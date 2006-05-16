@@ -8,6 +8,11 @@
 		private $password;
 		private $authenticationMethod;
 
+		private $firstname;
+		private $lastname;
+		private $department;
+		private $phone;
+
 		private $roles;
 
 		public function __construct($id = null)
@@ -28,45 +33,58 @@
 					# Passwords are one-way encrypted.  They should not be loaded by default
 					$this->authenticationMethod = $user['authenticationMethod'];
 
+					$this->firstname = $user['firstname'];
+					$this->lastname = $user['lastname'];
+					if ($user['phone']) { $this->phone = $user['phone']; }
+					if ($user['department']) { $this->department = $user['department']; }
 
 					$result->closeCursor();
 				}
 				else { throw new Exception("unknownUser"); }
 			}
 		}
+
 		public function save()
 		{
 			# Check for required fields before saving
-			if (!$this->getUsername() || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
+			if (!$this->username || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
 
-			if ($this->getUserID()) { $this->update(); }
-			else { $this->insert(); }
+			$fields = array();
+			$fields[] = "username='{$this->username}'";
+			$fields[] = "firstname='{$this->firstname}'";
+			$fields[] = "lastname='{$this->lastname}'";
+			if ($this->authenticationMethod) { $fields[] = "authenticationMethod='{$this->authenticationMethod}'"; } else { $fields[] = "authenticationMethod=null"; }
+			if ($this->phone) { $fields[] = "phone='{$this->phone}'"; } else { $fields[] = "phone=null"; }
+			if ($this->department) { $fields[] = "department='{$this->department}'"; } else { $fields[] = "department=null"; }
+			$fields = implode(",",$fields);
+
+			if ($this->id) { $this->update($fields); }
+			else { $this->insert($fields); }
 
 			$this->updateRoles();
 		}
-		private function update()
+
+		private function update($fields)
 		{
 			global $PDO;
 
-			$sql = "update users set username='{$this->getUsername()}',authenticationMethod='{$this->getAuthenticationMethod()}'";
+			$sql = "update users set $fields where id={$this->id}";
 
-
-			$sql.=" where id={$this->id}";
 			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
-		private function insert()
+		private function insert($fields)
 		{
 			global $PDO;
 
-			$sql = "insert users set username='{$this->getUsername()}',authenticationMethod='{$this->getAuthenticationMethod()}'";
+			$sql = "insert users set $fields";
 
 
 			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 			$this->id = $PDO->lastInsertID();
 
 			# Save the initial password if we've added one
-			if ($this->password) { $this->savePassword(); }
+			if ($this->getPassword()) { $this->savePassword(); }
 		}
 
 
@@ -74,13 +92,13 @@
 		{
 			global $PDO;
 
-			$sql = "delete from user_roles where user_id={$this->id()}";
+			$sql = "delete from user_roles where userID={$this->id}";
 			$PDO->exec($sql);
 
 			$roles = $this->getRoles();
 
-			$statement = $PDO->prepare("insert user_roles set user_id={$this->id},role=?");
-			foreach($roles as $role) { $statement->execute(array("$role")); }
+			$statement = $PDO->prepare("insert user_roles set user_id={$this->id},role_id=?");
+			foreach($roles as $role_id=>$role) { $statement->execute(array("$role_id")); }
 		}
 
 		protected function saveLocalPassword()
@@ -118,10 +136,10 @@
 			if (!$this->roles)
 			{
 				$this->roles = array();
-				$sql = "select role from user_roles left join roles on role_id=id where user_id={$this->getId()}";
+				$sql = "select role_id,role from user_roles left join roles on role_id=id where user_id={$this->id}";
 				if ($result = $PDO->query($sql))
 				{
-					foreach($result as $row) { $this->roles[] = $row['role']; }
+					foreach($result as $row) { $this->roles[$row['role_id']] = $row['role']; }
 					$result->closeCursor();
 				}
 			}
