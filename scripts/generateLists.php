@@ -1,6 +1,6 @@
 <?php
 mysql_connect(":/tmp/mysql.sock","username","password") or die(mysql_error());
-mysql_select_db("master_address") or die(mysql_error());
+mysql_select_db("database") or die(mysql_error());
 
 $sql = "show tables";
 $tables = mysql_query($sql) or die($sql.mysql_error());
