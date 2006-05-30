@@ -38,6 +38,6 @@
 			foreach($PDO->query($sql) as $row) { $this->list[] = $row['id']; }
 		}
 
-		protected function loadCurrent() { return new User(current($this->list)); }
+		protected function loadResult($key) { return new User($this->list[$key]); }
 	}
 ?>

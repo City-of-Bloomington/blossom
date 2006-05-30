@@ -21,6 +21,6 @@
 		}
 
 
-		protected function loadCurrent() { return current($this->list); }
+		protected function loadResult($key) { return $this->list[$key]; }
 	}
 ?>

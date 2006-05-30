@@ -67,7 +67,7 @@ $contents = "<?php
 	{
 $findFunction
 
-		protected function loadCurrent() { return new $className(current(\$this->list)); }
+		protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
 	}
 ?>";
 		file_put_contents("./classStubs/{$className}List.inc",$contents);
