@@ -10,8 +10,6 @@
 
 		private $firstname;
 		private $lastname;
-		private $department;
-		private $phone;
 
 		private $roles;
 
@@ -35,8 +33,6 @@
 
 					$this->firstname = $user['firstname'];
 					$this->lastname = $user['lastname'];
-					if ($user['phone']) { $this->phone = $user['phone']; }
-					if ($user['department']) { $this->department = $user['department']; }
 
 					$result->closeCursor();
 				}
@@ -50,12 +46,10 @@
 			if (!$this->username || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
 
 			$fields = array();
-			$fields[] = "username='{$this->username}'";
-			$fields[] = "firstname='{$this->firstname}'";
-			$fields[] = "lastname='{$this->lastname}'";
-			if ($this->authenticationMethod) { $fields[] = "authenticationMethod='{$this->authenticationMethod}'"; } else { $fields[] = "authenticationMethod=null"; }
-			if ($this->phone) { $fields[] = "phone='{$this->phone}'"; } else { $fields[] = "phone=null"; }
-			if ($this->department) { $fields[] = "department='{$this->department}'"; } else { $fields[] = "department=null"; }
+			$fields[] = $this->username ? "username='{$this->username}'" : "username=null";
+			$fields[] = $this->firstname ? "firstname='{$this->firstname}'" : "firstname=null";
+			$fields[] = $this->lastname ? "lastname='{$this->lastname}'" : "lastname=null";
+			$fields[] = $this->authenticationMethod ? "authenticationMethod='{$this->authenticationMethod}'" : "authenticationMethod=local";
 			$fields = implode(",",$fields);
 
 			if ($this->id) { $this->update($fields); }
@@ -92,7 +86,7 @@
 		{
 			global $PDO;
 
-			$sql = "delete from user_roles where userID={$this->id}";
+			$sql = "delete from user_roles where user_id={$this->id}";
 			$PDO->exec($sql);
 
 			$roles = $this->getRoles();
@@ -126,9 +120,6 @@
 		public function getAuthenticationMethod() { return $this->authenticationMethod; }
 		public function getFirstname() { return $this->firstname; }
 		public function getLastname() { return $this->lastname; }
-		public function getDepartment() { return $this->department; }
-		public function getPhone() { return $this->phone; }
-
 		public function getRoles()
 		{
 			global $PDO;
@@ -151,8 +142,6 @@
 		public function setAuthenticationMethod($string) { $this->authenticationMethod = $string; }
 		public function setFirstname($string) { $this->firstname = sanitizeString($string); }
 		public function setLastname($string) { $this->lastname = sanitizeString($string); }
-		public function setDepartment($string) { $this->department = sanitizeString($string); }
-		public function setPhone($string) { $this->phone = sanitizeString($string); }
 		public function setRoles($array) { $this->roles = $array; }
 	}
 ?>
