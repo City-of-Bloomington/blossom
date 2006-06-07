@@ -31,15 +31,11 @@
 	define("LDAP_PASSWORD_ATTRIBUTE","userpassword");
 
 
-	#--------------------------------------------------------------------------
-	# Session Startup
-	# Make sure to load all class definitions for anything that's going to
-	# be stored in the session before we start the session
-	#--------------------------------------------------------------------------
-	require_once(APPLICATION_HOME."/classes/User.inc");
-	session_start();
-
-
 	# Import global functions that we use for many applications we write
 	include(GLOBAL_INCLUDES."/ITSFunctions.inc");
+
+	#--------------------------------------------------------------------------
+	# Session Startup
+	#--------------------------------------------------------------------------
+	session_start();
 ?>

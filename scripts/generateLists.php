@@ -45,8 +45,14 @@ while(list($tableName) = mysql_fetch_array($tables))
 ";
 			foreach($fields as $field) { $findFunction.="\t\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]='\$fields[$field[Field]]'\"; }\n"; }
 	$findFunction.="
-			if (count(\$options)) { \$where = \" where \".implode(\" and \",\$options); } else { \$where = \"\"; }
-			\$sql = \"select $key[Column_name] from $tableName \$where order by \$sort\";
+
+			# Finding on fields from other tables required joining those tables.
+			# You can add fields from other tables to \$options by adding the join SQL
+			# to \$this->joins here
+
+
+			if (count(\$options)) { \$this->where = \"where \".implode(\" and \",\$options); }
+			\$sql = \"select $key[Column_name] from $tableName {\$this->joins} {\$this->where} order by \$sort\";
 
 			\$result = \$PDO->query(\$sql);
 			if (\$result)
@@ -60,11 +66,14 @@ while(list($tableName) = mysql_fetch_array($tables))
 
 
 $contents = "<?php
-	require_once(GLOBAL_INCLUDES.\"/classes/PDOResultIterator.inc\");
-	require_once(APPLICATION_HOME.\"/classes/$className.inc\");
 
 	class {$className}List extends PDOResultIterator
 	{
+		private \$joins = \"\";
+		private \$where = \"\";
+
+		public function __construct(\$fields=null) { if (is_array(\$fields)) \$this->find(\$fields); }
+
 $findFunction
 
 		protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
