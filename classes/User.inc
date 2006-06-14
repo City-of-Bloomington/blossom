@@ -116,6 +116,16 @@
 			else { return false; }
 			$result->closeCursor();
 		}
+		/* Takes a string or an array of strings and checks if the user has that role */
+		public function hasRole($roles)
+		{
+			if (is_array($roles))
+			{
+				foreach($roles as $role) { if (in_array($role,$this->getRoles())) { return true; } }
+				return false;
+			}
+			else { return in_array($roles,$this->getRoles()); }
+		}
 
 		public function getId() { return $this->id; }
 		public function getUsername() { return $this->username; }
