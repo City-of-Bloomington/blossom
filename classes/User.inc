@@ -3,6 +3,8 @@
 
 	class User extends SystemUser
 	{
+		private $PDO;
+
 		private $id;
 		private $username;
 		private $password;
@@ -13,17 +15,15 @@
 
 		private $roles;
 
-		public function __construct($id = null)
+		public function __construct(PDO $PDO,$id = null)
 		{
-			global $PDO;
-
 			if ($id)
 			{
 				# Load an existing user
 				if (is_numeric($id)) { $sql = "select * from users where id=$id"; }
 				else { $sql = "select * from users where username='$id'"; }
 
-				$result = $PDO->query($sql);
+				$result = $this->PDO->query($sql);
 				if ($user = $result->fetch())
 				{
 					$this->id = $user['id'];
@@ -60,22 +60,18 @@
 
 		private function update($fields)
 		{
-			global $PDO;
-
 			$sql = "update users set $fields where id={$this->id}";
 
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $this->PDO->exec($sql)) { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
 		private function insert($fields)
 		{
-			global $PDO;
-
 			$sql = "insert users set $fields";
 
 
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
-			$this->id = $PDO->lastInsertID();
+			if (false === $this->PDO->exec($sql)) { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$this->id = $this->PDO->lastInsertID();
 
 			# Save the initial password if we've added one
 			if ($this->getPassword()) { $this->savePassword(); }
@@ -84,34 +80,28 @@
 
 		private function updateRoles()
 		{
-			global $PDO;
-
 			$roles = $this->getRoles();
 
 			$sql = "delete from user_roles where user_id={$this->id}";
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $this->PDO->exec($sql)) { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 
-			$statement = $PDO->prepare("insert user_roles set user_id={$this->id},role_id=?");
+			$statement = $this->PDO->prepare("insert user_roles set user_id={$this->id},role_id=?");
 			foreach($roles as $role_id=>$role)
 			{
-				if (false === $statement->execute(array("$role_id"))) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+				if (false === $statement->execute(array("$role_id"))) { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 			}
 		}
 
 		protected function saveLocalPassword()
 		{
-			global $PDO;
-
 			$sql = "update users set password=md5('{$this->password}') where id={$this->id}";
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $this->PDO->exec($sql)) { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
 		protected function authenticateDatabase($password)
 		{
-			global $PDO;
-
 			$sql = "select id from users where username='{$this->username}' and password=md5('$password')";
-			$result = $PDO->query($sql);
+			$result = $this->PDO->query($sql);
 			if ($user = $result->fetch()) { return true; }
 			else { return false; }
 			$result->closeCursor();
@@ -135,13 +125,11 @@
 		public function getLastname() { return $this->lastname; }
 		public function getRoles()
 		{
-			global $PDO;
-
 			if (!$this->roles)
 			{
 				$this->roles = array();
 				$sql = "select role_id,role from user_roles left join roles on role_id=id where user_id={$this->id}";
-				if ($result = $PDO->query($sql))
+				if ($result = $this->PDO->query($sql))
 				{
 					foreach($result as $row) { $this->roles[$row['role_id']] = $row['role']; }
 					$result->closeCursor();
@@ -161,7 +149,7 @@
 			$this->roles = array();
 			foreach($array as $id)
 			{
-				$role = new Role($id);
+				$role = new Role($this->PDO,$id);
 				$this->roles[$role->getId()] = $role->getRole();
 			}
 		}

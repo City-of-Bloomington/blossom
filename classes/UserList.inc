@@ -4,13 +4,14 @@
 
 	class UserList extends PDOResultIterator
 	{
+		private $PDO;
 		private $joins = "";
 		private $where = "";
 
+		public function __construct(PDO $PDO) { $this->PDO = $PDO; }
+
 		public function find($fields=null,$sort = "username")
 		{
-			global $PDO;
-
 			if ($fields)
 			{
 				$options = array();
@@ -33,18 +34,16 @@
 			}
 			else { $sql = "select id from users order by $sort"; }
 
-			$result = $PDO->query($sql);
+			$result = $this->PDO->query($sql);
 			if ($result)
 			{
 				foreach($result as $row) { $this->list[] = $row['id']; }
 			}
-			else { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			else { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
 		public function search($fields=null,$sort = "username")
 		{
-			global $PDO;
-
 			if ($fields)
 			{
 				$options = array();
@@ -67,14 +66,14 @@
 			}
 			else { $sql = "select id from users order by $sort"; }
 
-			$result = $PDO->query($sql);
+			$result = $this->PDO->query($sql);
 			if ($result)
 			{
 				foreach($result as $row) { $this->list[] = $row['id']; }
 			}
-			else { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			else { $e = $this->PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
-		protected function loadResult($key) { return new User($this->list[$key]); }
+		protected function loadResult($key) { return new User($this->PDO,$this->list[$key]); }
 	}
 ?>

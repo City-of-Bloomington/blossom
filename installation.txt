@@ -8,6 +8,10 @@ Contents
 ---------------------------------------------------------------------
 I. Requirements
 ---------------------------------------------------------------------
+PHP 5.1.x or greater
+	This application uses the new SPL interfaces for PHP that are
+only available on PHP 5.1 or later
+
 PHP must be compiled with support for:
 	LDAP
 	MySQL
@@ -31,7 +35,32 @@ the HTML directory.
 
 
 ---------------------------------------------------------------------
-II. Installation
+II. php.ini settings
+---------------------------------------------------------------------
+	This application has been written to conform to E_STRICT error
+reporting.  However, it does rely on some specific php.ini settings.
+
+output_buffering  = 4096
+	There are many places where we do redirects after some content
+	has been written.  For instance, Find forms tend to redirect
+	to a view page if they find only one result.
+
+arg_separator.output = ";"
+arg_separator.input = ";&"
+	In order to be fully standards comliant, urls must be marked up
+	using a semicolon instead of the traditional ampersand.  However,
+	browsers still use the ampersand when submitting forms via GET,
+	so we have to allow for it.
+
+
+session.use_cookies = 1
+session.use_only_cookies = 1
+	We don't want our sessions to be hijacked, so they're not passed
+	in the url at all.  All sessions will be cookie-based, and only
+	cookie-based.
+
+---------------------------------------------------------------------
+III. Installation
 ---------------------------------------------------------------------
 	The best way is to have PHP auto_prepend the configuration.inc.
 If this is the only web application on your apache server, you can just point

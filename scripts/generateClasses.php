@@ -34,14 +34,14 @@ while(list($tableName) = mysql_fetch_array($tables))
 	if (mysql_num_rows($temp) != 1) { continue; }
 	$key = mysql_fetch_array($temp);
 		$constructor = "
-		public function __construct(\$$key[Column_name]=null)
+		public function __construct(PDO \$PDO,\$$key[Column_name]=null)
 		{
-			global \$PDO;
+			\$this->PDO = \$PDO;
 
 			if (\$$key[Column_name])
 			{
 				\$sql = \"select * from $tableName where $key[Column_name]=\$$key[Column_name]\";
-				\$result = \$PDO->query(\$sql);
+				\$result = \$this->PDO->query(\$sql);
 				if (\$result)
 				{
 					if (\$row = \$result->fetch())
@@ -55,7 +55,7 @@ while(list($tableName) = mysql_fetch_array($tables))
 					}
 					else { throw new Exception(\$sql); }
 				}
-				else { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+				else { \$e = \$this->PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
 			}
 			else
 			{
@@ -85,6 +85,8 @@ while(list($tableName) = mysql_fetch_array($tables))
 $contents = "<?php
 	class $className
 	{
+		private \$PDO;
+
 $properties
 
 $constructor
@@ -110,19 +112,15 @@ $contents.= "
 
 		private function update(\$fields)
 		{
-			global \$PDO;
-
 			\$sql = \"update $tableName set \$fields where $key[Column_name]={\$this->$key[Column_name]}\";
-			if (false === \$PDO->exec(\$sql)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+			if (false === \$this->PDO->exec(\$sql)) { \$e = \$this->PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
 		}
 
 		private function insert(\$fields)
 		{
-			global \$PDO;
-
 			\$sql = \"insert $tableName set \$fields\";
-			if (false === \$PDO->exec(\$sql)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
-			\$this->$key[Column_name] = \$PDO->lastInsertID();
+			if (false === \$this->PDO->exec(\$sql)) { \$e = \$this->PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+			\$this->$key[Column_name] = \$this->PDO->lastInsertID();
 		}
 
 
