@@ -27,7 +27,7 @@
 		<tr><td><label for="roles">Roles</label></td>
 			<td><select name="roles[]" id="roles" size="5" multiple="multiple">
 				<?php
-					$roles = new RoleList($PDO);
+					$roles = new RoleList();
 					$roles->find();
 					foreach($roles as $role) { echo "<option>$role</option>"; }
 				?>

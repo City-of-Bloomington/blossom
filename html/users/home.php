@@ -16,7 +16,7 @@
 		<?php
 			require_once(APPLICATION_HOME."/classes/UserList.inc");
 
-			$userList = new UserList($PDO);
+			$userList = new UserList();
 			$userList->find();
 			foreach($userList as $user)
 			{

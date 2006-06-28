@@ -12,7 +12,7 @@
 */
 	try
 	{
-		$user = new User($PDO,$_POST['username']);
+		$user = new User($_POST['username']);
 
 		if ($user->authenticate($_POST['password'])) { $user->startNewSession(); }
 		else { throw new Exception("wrongPassword"); }

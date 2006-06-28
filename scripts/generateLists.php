@@ -37,8 +37,10 @@ while(list($tableName) = mysql_fetch_array($tables))
 
 
 	$findFunction = "
-		public function find(PDO \$PDO,\$fields=null,\$sort=\"$key[Column_name]\")
+		public function find(\$fields=null,\$sort=\"$key[Column_name]\")
 		{
+			global \$PDO;
+
 			\$options = array();
 ";
 			foreach($fields as $field) { $findFunction.="\t\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]='\$fields[$field[Field]]'\"; }\n"; }
@@ -52,12 +54,12 @@ while(list($tableName) = mysql_fetch_array($tables))
 			if (count(\$options)) { \$this->where = \"where \".implode(\" and \",\$options); }
 			\$sql = \"select $key[Column_name] from $tableName {\$this->joins} {\$this->where} order by \$sort\";
 
-			\$result = \$this->PDO->query(\$sql);
+			\$result = \$PDO->query(\$sql);
 			if (\$result)
 			{
 				foreach(\$result as \$row) { \$this->list[] = \$row['$key[Column_name]']; }
 			}
-			else { \$e = \$this->PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+			else { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
 		}
 	";
 
@@ -67,20 +69,14 @@ $contents = "<?php
 
 	class {$className}List extends PDOResultIterator
 	{
-		private \$PDO;
-
 		private \$joins = \"\";
 		private \$where = \"\";
 
-		public function __construct(PDO \$PDO,\$fields=null)
-		{
-			\$this->PDO = \$PDO;
-			if (is_array(\$fields)) \$this->find(\$fields);
-		}
+		public function __construct(\$fields=null) { if (is_array(\$fields)) \$this->find(\$fields); }
 
 $findFunction
 
-		protected function loadResult(\$key) { return new $className(\$this->PDO,\$this->list[\$key]); }
+		protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
 	}
 ?>";
 		file_put_contents("./classStubs/{$className}List.inc",$contents);
