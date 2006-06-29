@@ -40,6 +40,7 @@ while(list($tableName) = mysql_fetch_array($tables))
 		public function find(\$fields=null,\$sort=\"$key[Column_name]\")
 		{
 			global \$PDO;
+			\$this->sort = \$sort;
 
 			\$options = array();
 ";
@@ -52,7 +53,7 @@ while(list($tableName) = mysql_fetch_array($tables))
 
 
 			if (count(\$options)) { \$this->where = \"where \".implode(\" and \",\$options); }
-			\$sql = \"select $key[Column_name] from $tableName {\$this->joins} {\$this->where} order by \$sort\";
+			\$sql = \"select $key[Column_name] from $tableName {\$this->joins} {\$this->where} order by {\$this->sort}\";
 
 			\$result = \$PDO->query(\$sql);
 			if (\$result)

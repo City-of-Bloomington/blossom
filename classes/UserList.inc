@@ -4,12 +4,10 @@
 
 	class UserList extends PDOResultIterator
 	{
-		private $joins = "";
-		private $where = "";
-
 		public function find($fields=null,$sort = "username")
 		{
 			global $PDO;
+			$this->sort = $sort;
 
 			if ($fields)
 			{
@@ -29,9 +27,9 @@
 				}
 
 				$this->where = "where ".implode(" and ",$options);
-				$sql.= "select distinct users.id from users {$this->joins} {$this->where} order by $sort";
+				$sql.= "select distinct users.id from users {$this->joins} {$this->where} order by {$this->sort}";
 			}
-			else { $sql = "select id from users order by $sort"; }
+			else { $sql = "select id from users order by {$this->sort}"; }
 
 			$result = $PDO->query($sql);
 			if ($result)
@@ -63,7 +61,7 @@
 				}
 
 				$this->where = "where ".implode(" and ",$options);
-				$sql.= "select distinct users.id from users {$this->joins} {$this->where} order by $sort";
+				$sql.= "select distinct users.id from users {$this->joins} {$this->where} order by {$this->sort}";
 			}
 			else { $sql = "select id from users order by $sort"; }
 
