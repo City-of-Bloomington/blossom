@@ -33,7 +33,13 @@ while(list($tableName) = mysql_fetch_array($tables))
 	# The other tables are either linking tables, or are multiple attributes of a single-keyed table
 	if (mysql_num_rows($temp) != 1) { continue; }
 	$key = mysql_fetch_array($temp);
-		$constructor = "
+
+
+
+	#--------------------------------------------------------------------------
+	# Constructor
+	#--------------------------------------------------------------------------
+	$constructor = "
 		public function __construct(\$$key[Column_name]=null)
 		{
 			global \$PDO;
@@ -63,11 +69,17 @@ while(list($tableName) = mysql_fetch_array($tables))
 				# Set any default values for properties that need it here
 			}
 		}
-		";
+	";
 
+	#--------------------------------------------------------------------------
+	# Properties
+	#--------------------------------------------------------------------------
 	$properties = "";
 	foreach($fields as $field) { $properties.= "\t\tprivate \$$field[Field];\n"; }
 
+	#--------------------------------------------------------------------------
+	# Getters
+	#--------------------------------------------------------------------------
 	$getters = "";
 	foreach($fields as $field)
 	{
@@ -75,15 +87,41 @@ while(list($tableName) = mysql_fetch_array($tables))
 		$getters.= "\t\tpublic function get$fieldFunctionName() { return \$this->$field[Field]; }\n";
 	}
 
+	#--------------------------------------------------------------------------
+	# Setters
+	#--------------------------------------------------------------------------
 	$setters = "";
 	foreach($fields as $field)
 	{
 		$fieldFunctionName = ucwords($field['Field']);
-		$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type]; }\n";
+		switch ($field['Type'])
+		{
+			case "int":
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9]\",\"\",\$$field[Type]); }\n";
+			break;
+
+			case "string":
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$this->sanitizeString(\$$field[Type]); }\n";
+			break;
+
+			case "date":
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = is_array(\$$field[Type]) ? \$this->dateArrayToString(\$$field[Type]) : \$$field[Type]; }\n";
+			break;
+
+			case "float":
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9.\-]\",\"\",\$$field[Type]); }\n";
+			break;
+
+			default:
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type]; }\n";
+		}
 	}
 
+	#--------------------------------------------------------------------------
+	# Output the class
+	#--------------------------------------------------------------------------
 $contents = "<?php
-	class $className
+	class $className extends ActiveRecord
 	{
 $properties
 
