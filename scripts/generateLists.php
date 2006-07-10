@@ -90,9 +90,6 @@ $contents = "<?php
 $copyright
 	class {$className}List extends PDOResultIterator
 	{
-		private \$joins = \"\";
-		private \$where = \"\";
-
 		public function __construct(\$fields=null) { if (is_array(\$fields)) \$this->find(\$fields); }
 
 $findFunction
