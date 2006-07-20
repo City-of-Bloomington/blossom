@@ -1,6 +1,9 @@
 <?php
 /*
-	$_POST variables:	user [ authenticationMethod		# Optional
+	$_GET variables:	id
+	---------------------------------------------------------------------------
+	$_POST variables:	id
+						user [ authenticationMethod		# Optional
 								username				password
 								roles					firstname
 														lastname
@@ -9,24 +12,16 @@
 							]
 */
 	verifyUser("Administrator");
+
 	if (isset($_POST['user']))
 	{
-		$user = new User();
+		$user = new User($_POST['id']);
 		foreach($_POST['user'] as $field=>$value)
 		{
 			$set = "set".ucfirst($field);
 			$user->$set($value);
 		}
 
-		if ($user->getAuthenticationMethod() == "LDAP")
-		{
-			# Load the rest of their stuff from LDAP
-			$ldap = new LDAPEntry($user->getUsername());
-			$user->setFirstname($ldap->getFirstname());
-			$user->setLastname($ldap->getLastname());
-			$user->setDepartment($ldap->getDepartment());
-			$user->setPhone($ldap->getPhone());
-		}
 
 		try
 		{
@@ -38,14 +33,16 @@
 			$_SESSION['errorMessages'][] = $e;
 
 			$view = new View();
-			$view->addBlock("users/addUserForm.inc");
+			$view->user = $user;
+			$view->addBlock("users/updateUserForm.inc");
 			$view->render();
 		}
 	}
 	else
 	{
 		$view = new View();
-		$view->addBlock("users/addUserForm.inc");
+		$view->user = new User($_GET['id']);
+		$view->addBlock("users/updateUserForm.inc");
 		$view->render();
 	}
 ?>

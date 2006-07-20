@@ -20,8 +20,6 @@
 /*
 	Roles are really just an attribute array for users.  For now, I'm not loading them in as objects.
 */
-	require_once(GLOBAL_INCLUDES."/classes/PDOResultIterator.inc");
-
 	class RoleList extends PDOResultIterator
 	{
 

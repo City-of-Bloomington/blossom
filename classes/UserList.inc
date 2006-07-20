@@ -17,9 +17,6 @@
 * along with Foobar; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
-	require_once(APPLICATION_HOME."/classes/User.inc");
-	require_once(GLOBAL_INCLUDES."/classes/PDOResultIterator.inc");
-
 	class UserList extends PDOResultIterator
 	{
 		public function find($fields=null,$sort = "username")

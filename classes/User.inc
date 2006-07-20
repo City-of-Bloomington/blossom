@@ -1,24 +1,4 @@
 <?php
-/**
-* @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
-* This file is part of the City of Bloomington's web application Framework.
-* This Framework is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This Framework is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Foobar; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
-	require_once(GLOBAL_INCLUDES."/classes/SystemUser.inc");
-
 	class User extends SystemUser
 	{
 		private $id;
@@ -64,16 +44,31 @@
 			if (!$this->username || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
 
 			$fields = array();
-			$fields[] = $this->username ? "username='{$this->username}'" : "username=null";
-			$fields[] = $this->firstname ? "firstname='{$this->firstname}'" : "firstname=null";
-			$fields[] = $this->lastname ? "lastname='{$this->lastname}'" : "lastname=null";
-			$fields[] = $this->authenticationMethod ? "authenticationMethod='{$this->authenticationMethod}'" : "authenticationMethod=local";
+			$fields[] = "username='{$this->username}'";
+			$fields[] = "firstname='{$this->firstname}'";
+			$fields[] = "lastname='{$this->lastname}'";
+			if ($this->authenticationMethod) { $fields[] = "authenticationMethod='{$this->authenticationMethod}'"; } else { $fields[] = "authenticationMethod=null"; }
 			$fields = implode(",",$fields);
 
 			if ($this->id) { $this->update($fields); }
 			else { $this->insert($fields); }
 
 			$this->updateRoles();
+		}
+
+		public function delete()
+		{
+			global $PDO;
+
+			$PDO->beginTransaction();
+
+			$sql = "delete from user_roles where user_id={$this->id}";
+			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); $PDO->rollBack(); throw new Exception($sql.$e[2]); }
+
+			$sql = "delete from users where id={$this->id}";
+			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); $PDO->rollBack(); throw new Exception($sql.$e[2]); }
+
+			$PDO->commit();
 		}
 
 		private function update($fields)
@@ -151,6 +146,7 @@
 		public function getAuthenticationMethod() { return $this->authenticationMethod; }
 		public function getFirstname() { return $this->firstname; }
 		public function getLastname() { return $this->lastname; }
+
 		public function getRoles()
 		{
 			global $PDO;
@@ -168,11 +164,11 @@
 			return $this->roles;
 		}
 
-		public function setUsername($string) { $this->username = sanitizeString($string); }
-		public function setPassword($string) { $this->password = $string; }
+		public function setUsername($string) { $this->username = $this->sanitizeString($string); }
+		public function setPassword($string) { if ($string) { $this->password = $string; } }
 		public function setAuthenticationMethod($string) { $this->authenticationMethod = $string; }
-		public function setFirstname($string) { $this->firstname = sanitizeString($string); }
-		public function setLastname($string) { $this->lastname = sanitizeString($string); }
+		public function setFirstname($string) { $this->firstname = $this->sanitizeString($string); }
+		public function setLastname($string) { $this->lastname = $this->sanitizeString($string); }
 		/* Takes an array of role names.  Needs to look up the role_id and add them to the user */
 		public function setRoles($array)
 		{
