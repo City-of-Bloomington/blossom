@@ -20,7 +20,7 @@ $copyright = "/**
 
 
 mysql_connect(":/tmp/mysql.sock","username","password") or die(mysql_error());
-mysql_select_db("database") or die(mysql_error());
+mysql_select_db("database_name") or die(mysql_error());
 
 $sql = "show tables";
 $tables = mysql_query($sql) or die($sql.mysql_error());
@@ -95,7 +95,22 @@ while(list($tableName) = mysql_fetch_array($tables))
 	# Properties
 	#--------------------------------------------------------------------------
 	$properties = "";
-	foreach($fields as $field) { $properties.= "\t\tprivate \$$field[Field];\n"; }
+	$linkedProperties = array();
+	foreach($fields as $field)
+	{
+		$properties.= "\t\tprivate \$$field[Field];\n";
+
+		if (substr($field['Field'],-3) == "_id") { $linkedProperties[] = $field['Field']; }
+	}
+	if (count($linkedProperties))
+	{
+		$properties.="\n\n";
+		foreach($linkedProperties as $property)
+		{
+			$field = substr($property,0,-3);
+			$properties.= "\t\tprivate \$$field;\n";
+		}
+	}
 
 	#--------------------------------------------------------------------------
 	# Getters
@@ -106,6 +121,23 @@ while(list($tableName) = mysql_fetch_array($tables))
 		$fieldFunctionName = ucwords($field['Field']);
 		$getters.= "\t\tpublic function get$fieldFunctionName() { return \$this->$field[Field]; }\n";
 	}
+	foreach($linkedProperties as $property)
+	{
+		$field = substr($property,0,-3);
+		$fieldFunctionName = ucwords($field);
+		$getters.= "
+		public get$fieldFunctionName()
+		{
+			if (\$this->$property)
+			{
+				if (!\$this->$field) { \$this->$field = new $fieldFunctionName(\$this->$property); }
+				return \$this->$field;
+			}
+			else return null;
+		}
+		";
+	}
+
 
 	#--------------------------------------------------------------------------
 	# Setters
@@ -117,11 +149,20 @@ while(list($tableName) = mysql_fetch_array($tables))
 		switch ($field['Type'])
 		{
 			case "int":
-				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9]\",\"\",\$$field[Type]); }\n";
+				if (in_array($field['Field'],$linkedProperties))
+				{
+					$property = substr($field['Field'],0,-3);
+					$object = ucfirst($property);
+					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$property = new $object(\$int); \$this->$field[Field] = \$$field[Type]; }\n";
+				}
+				else
+				{
+					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9]\",\"\",\$$field[Type]); }\n";
+				}
 			break;
 
 			case "string":
-				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$this->sanitizeString(\$$field[Type]); }\n";
+				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = trim(\$$field[Type]); }\n";
 			break;
 
 			case "date":
@@ -135,6 +176,13 @@ while(list($tableName) = mysql_fetch_array($tables))
 			default:
 				$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type]; }\n";
 		}
+	}
+	$setters.= "\n";
+	foreach($linkedProperties as $field)
+	{
+		$property = substr($field,0,-3);
+		$object = ucfirst($property);
+		$setters.= "\t\tpublic function set$object(\$$object) { \$this->$field = {$object}->getId(); \$this->$property = \$$object; }\n";
 	}
 
 	#--------------------------------------------------------------------------
