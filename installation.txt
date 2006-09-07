@@ -45,22 +45,11 @@ as needed.
 ---------------------------------------------------------------------
 Requirements
 ---------------------------------------------------------------------
-PHP must be compiled with support for:
-	PDO
-	MySQL
-	LDAP
-
-	Actually, you can substitute any database support for MySQL, as our
-framework uses PDO for database interaction.
-
-	MySQL should have support for InnoDB.  Foreign keys are written into
-the database load scripts.  While MyISAM tables will just ignore them,
-you database and your application will be that much more robust with InnoDB
-support.
-
-	LDAP is only used for doing LDAP authentication for users.
-If you're not going to do any LDAP authentication, you can delete or
-comment out the LDAP stuff.
+Framework:
+This scaffolding requires our Framework to be on the server somewhere.
+Our Framework is available as a seperate release.  In the configuration,
+you will need to point this scaffolding to the directory where the
+Framework is installed.
 
 This application was written assuming you have control over your own web
 server.  If you are on a hosted system, you may need to make changes to
@@ -71,6 +60,25 @@ file has been included. You will need to make sure that every .php script
 in the HTML directory includes configuration.inc.  If you control your own
 webserver, you can add a <Directory> command to your httpd.conf.
 
+PHP:
+PHP must be compiled with support for:
+	PDO
+	MySQL
+	LDAP
+
+	Actually, you can substitute any database support for MySQL, as our
+framework uses PDO for database interaction.
+
+MySQL:
+	MySQL should have support for InnoDB.  Foreign keys are written into
+the database load scripts.  While MyISAM tables will just ignore them,
+you database and your application will be that much more robust with InnoDB
+support.
+
+LDAP:
+	LDAP is only used for doing LDAP authentication for users.
+If you're not going to do any LDAP authentication, you can delete or
+comment out the LDAP stuff.
 
 ---------------------------------------------------------------------
 Installation
