@@ -13,6 +13,10 @@
 */
 	verifyUser("Administrator");
 
+	$view = new View();
+	if (isset($_GET['id'])) { $view->user = new User($_GET['user']); }
+
+	$view->addBlock("users/updateUserForm.inc");
 	if (isset($_POST['user']))
 	{
 		$user = new User($_POST['id']);
@@ -22,27 +26,14 @@
 			$user->$set($value);
 		}
 
-
+		$view->user = $user;
 		try
 		{
 			$user->save();
 			Header("Location: home.php");
 		}
-		catch (Exception $e)
-		{
-			$_SESSION['errorMessages'][] = $e;
+		catch (Exception $e) { $_SESSION['errorMessages'][] = $e; }
+	}
 
-			$view = new View();
-			$view->user = $user;
-			$view->addBlock("users/updateUserForm.inc");
-			$view->render();
-		}
-	}
-	else
-	{
-		$view = new View();
-		$view->user = new User($_GET['id']);
-		$view->addBlock("users/updateUserForm.inc");
-		$view->render();
-	}
+	$view->render();
 ?>

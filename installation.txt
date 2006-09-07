@@ -12,7 +12,7 @@ Contents
 ---------------------------------------------------------------------
 About
 ---------------------------------------------------------------------
-	This framework is really just a template for our web
+	This scaffolding is really just a template for our web
 applications.  It provides us the basics to get a web application up
 and running very quickly.  It also means our applications will be
 relatively uniform and easier to extend and maintain down the road.
@@ -24,20 +24,21 @@ new applications.
 ---------------------------------------------------------------------
 Copyright
 ---------------------------------------------------------------------
-	This framework is written and copyrighted by the
+	This scaffolding is written and copyrighted by the
 City of Bloomington, IN.  It is being released as free software;
 you can redistribute it and/or modify it under the terms of the
 GNU General Public License as published by the Free Software Foundation;
 either version 2 of the License, or (at your option) any later version.
 
-	This framework includes code generators to create classes to
+	This scaffolding includes code generators to create classes to
 work with your database.  While the generators fall under the GPL,
 any code you generate with them belongs to you.  However, we highly
 encourage you to uphold the values of Free Software and release your
 application as Free Software as well.
 
-	In any case, you should edit the copyright statement that will
-be generated in /scripts/generateClasses.php and /scripts/generateLists.php
+	In any case, you own the copyright to any generated code and should
+edit the copyright statement that will be generated in
+/scripts/generateClasses.php and /scripts/generateLists.php
 as needed.
 
 
@@ -49,7 +50,7 @@ PHP must be compiled with support for:
 	MySQL
 	LDAP
 
-	Actually, you can substitute any database support for MySQL, as this
+	Actually, you can substitute any database support for MySQL, as our
 framework uses PDO for database interaction.
 
 	MySQL should have support for InnoDB.  Foreign keys are written into
@@ -68,15 +69,13 @@ the code to accomodate your server.
 All include files have been kept out of the web directory, and a configuration
 file has been included. You will need to make sure that every .php script
 in the HTML directory includes configuration.inc.  If you control your own
-webserver, you can add a <Directory> command to your httpd.conf, otherwise
-you will need to add a include() command to the top of every .php script in
-the HTML directory.
+webserver, you can add a <Directory> command to your httpd.conf.
 
 
 ---------------------------------------------------------------------
 Installation
 ---------------------------------------------------------------------
-	This framework is essentially a working web application that is
+	This scaffolding is essentially a working web application that is
 ready to be extended.  It has authentication and user management
 already built.
 
@@ -90,12 +89,26 @@ our Apache config for each one.  This does essentially the same thing.
 
 Add to httpd.conf:
 
-Alias /application_name "/var/www/sites/application_name/html"
-<Directory "/var/www/sites/application_name/html">
+Alias /application_name "/path/to/application_name/html"
+<Directory "/path/to/application_name/html">
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all
 
-        php_value auto_prepend_file /var/www/sites/application_name/configuration.inc
+        php_value auto_prepend_file /path/to/application_name/configuration.inc
 </Directory>
+
+
+	If you're running in a shared hosting environment, you cannot do Alias or
+Directory commands.  However the html can be moved into your web directory.
+To make sure the configuration file gets loaded, create an htaccess file in
+this application's html directory with the php_value line from above.
+
+	If you cannot edit your httpd.conf or use htaccess files, you will need to
+add an include() command to the top of every last PHP script in the html directory.
+
+---------------------------------------------------------------------
+Configuration
+---------------------------------------------------------------------
+	Edit configuration.inc with appropriate values for your installation.

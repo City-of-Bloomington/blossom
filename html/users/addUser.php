@@ -9,6 +9,9 @@
 							]
 */
 	verifyUser("Administrator");
+
+	$view = new View();
+	$view->addBlock("users/addUserForm.inc");
 	if (isset($_POST['user']))
 	{
 		$user = new User();
@@ -33,19 +36,8 @@
 			$user->save();
 			Header("Location: home.php");
 		}
-		catch (Exception $e)
-		{
-			$_SESSION['errorMessages'][] = $e;
+		catch (Exception $e) { $_SESSION['errorMessages'][] = $e; }
+	}
 
-			$view = new View();
-			$view->addBlock("users/addUserForm.inc");
-			$view->render();
-		}
-	}
-	else
-	{
-		$view = new View();
-		$view->addBlock("users/addUserForm.inc");
-		$view->render();
-	}
+	$view->render();
 ?>
