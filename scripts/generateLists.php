@@ -59,7 +59,6 @@ while(list($tableName) = mysql_fetch_array($tables))
 	$findFunction = "
 		public function find(\$fields=null,\$sort=\"$key[Column_name]\")
 		{
-			global \$PDO;
 			\$this->sort = \$sort;
 
 			\$options = array();
@@ -71,16 +70,7 @@ while(list($tableName) = mysql_fetch_array($tables))
 			# You can add fields from other tables to \$options by adding the join SQL
 			# to \$this->joins here
 
-
-			if (count(\$options)) { \$this->where = \"where \".implode(\" and \",\$options); }
-			\$sql = \"select $key[Column_name] from $tableName {\$this->joins} {\$this->where} order by {\$this->sort}\";
-
-			\$result = \$PDO->query(\$sql);
-			if (\$result)
-			{
-				foreach(\$result as \$row) { \$this->list[] = \$row['$key[Column_name]']; }
-			}
-			else { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+			\$this->populateList(\$options);
 		}
 	";
 
@@ -90,7 +80,12 @@ $contents = "<?php
 $copyright
 	class {$className}List extends PDOResultIterator
 	{
-		public function __construct(\$fields=null) { if (is_array(\$fields)) \$this->find(\$fields); }
+		public function __construct(\$fields=null,\$sort=\"id\")
+		{
+			\$this->select = \"select $tableName.id from $tableName\";
+			\$this->sort = \$sort;
+			if (is_array(\$fields)) \$this->find(\$fields);
+		}
 
 $findFunction
 
