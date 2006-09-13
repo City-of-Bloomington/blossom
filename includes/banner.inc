@@ -30,5 +30,7 @@
 </head>
 <body>
 <div id="banner">
-	<h1><a href="<?php echo BASE_URL; ?>">New Application</a></h1><h2>City of Bloomington, Indiana</h2>
+	<div id="application_name"><a href="<?php echo BASE_URL; ?>">New Application</a></div>
+	<div id="location_name">City of Bloomington, Indiana</div>
+	<div id="navigation"></div>
 </div>

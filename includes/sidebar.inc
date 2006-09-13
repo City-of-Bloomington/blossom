@@ -18,12 +18,14 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 ?>
-<div class="sidebar">
-	<div class="titleBar">Tables</div>
-	<ul>
-	</ul>
+<div id="sidebar">
+	<div>
+		<div class="titleBar">Tables</div>
+		<ul>
+		</ul>
+	</div>
+	<?php
+		if (!isset($_SESSION['USER'])) { include(FRAMEWORK."/sidebarBoxes/loginBox.inc"); }
+		else { if (in_array("Administrator",$_SESSION['USER']->getRoles())) { include(APPLICATION_HOME."/includes/sidebarBoxes/Administrator.inc"); } }
+	?>
 </div>
-<?php
-	if (!isset($_SESSION['USER'])) { include(FRAMEWORK."/sidebarBoxes/loginBox.inc"); }
-	else { if (in_array("Administrator",$_SESSION['USER']->getRoles())) { include(APPLICATION_HOME."/includes/sidebarBoxes/Administrator.inc"); } }
-?>
