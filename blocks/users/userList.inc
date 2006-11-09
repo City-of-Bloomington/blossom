@@ -1,4 +1,7 @@
 <?php
+/*
+	$this->userList
+*/
 	if (userHasRole("Administrator"))
 	{
 		$addButton = "<button type=\"button\" class=\"addSmall\" onclick=\"document.location.href='".BASE_URL."/users/addUser.php';\">Add</button>";
@@ -9,9 +12,7 @@
 	<div class="titleBar"><?php echo $addButton; ?>Users</div>
 	<table>
 	<?php
-		$userList = new UserList();
-		$userList->find();
-		foreach($userList as $user)
+		foreach($this->userList as $user)
 		{
 			if (userHasRole("Administrator"))
 			{

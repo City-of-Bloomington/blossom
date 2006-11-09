@@ -1,23 +1,17 @@
 <?php
+/**
+ * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ */
 /*
 	$_GET variables:	id
 	---------------------------------------------------------------------------
 	$_POST variables:	id
-						user [ authenticationMethod		# Optional
-								username				password
-								roles					firstname
-														lastname
-														department
-														phone
-							]
+						user
 */
 	verifyUser("Administrator");
-
-	$view = new View();
-	if (isset($_GET['id'])) { $view->user = new User($_GET['user']); }
-
-	$view->addBlock("users/updateUserForm.inc");
-	if (isset($_POST['user']))
+	if (isset($_GET['id'])) { $user = new User($_GET['id']); }
+	if (isset($_POST['id']))
 	{
 		$user = new User($_POST['id']);
 		foreach($_POST['user'] as $field=>$value)
@@ -26,14 +20,16 @@
 			$user->$set($value);
 		}
 
-		$view->user = $user;
 		try
 		{
 			$user->save();
 			Header("Location: home.php");
+			exit();
 		}
 		catch (Exception $e) { $_SESSION['errorMessages'][] = $e; }
 	}
 
-	$view->render();
+	$template = new Template();
+	$template->blocks[] = new Block("users/updateUserForm.inc",array('user'=>$user));
+	$template->render();
 ?>

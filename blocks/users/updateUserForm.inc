@@ -1,3 +1,8 @@
+<?php
+/*
+	$this->user
+*/
+?>
 <h1>Edit <?php echo $this->user->getUsername(); ?></h1>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <fieldset><legend>Login Info</legend>

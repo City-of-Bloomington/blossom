@@ -1,22 +1,8 @@
 <?php
 /**
-* @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
-* This file is part of the City of Bloomington's web application Scaffolding.
-* This Scaffolding is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This Scaffolding is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this scaffolding; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ */
 	class User extends SystemUser
 	{
 		private $id;
@@ -36,12 +22,21 @@
 			if ($id)
 			{
 				# Load an existing user
-				if (is_numeric($id)) { $sql = "select * from users where id=$id"; }
-				else { $sql = "select * from users where username='$id'"; }
+				if (is_numeric($id)) { $sql = "select * from users where id=?"; }
+				else { $sql = "select * from users where username=?"; }
 
-				$result = $PDO->query($sql);
-				if ($user = $result->fetch())
+				try
 				{
+					$query = $PDO->prepare($sql);
+					$query->execute(array($id));
+				}
+				catch (Exception $e) { throw $e; }
+
+				$result = $query->fetchAll();
+				if (count($result[0]))
+				{
+					$user = $result[0];
+
 					$this->id = $user['id'];
 					$this->username = $user['username'];
 					# Passwords are one-way encrypted.  They should not be loaded by default
@@ -49,8 +44,6 @@
 
 					$this->firstname = $user['firstname'];
 					$this->lastname = $user['lastname'];
-
-					$result->closeCursor();
 				}
 				else { throw new Exception("unknownUser"); }
 			}
@@ -62,16 +55,31 @@
 			if (!$this->username || !$this->firstname || !$this->lastname) { throw new Exception("missingRequiredFields"); }
 
 			$fields = array();
-			$fields[] = "username='{$this->username}'";
-			$fields[] = "firstname='{$this->firstname}'";
-			$fields[] = "lastname='{$this->lastname}'";
-			if ($this->authenticationMethod) { $fields[] = "authenticationMethod='{$this->authenticationMethod}'"; } else { $fields[] = "authenticationMethod=null"; }
-			$fields = implode(",",$fields);
+			$fields['username'] = $this->username;
+			$fields['firstname'] = $this->firstname ? $this->firstname : "null";
+			$fields['lastname'] = $this->lastname ? $this->lastname : "null";
+			$fields['authenticationMethod'] = $this->authenticationMethod ? $this->authenticationMethod : 'null';
+			# Passwords should not be updated by default.  Use the savePassword() function
 
-			if ($this->id) { $this->update($fields); }
-			else { $this->insert($fields); }
+			# Split the fields up into a preparedFields array and a values array.
+			# PDO->execute cannot take an associative array for values, so we have
+			# to strip out the keys from $fields
+			$preparedFields = array();
+			foreach($fields as $key=>$value)
+			{
+				$preparedFields[] = "$key=?";
+				$values[] = $value;
+			}
+			$preparedFields = implode(",",$preparedFields);
 
-			$this->updateRoles();
+			# Do the database calls
+			if ($this->id) { $this->update($values,$preparedFields); }
+			else { $this->insert($values,$preparedFields); }
+
+			# Save the password only if they've typed one
+			if ($this->getPassword()) { $this->savePassword(); }
+
+			#$this->updateRoles();
 		}
 
 		public function delete()
@@ -89,27 +97,23 @@
 			$PDO->commit();
 		}
 
-		private function update($fields)
+		private function update($values,$preparedFields)
 		{
 			global $PDO;
 
-			$sql = "update users set $fields where id={$this->id}";
-
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$sql = "update users set $preparedFields where id={$this->id}";
+			if (false === $query = $PDO->prepare($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $query->execute($values)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
-		private function insert($fields)
+		private function insert($values,$preparedFields)
 		{
 			global $PDO;
 
-			$sql = "insert users set $fields";
-
-
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$sql = "insert users set $preparedFields";
+			if (false === $query = $PDO->prepare($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $query->execute($values)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 			$this->id = $PDO->lastInsertID();
-
-			# Save the initial password if we've added one
-			if ($this->getPassword()) { $this->savePassword(); }
 		}
 
 
@@ -119,13 +123,14 @@
 
 			$roles = $this->getRoles();
 
-			$sql = "delete from user_roles where user_id={$this->id}";
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$sql = "delete from user_roles where user_id=?";
+			if (false === $query = $PDO->prepare($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $PDO->execute(array($this->id))) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 
 			$statement = $PDO->prepare("insert user_roles set user_id={$this->id},role_id=?");
 			foreach($roles as $role_id=>$role)
 			{
-				if (false === $statement->execute(array("$role_id"))) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+				if (false === $statement->execute(array($role_id))) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 			}
 		}
 
@@ -133,19 +138,21 @@
 		{
 			global $PDO;
 
-			$sql = "update users set password=md5('{$this->password}') where id={$this->id}";
-			if (false === $PDO->exec($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			$sql = "update users set password=md5(?) where id={$this->id}";
+			if (false === $query = $PDO->prepare($sql)) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
+			if (false === $query->execute(array($this->password))) { $e = $PDO->errorInfo(); throw new Exception($sql.$e[2]); }
 		}
 
 		protected function authenticateDatabase($password)
 		{
 			global $PDO;
 
-			$sql = "select id from users where username='{$this->username}' and password=md5('$password')";
-			$result = $PDO->query($sql);
-			if ($user = $result->fetch()) { return true; }
+			$sql = "select id from users where username=? and password=md5(?)";
+			$query = $PDO->prepare($sql);
+			$query->execute(array($this->username,$password));
+			$result = $query->fetchAll();
+			if (count($result)) { return true; }
 			else { return false; }
-			$result->closeCursor();
 		}
 		/* Takes a string or an array of strings and checks if the user has that role */
 		public function hasRole($roles)
@@ -182,11 +189,11 @@
 			return $this->roles;
 		}
 
-		public function setUsername($string) { $this->username = $this->sanitizeString($string); }
+		public function setUsername($string) { $this->username = trim($string); }
 		public function setPassword($string) { if ($string) { $this->password = $string; } }
 		public function setAuthenticationMethod($string) { $this->authenticationMethod = $string; }
-		public function setFirstname($string) { $this->firstname = $this->sanitizeString($string); }
-		public function setLastname($string) { $this->lastname = $this->sanitizeString($string); }
+		public function setFirstname($string) { $this->firstname = trim($string); }
+		public function setLastname($string) { $this->lastname = trim($string); }
 		/* Takes an array of role names.  Needs to look up the role_id and add them to the user */
 		public function setRoles($array)
 		{
