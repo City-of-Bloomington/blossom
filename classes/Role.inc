@@ -51,7 +51,7 @@
 			if (!$this->role) { throw new Exception("missingRequiredFields"); }
 
 			$fields = array();
-			$fields['role'] = $this->role ? $this->role : "null";
+			$fields['role'] = $this->role ? $this->role : null;
 
 			# Split the fields up into a preparedFields array and a values array.
 			# PDO->execute cannot take an associative array for values, so we have

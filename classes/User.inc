@@ -56,9 +56,9 @@
 
 			$fields = array();
 			$fields['username'] = $this->username;
-			$fields['firstname'] = $this->firstname ? $this->firstname : "null";
-			$fields['lastname'] = $this->lastname ? $this->lastname : "null";
-			$fields['authenticationMethod'] = $this->authenticationMethod ? $this->authenticationMethod : 'null';
+			$fields['firstname'] = $this->firstname ? $this->firstname : null;
+			$fields['lastname'] = $this->lastname ? $this->lastname : null;
+			$fields['authenticationMethod'] = $this->authenticationMethod ? $this->authenticationMethod : null;
 			# Passwords should not be updated by default.  Use the savePassword() function
 
 			# Split the fields up into a preparedFields array and a values array.
@@ -79,7 +79,7 @@
 			# Save the password only if they've typed one
 			if ($this->getPassword()) { $this->savePassword(); }
 
-			#$this->updateRoles();
+			$this->updateRoles();
 		}
 
 		public function delete()

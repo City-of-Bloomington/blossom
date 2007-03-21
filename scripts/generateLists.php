@@ -1,9 +1,4 @@
 <?php
-$copyright = "/**
- * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
- */";
-
 include("../configuration.inc");
 
 $tables = array();
@@ -33,9 +28,9 @@ foreach($tables as $tableName)
 	# Constructor
 	#--------------------------------------------------------------------------
 	$constructor = "
-		public function __construct(\$fields=null,\$sort=\"id\")
+		public function __construct(\$fields=null,\$sort='id')
 		{
-			\$this->select = \"select $tableName.$key[Column_name] as id from $tableName\";
+			\$this->select = 'select $tableName.$key[Column_name] as id from $tableName';
 			\$this->sort = \$sort;
 			if (is_array(\$fields)) \$this->find(\$fields);
 		}
@@ -46,7 +41,7 @@ foreach($tables as $tableName)
 	# Find
 	#--------------------------------------------------------------------------
 	$findFunction = "
-		public function find(\$fields=null,\$sort=\"$key[Column_name]\")
+		public function find(\$fields=null,\$sort='id')
 		{
 			\$this->sort = \$sort;
 
@@ -68,23 +63,20 @@ foreach($tables as $tableName)
 	#--------------------------------------------------------------------------
 	# Output the class
 	#--------------------------------------------------------------------------
-$contents = "<?php
-$copyright
+$contents = "<?php\n";
+$contents.= COPYRIGHT;
+$contents.="
 	class {$className}List extends PDOResultIterator
 	{
-		public function __construct(\$fields=null,\$sort=\"id\")
-		{
-			\$this->select = \"select $tableName.id from $tableName\";
-			\$this->sort = \$sort;
-			if (is_array(\$fields)) \$this->find(\$fields);
-		}
-
+$constructor
 $findFunction
 
 		protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
 	}
 ?>";
+	$dir = APPLICATION_HOME.'/scripts/stubs/classes';
+	if (!is_dir($dir)) { mkdir($dir,0770,true); }
+	file_put_contents("$dir/{$className}List.inc",$contents);
 	echo "$className\n";
-	file_put_contents("./classStubs/{$className}List.inc",$contents);
 }
 ?>
