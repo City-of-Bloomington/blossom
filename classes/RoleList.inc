@@ -1,28 +1,27 @@
 <?php
 /**
- * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2006,2007,2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ *
+ * Roles are really just an attribute array for users.
+ * For now, I'm not loading them in as objects.
  */
-/*
-	Roles are really just an attribute array for users.  For now, I'm not loading them in as objects.
-*/
-	class RoleList extends PDOResultIterator
+class RoleList extends PDOResultIterator
+{
+
+	public function find($fields=null,$sort='role',$limit=null,$groupBy=null)
 	{
+		$PDO = Database::getConnection();
 
-		public function find($fields=null,$sort='role')
-		{
-			global $PDO;
+		$options = array();
+		if (isset($fields['role'])) { $options[] = "role='$fields[role]'"; }
 
-			$options = array();
-			if (isset($fields['role'])) { $options[] = "role='$fields[role]'"; }
+		if (count($options)) { $where = " where ".implode(" and ",$options); } else { $where = ""; }
+		$sql = "select role from roles $where order by $sort";
 
-			if (count($options)) { $where = " where ".implode(" and ",$options); } else { $where = ""; }
-			$sql = "select role from roles $where order by $sort";
-
-			foreach($PDO->query($sql) as $row) { $this->list[] = $row['role']; }
-		}
-
-
-		protected function loadResult($key) { return $this->list[$key]; }
+		foreach($PDO->query($sql) as $row) { $this->list[] = $row['role']; }
 	}
-?>
+
+
+	protected function loadResult($key) { return $this->list[$key]; }
+}

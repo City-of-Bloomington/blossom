@@ -1,5 +1,6 @@
 <?php
-include("../configuration.inc");
+include '../configuration.inc';
+$PDO = Database::getConnection();
 
 $tables = array();
 foreach($PDO->query("show tables") as $row) { list($tables[]) = $row; }
@@ -28,33 +29,28 @@ foreach($tables as $tableName)
 	# Constructor
 	#--------------------------------------------------------------------------
 	$constructor = "
-		/**
-		 * This will load all fields in the table as properties of this class.
-		 * You may want to replace this with, or add your own extra, custom loading
-		 */
-		public function __construct(\$$key[Column_name]=null)
+	/**
+	 * This will load all fields in the table as properties of this class.
+	 * You may want to replace this with, or add your own extra, custom loading
+	 */
+	public function __construct(\$$key[Column_name]=null)
+	{
+		if (\$$key[Column_name])
 		{
-			global \$PDO;
+			\$PDO = Database::getConnection();
+			\$query = \$PDO->prepare('select * from $tableName where $key[Column_name]=?');
+			\$query->execute(array(\$$key[Column_name]));
 
-			if (\$$key[Column_name])
-			{
-				\$sql = 'select * from $tableName where $key[Column_name]=?';
-				try
-				{
-					\$query = \$PDO->prepare(\$sql);
-					\$query->execute(array(\$$key[Column_name]));
-				}
-				catch (Exception \$e) { throw \$e; }
-
-				\$result = \$query->fetchAll();
-				foreach(\$result[0] as \$field=>\$value) { if (\$value) \$this->\$field = \$value; }
-			}
-			else
-			{
-				# This is where the code goes to generate a new, empty instance.
-				# Set any default values for properties that need it here
-			}
+			\$result = \$query->fetchAll(PDO::FETCH_ASSOC);
+			if (!count(\$result)) { throw new Exception('$tableName/unknown$className'); }
+			foreach(\$result[0] as \$field=>\$value) { if (\$value) \$this->\$field = \$value; }
 		}
+		else
+		{
+			# This is where the code goes to generate a new, empty instance.
+			# Set any default values for properties that need it here
+		}
+	}
 	";
 
 	#--------------------------------------------------------------------------
@@ -64,7 +60,7 @@ foreach($tables as $tableName)
 	$linkedProperties = array();
 	foreach($fields as $field)
 	{
-		$properties.= "\t\tprivate \$$field[Field];\n";
+		$properties.= "\tprivate \$$field[Field];\n";
 
 		if (substr($field['Field'],-3) == "_id") { $linkedProperties[] = $field['Field']; }
 	}
@@ -74,7 +70,7 @@ foreach($tables as $tableName)
 		foreach($linkedProperties as $property)
 		{
 			$field = substr($property,0,-3);
-			$properties.= "\t\tprivate \$$field;\n";
+			$properties.= "\tprivate \$$field;\n";
 		}
 	}
 
@@ -91,10 +87,20 @@ foreach($tables as $tableName)
 			case 'date':
 			case 'datetime':
 			case 'timestamp':
-				$getters.= "\t\tpublic function get$fieldFunctionName(\$format=null)\n\t\t{\n\t\t\tif (\$format && \$this->$field[Field]!=0) return strftime(\$format,strtotime(\$this->$field[Field]));\n\t\t\telse return \$this->$field[Field];\n\t\t}\n";
+				$getters.= "
+	public function get$fieldFunctionName(\$format=null)
+	{
+		if (\$format && \$this->$field[Field])
+		{
+			if (strpos(\$format,'%')!==false) { return strftime(\$format,\$this->$field[Field]); }
+			else { return date(\$format,\$this->$field[Field]); }
+		}
+		else return \$this->$field[Field];
+	}
+";
 			break;
 
-			default: $getters.= "\t\tpublic function get$fieldFunctionName() { return \$this->$field[Field]; }\n";
+			default: $getters.= "\tpublic function get$fieldFunctionName() { return \$this->$field[Field]; }\n";
 		}
 	}
 	foreach($linkedProperties as $property)
@@ -102,15 +108,15 @@ foreach($tables as $tableName)
 		$field = substr($property,0,-3);
 		$fieldFunctionName = ucwords($field);
 		$getters.= "
-		public function get$fieldFunctionName()
+	public function get$fieldFunctionName()
+	{
+		if (\$this->$property)
 		{
-			if (\$this->$property)
-			{
-				if (!\$this->$field) { \$this->$field = new $fieldFunctionName(\$this->$property); }
-				return \$this->$field;
-			}
-			else return null;
+			if (!\$this->$field) { \$this->$field = new $fieldFunctionName(\$this->$property); }
+			return \$this->$field;
 		}
+		else return null;
+	}
 		";
 	}
 
@@ -131,30 +137,41 @@ foreach($tables as $tableName)
 					{
 						$property = substr($field['Field'],0,-3);
 						$object = ucfirst($property);
-						$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$property = new $object(\$int); \$this->$field[Field] = \$$field[Type]; }\n";
+						$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$property = new $object(\$int); \$this->$field[Field] = \$$field[Type]; }\n";
 					}
 					else
 					{
-						$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9]\",\"\",\$$field[Type]); }\n";
+						$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9]\",\"\",\$$field[Type]); }\n";
 					}
 				break;
 
 				case 'string':
-					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = trim(\$$field[Type]); }\n";
+					$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = trim(\$$field[Type]); }\n";
 				break;
 
 				case 'date':
 				case 'datetime':
 				case 'timestamp':
-					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = is_array(\$$field[Type]) ? \$this->dateArrayToString(\$$field[Type]) : \$$field[Type]; }\n";
+	$setters.= "
+	public function set$fieldFunctionName(\$$field[Type])
+	{
+		if (is_array(\$$field[Type])) { \$this->$field[Field] = \$this->dateArrayToTimestamp(\$$field[Type]); }
+		elseif(ctype_digit(\$$field[Type])) { \$this->$field[Field] = \$$field[Type]; }
+		else { \$this->$field[Field] = strtotime(\$$field[Type]); }
+	}
+	";
 				break;
 
 				case 'float':
-					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9.\-]\",\"\",\$$field[Type]); }\n";
+					$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = ereg_replace(\"[^0-9.\-]\",\"\",\$$field[Type]); }\n";
+				break;
+
+				case 'bool':
+					$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type] ? true : false; }\n";
 				break;
 
 				default:
-					$setters.= "\t\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type]; }\n";
+					$setters.= "\tpublic function set$fieldFunctionName(\$$field[Type]) { \$this->$field[Field] = \$$field[Type]; }\n";
 			}
 		}
 	}
@@ -163,7 +180,7 @@ foreach($tables as $tableName)
 	{
 		$property = substr($field,0,-3);
 		$object = ucfirst($property);
-		$setters.= "\t\tpublic function set$object(\$$property) { \$this->$field = \${$property}->getId(); \$this->$property = \$$property; }\n";
+		$setters.= "\tpublic function set$object(\$$property) { \$this->$field = \${$property}->getId(); \$this->$property = \$$property; }\n";
 	}
 
 	#--------------------------------------------------------------------------
@@ -172,76 +189,76 @@ foreach($tables as $tableName)
 $contents = "<?php\n";
 $contents.= COPYRIGHT;
 $contents.="
-	class $className extends ActiveRecord
-	{
+class $className extends ActiveRecord
+{
 $properties
 
 $constructor
 
-		/**
-		 * This generates generic SQL that should work right away.
-		 * You can replace this \$fields code with your own custom SQL
-		 * for each property of this class,
-		 */
-		public function save()
-		{
-			# Check for required fields here.  Throw an exception if anything is missing.
+	/**
+	 * This generates generic SQL that should work right away.
+	 * You can replace this \$fields code with your own custom SQL
+	 * for each property of this class,
+	 */
+	public function save()
+	{
+		# Check for required fields here.  Throw an exception if anything is missing.
 
-			\$fields = array();
+		\$fields = array();
 ";
 			foreach($fields as $field)
 			{
 				if ($field['Field'] != $key['Column_name'])
 				{
-					$contents.="\t\t\t\$fields['$field[Field]'] = \$this->$field[Field] ? \$this->$field[Field] : null;\n";
+					$contents.="\t\t\$fields['$field[Field]'] = \$this->$field[Field] ? \$this->$field[Field] : null;\n";
 				}
 			}
 $contents.= "
-			# Split the fields up into a preparedFields array and a values array.
-			# PDO->execute cannot take an associative array for values, so we have
-			# to strip out the keys from \$fields
-			\$preparedFields = array();
-			foreach(\$fields as \$key=>\$value)
-			{
-				\$preparedFields[] = \"\$key=?\";
-				\$values[] = \$value;
-			}
-			\$preparedFields = implode(\",\",\$preparedFields);
-
-
-			if (\$this->$key[Column_name]) { \$this->update(\$values,\$preparedFields); }
-			else { \$this->insert(\$values,\$preparedFields); }
-		}
-
-		private function update(\$values,\$preparedFields)
+		# Split the fields up into a preparedFields array and a values array.
+		# PDO->execute cannot take an associative array for values, so we have
+		# to strip out the keys from \$fields
+		\$preparedFields = array();
+		foreach(\$fields as \$key=>\$value)
 		{
-			global \$PDO;
-
-			\$sql = \"update $tableName set \$preparedFields where $key[Column_name]={\$this->$key[Column_name]}\";
-			if (false === \$query = \$PDO->prepare(\$sql)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
-			if (false === \$query->execute(\$values)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
+			\$preparedFields[] = \"\$key=?\";
+			\$values[] = \$value;
 		}
+		\$preparedFields = implode(\",\",\$preparedFields);
 
-		private function insert(\$values,\$preparedFields)
-		{
-			global \$PDO;
 
-			\$sql = \"insert $tableName set \$preparedFields\";
-			if (false === \$query = \$PDO->prepare(\$sql)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
-			if (false === \$query->execute(\$values)) { \$e = \$PDO->errorInfo(); throw new Exception(\$sql.\$e[2]); }
-			\$this->$key[Column_name] = \$PDO->lastInsertID();
-		}
-
-		/**
-		 * Generic Getters
-		 */
-$getters
-		/**
-		 * Generic Setters
-		 */
-$setters
+		if (\$this->$key[Column_name]) { \$this->update(\$values,\$preparedFields); }
+		else { \$this->insert(\$values,\$preparedFields); }
 	}
-?>";
+
+	private function update(\$values,\$preparedFields)
+	{
+		\$PDO = Database::getConnection();
+
+		\$sql = \"update $tableName set \$preparedFields where $key[Column_name]={\$this->$key[Column_name]}\";
+		\$query = \$PDO->prepare(\$sql);
+		\$query->execute(\$values);
+	}
+
+	private function insert(\$values,\$preparedFields)
+	{
+		\$PDO = Database::getConnection();
+
+		\$sql = \"insert $tableName set \$preparedFields\";
+		\$query = \$PDO->prepare(\$sql);
+		\$query->execute(\$values);
+		\$this->$key[Column_name] = \$PDO->lastInsertID();
+	}
+
+	/**
+	 * Generic Getters
+	 */
+$getters
+	/**
+	 * Generic Setters
+	 */
+$setters
+}
+";
 	$dir = APPLICATION_HOME.'/scripts/stubs/classes';
 	if (!is_dir($dir)) { mkdir($dir,0770,true); }
 	file_put_contents("$dir/$className.inc",$contents);

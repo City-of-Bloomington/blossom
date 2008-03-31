@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (C) 2007 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2007,2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param array $this->errorMessages
@@ -12,9 +12,9 @@
 		foreach($this->errorMessages as $e)
 		{
 			$error = $e->getMessage();
-			if (file_exists(APPLICATION_HOME."/blocks/errorMessages/$error.inc"))
+			if (file_exists(APPLICATION_HOME."/blocks/html/errorMessages/$error.inc"))
 			{
-				include APPLICATION_HOME."/blocks/errorMessages/$error.inc";
+				include APPLICATION_HOME."/blocks/html/errorMessages/$error.inc";
 			}
 			else
 			{

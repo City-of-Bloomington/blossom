@@ -1,5 +1,6 @@
 <?php
 include '../configuration.inc';
+$PDO = Database::getConnection();
 
 $tables = array();
 foreach($PDO->query("show tables") as $row) { list($tables[]) = $row; }
@@ -30,17 +31,15 @@ foreach($tables as $tableName)
  * Generate home.php
  */
 $PHP = "\${$variableName}List = new {$className}List();
-	\${$variableName}List->find();
+\${$variableName}List->find();
 
-	\$template = new Template();
-	\$template->blocks[] = new Block('{$variableName}s/{$variableName}List.inc',array('{$variableName}List'=>\${$variableName}List));
-	\$template->render();";
+\$template = new Template();
+\$template->blocks[] = new Block('{$variableName}s/{$variableName}List.inc',array('{$variableName}List'=>\${$variableName}List));
+\$template->render();";
 
 $contents = "<?php\n";
-$contents.= COPYRIGHT;
-$contents.="
-	$PHP
-?>";
+$contents.= COPYRIGHT."\n";
+$contents.= $PHP;
 
 	$dir = APPLICATION_HOME."/scripts/stubs/html/$tableName";
 	if (!is_dir($dir)) { mkdir($dir,0770,true); }
@@ -51,32 +50,30 @@ $contents.="
  */
 $PHP = "verifyUser();
 
-	if (isset(\$_POST['{$variableName}']))
+if (isset(\$_POST['{$variableName}']))
+{
+	\${$variableName} = new {$className}();
+	foreach(\$_POST['{$variableName}'] as \$field=>\$value)
 	{
-		\${$variableName} = new {$className}();
-		foreach(\$_POST['{$variableName}'] as \$field=>\$value)
-		{
-			\$set = 'set'.ucfirst(\$field);
-			\${$variableName}->\$set(\$value);
-		}
-
-		try
-		{
-			\${$variableName}->save();
-			Header('Location: home.php');
-			exit();
-		}
-		catch(Exception \$e) { \$_SESSION['errorMessages'][] = \$e; }
+		\$set = 'set'.ucfirst(\$field);
+		\${$variableName}->\$set(\$value);
 	}
 
-	\$template = new Template();
-	\$template->blocks[] = new Block('{$variableName}s/add{$className}Form.inc');
-	\$template->render();";
+	try
+	{
+		\${$variableName}->save();
+		Header('Location: home.php');
+		exit();
+	}
+	catch(Exception \$e) { \$_SESSION['errorMessages'][] = \$e; }
+}
+
+\$template = new Template();
+\$template->blocks[] = new Block('{$variableName}s/add{$className}Form.inc');
+\$template->render();";
 $contents = "<?php\n";
-$contents.= COPYRIGHT;
-$contents.="
-	$PHP
-?>";
+$contents.= COPYRIGHT."\n";
+$contents.= $PHP;
 	file_put_contents("$dir/add{$className}.php",$contents);
 
 
@@ -85,34 +82,31 @@ $contents.="
  */
 $PHP = "verifyUser();
 
-	if (isset(\$_GET['$key[Column_name]'])) { \${$variableName} = new {$className}(\$_GET['$key[Column_name]']); }
-	if (isset(\$_POST['$key[Column_name]']))
+if (isset(\$_GET['$key[Column_name]'])) { \${$variableName} = new {$className}(\$_GET['$key[Column_name]']); }
+if (isset(\$_POST['$key[Column_name]']))
+{
+	\${$variableName} = new {$className}(\$_POST['$key[Column_name]']);
+	foreach(\$_POST['$variableName'] as \$field=>\$value)
 	{
-		\${$variableName} = new {$className}(\$_POST['$key[Column_name]']);
-		foreach(\$_POST['$variableName'] as \$field=>\$value)
-		{
-			\$set = 'set'.ucfirst(\$field);
-			\${$variableName}->\$set(\$value);
-		}
-
-		try
-		{
-			\${$variableName}->save();
-			Header('Location: home.php');
-			exit();
-		}
-		catch (Exception \$e) { \$_SESSION['errorMessages'][] = \$e; }
+		\$set = 'set'.ucfirst(\$field);
+		\${$variableName}->\$set(\$value);
 	}
 
-	\$template = new Template();
-	\$template->blocks[] = new Block('{$variableName}s/update{$className}Form.inc',array('{$variableName}'=>\${$variableName}));
-	\$template->render();";
+	try
+	{
+		\${$variableName}->save();
+		Header('Location: home.php');
+		exit();
+	}
+	catch (Exception \$e) { \$_SESSION['errorMessages'][] = \$e; }
+}
+
+\$template = new Template();
+\$template->blocks[] = new Block('{$variableName}s/update{$className}Form.inc',array('{$variableName}'=>\${$variableName}));
+\$template->render();";
 $contents = "<?php\n";
-$contents.= COPYRIGHT;
-$contents.="
-	$PHP
-?>";
+$contents.= COPYRIGHT."\n";
+$contents.= $PHP;
 	file_put_contents("$dir/update{$className}.php",$contents);
 	echo "$className\n";
 }
-?>

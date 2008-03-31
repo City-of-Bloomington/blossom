@@ -1,5 +1,6 @@
 <?php
 include '../configuration.inc';
+$PDO = Database::getConnection();
 
 $tables = array();
 foreach($PDO->query("show tables") as $row) { list($tables[]) = $row; }
@@ -31,16 +32,16 @@ foreach($tables as $tableName)
 		*/
 	$getId = "get".ucwords($key['Column_name']);
 	$HTML = "<div class=\"interfaceBox\">
-	<div class=\"titleBar\">
+	<h1>
 		<button type=\"button\" class=\"addSmall\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/$tableName/add$className.php';\">Add</button>
 		{$className}s
-	</div>
+	</h1>
 	<ul><?php
 			foreach(\$this->{$variableName}List as \${$variableName})
 			{
 				echo \"
 				<li><button type=\\\"button\\\" class=\\\"editSmall\\\" onclick=\\\"document.location.href='\".BASE_URL.\"/$tableName/update$className.php?$key[Column_name]={\${$variableName}->{$getId}()}';\\\">Edit</button>
-					$variableName</li>
+					\$$variableName</li>
 				\";
 			}
 		?>

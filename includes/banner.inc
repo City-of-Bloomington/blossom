@@ -9,14 +9,17 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	<link rel="SHORTCUT ICON" href="/favicon.ico" />
 	<style type="text/css" media="screen">
-		@import url("/skins/default/skin.css");
+		@import url('<?php echo BASE_URL; ?>/skins/default/screen.css');
 	</style>
-	<style type="text/css" media="print">@import url("/skins/default/print.css");</style>
+	<style type="text/css" media="print">
+		@import url('<?php echo BASE_URL; ?>/skins/default/print.css');
+	</style>
+	<script type="text/javascript" src="<?php echo BASE_URL; ?>/js/functions.js"></script>
 	<title>New Application - City of Bloomington, Indiana</title>
 </head>
 <body>
 <div id="banner">
-	<div id="application_name"><a href="<?php echo BASE_URL; ?>">New Application</a></div>
+	<div id="application_name"><a href="<?php echo BASE_URL; ?>/">New Application</a></div>
 	<div id="location_name">City of Bloomington, Indiana</div>
 	<div id="navigation"></div>
 </div>

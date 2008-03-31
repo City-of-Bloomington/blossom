@@ -1,5 +1,6 @@
 <?php
-include("../configuration.inc");
+include '../configuration.inc';
+$PDO = Database::getConnection();
 
 $tables = array();
 foreach($PDO->query("show tables") as $row) { list($tables[]) = $row; }
@@ -28,12 +29,11 @@ foreach($tables as $tableName)
 	# Constructor
 	#--------------------------------------------------------------------------
 	$constructor = "
-		public function __construct(\$fields=null,\$sort='id')
-		{
-			\$this->select = 'select $tableName.$key[Column_name] as id from $tableName';
-			\$this->sort = \$sort;
-			if (is_array(\$fields)) \$this->find(\$fields);
-		}
+	public function __construct(\$fields=null)
+	{
+		\$this->select = 'select $tableName.$key[Column_name] as id from $tableName';
+		if (is_array(\$fields)) \$this->find(\$fields);
+	}
 	";
 
 
@@ -41,21 +41,23 @@ foreach($tables as $tableName)
 	# Find
 	#--------------------------------------------------------------------------
 	$findFunction = "
-		public function find(\$fields=null,\$sort='id')
-		{
-			\$this->sort = \$sort;
+	public function find(\$fields=null,\$sort='id',\$limit=null,\$groupBy=null)
+	{
+		\$this->sort = \$sort;
+		\$this->limit = \$limit;
+		\$this->groupBy = \$groupBy;
 
-			\$options = array();
+		\$options = array();
 ";
-			foreach($fields as $field) { $findFunction.="\t\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]='\$fields[$field[Field]]'\"; }\n"; }
+			foreach($fields as $field) { $findFunction.="\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]='\$fields[$field[Field]]'\"; }\n"; }
 	$findFunction.="
 
-			# Finding on fields from other tables required joining those tables.
-			# You can add fields from other tables to \$options by adding the join SQL
-			# to \$this->joins here
+		# Finding on fields from other tables required joining those tables.
+		# You can add fields from other tables to \$options by adding the join SQL
+		# to \$this->joins here
 
-			\$this->populateList(\$options);
-		}
+		\$this->populateList(\$options);
+	}
 	";
 
 
@@ -66,17 +68,16 @@ foreach($tables as $tableName)
 $contents = "<?php\n";
 $contents.= COPYRIGHT;
 $contents.="
-	class {$className}List extends PDOResultIterator
-	{
+class {$className}List extends PDOResultIterator
+{
 $constructor
 $findFunction
 
-		protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
-	}
-?>";
+	protected function loadResult(\$key) { return new $className(\$this->list[\$key]); }
+}
+";
 	$dir = APPLICATION_HOME.'/scripts/stubs/classes';
 	if (!is_dir($dir)) { mkdir($dir,0770,true); }
 	file_put_contents("$dir/{$className}List.inc",$contents);
 	echo "$className\n";
 }
-?>

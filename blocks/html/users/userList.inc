@@ -17,7 +17,7 @@
 			if (userHasRole("Administrator"))
 			{
 				$editButton = "<button type=\"button\" class=\"editSmall\" onclick=\"document.location.href='updateUser.php?id={$user->getId()}'\">Edit</button>";
-				$deleteButton = "<button type=\"button\" class=\"deleteSmall\" onclick=\"deleteConfirmation('deleteUser.php?id={$user->getId()}');\">Delete</button>";
+				$deleteButton = "<button type=\"button\" class=\"deleteSmall\" onclick=\"FRAMEWORK.deleteConfirmation('deleteUser.php?id={$user->getId()}');\">Delete</button>";
 			}
 			else
 			{
