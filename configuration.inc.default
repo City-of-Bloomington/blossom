@@ -9,21 +9,14 @@ define('COPYRIGHT',"/**
 define('APPLICATION_NAME','application_name');
 
 /**
- * Where on the filesystem the framework is installed.
- */
-define('FRAMEWORK','/var/www/libraries/framework');
-
-/**
- * This needs to point to the library directory inside your
- * installation of the ZendFramework
- * http://framework.zend.com
- */
-define('ZEND','/var/www/libraries/ZendFramework/library');
-
-/**
  * Where on the filesystem this application is installed
  */
 define('APPLICATION_HOME','/var/www/sites/application_name');
+
+/**
+ * Where on the filesystem the framework is installed.
+ */
+define('FRAMEWORK',APPLICATION_HOME.'/libraries/framework');
 
 /**
  * The URL to get to this site
@@ -62,7 +55,7 @@ define('LDAP_PASSWORD_ATTRIBUTE','userpassword');
 /**
  * Import global functions that we use for many applications we write
  */
-include FRAMEWORK.'/ITSFunctions.inc';
+include FRAMEWORK.'/globalFunctions.inc';
 
 /**
  * Session Startup

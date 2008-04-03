@@ -1,12 +1,14 @@
 <?php
 /**
- * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  */
+# Calculate the process time
+$endTime = microtime(1);
+$processTime = $endTime - $startTime;
 ?>
 <div id="footer">
-	<div class="menuBar">
-		<a href="http://bandit.bloomington.in.gov/svn/listing.php?repname=application_name;path=%2F;sc=0">Subversion</a>
-	</div>
-	<?php include(FRAMEWORK."/footer.inc"); ?>
+<p>
+	<!-- Process Time: <?php echo $processTime; ?> -->
+</p>
 </div>

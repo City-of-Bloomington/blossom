@@ -35,7 +35,7 @@ $PHP = "\${$variableName}List = new {$className}List();
 
 \$template = new Template();
 \$template->blocks[] = new Block('{$variableName}s/{$variableName}List.inc',array('{$variableName}List'=>\${$variableName}List));
-\$template->render();";
+echo \$template->render();";
 
 $contents = "<?php\n";
 $contents.= COPYRIGHT."\n";
@@ -70,7 +70,7 @@ if (isset(\$_POST['{$variableName}']))
 
 \$template = new Template();
 \$template->blocks[] = new Block('{$variableName}s/add{$className}Form.inc');
-\$template->render();";
+echo \$template->render();";
 $contents = "<?php\n";
 $contents.= COPYRIGHT."\n";
 $contents.= $PHP;
@@ -103,7 +103,7 @@ if (isset(\$_POST['$key[Column_name]']))
 
 \$template = new Template();
 \$template->blocks[] = new Block('{$variableName}s/update{$className}Form.inc',array('{$variableName}'=>\${$variableName}));
-\$template->render();";
+echo \$template->render();";
 $contents = "<?php\n";
 $contents.= COPYRIGHT."\n";
 $contents.= $PHP;

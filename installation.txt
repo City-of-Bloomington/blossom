@@ -16,7 +16,7 @@ About
 applications.  It provides us the basics to get a web application up
 and running very quickly.  It also means our applications will be
 relatively uniform and easier to extend and maintain down the road.
-	While not fully MVC, it has heavily borrowed ideas from Rails
+	While not fully MVC, it has borrowed ideas from Rails
 and Struts.  It has developed over time, and will continue to develop
 as we come across better solutions to problems run into while creating
 new applications.
@@ -46,10 +46,12 @@ as needed.
 Requirements
 ---------------------------------------------------------------------
 Framework:
-This scaffolding requires our Framework to be on the server somewhere.
-Our Framework is available as a seperate release.  In the configuration,
-you will need to point this scaffolding to the directory where the
-Framework is installed.
+This scaffolding requires our framework to be on the server somewhere.
+It ships with a working version of framework installed in /libraries.
+In the configuration, you can point the application to another copy
+of the framework, if you like.  If you make changes to the code in
+the /libraries/framework, you might consider sending those changes
+back to us, so we can improve this scaffolding.
 
 This application was written assuming you have control over your own web
 server.  If you are on a hosted system, you may need to make changes to

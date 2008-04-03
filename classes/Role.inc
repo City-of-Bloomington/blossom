@@ -1,7 +1,8 @@
 <?php
 /**
- * @copyright Copyright (C) 2006,2007,2008 Cliff Ingham. All rights reserved.
+ * @copyright Copyright (C) 2006-2008 Cliff Ingham. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 class Role extends ActiveRecord
 {
@@ -17,7 +18,10 @@ class Role extends ActiveRecord
 		if ($id)
 		{
 			$PDO = Database::getConnection();
-			$query = $PDO->prepare('select * from roles where id=?');
+
+			if (ctype_digit($id)) { $sql = 'select * from roles where id=?'; }
+			else { $sql = 'select * from roles where role=?'; }
+			$query = $PDO->prepare($sql);
 			$query->execute(array($id));
 
 			$result = $query->fetchAll(PDO::FETCH_ASSOC);

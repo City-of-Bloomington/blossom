@@ -1,7 +1,8 @@
 <?php
 /**
- * @copyright Copyright (C) 2006,2007,2008 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 class User extends SystemUser
 {
@@ -23,8 +24,8 @@ class User extends SystemUser
 			$PDO = Database::getConnection();
 
 			# Load an existing user
-			if (is_numeric($id)) { $sql = "select * from users where id=?"; }
-			else { $sql = "select * from users where username=?"; }
+			if (ctype_digit($id)) { $sql = 'select * from users where id=?'; }
+			else { $sql = 'select * from users where username=?'; }
 
 			$query = $PDO->prepare($sql);
 			$query->execute(array($id));
