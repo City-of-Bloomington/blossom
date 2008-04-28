@@ -16,6 +16,14 @@ class Template extends View
 	{
 		$this->filename = $filename;
 		$this->outputFormat = $outputFormat;
+
+		# Make sure the output format exists
+		if (!is_file(APPLICATION_HOME."/templates/{$this->outputFormat}/{$this->filename}.inc"))
+		{
+			$this->filename = 'default';
+			$this->outputFormat = 'html';
+		}
+
 		if (count($vars))
 		{
 			foreach($vars as $name=>$value) { $this->vars[$name] = $value; }
