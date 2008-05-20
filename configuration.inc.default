@@ -35,6 +35,8 @@ define('ADMINISTRATOR_EMAIL','admin@servername.com');
 /**
  * Database Setup
  */
+define('DB_TYPE','mysql');
+define('DB_DSN','host=localhost;'); # You must include the trailing semi-colon
 define('DB_NAME',APPLICATION_NAME);
 define('DB_USER',APPLICATION_NAME);
 define('DB_PASS','password');
