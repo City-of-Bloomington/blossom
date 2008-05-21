@@ -15,7 +15,7 @@ abstract class Database
 		{
 			try
 			{
-				self::$PDO = new PDO(DB_TYPE':'.DB_DSN.'dbname='.DB_NAME,
+				self::$PDO = new PDO(DB_TYPE.':'.DB_DSN.'dbname='.DB_NAME,
 										DB_USER,
 										DB_PASS,
 										array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
