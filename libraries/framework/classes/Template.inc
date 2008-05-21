@@ -15,7 +15,7 @@ class Template extends View
 	public function __construct($filename='default',$outputFormat='html',array $vars=null)
 	{
 		$this->filename = $filename;
-		$this->outputFormat = preg_replace('/[^a-zA-Z]/','',$outputFormat;
+		$this->outputFormat = preg_replace('/[^a-zA-Z]/','',$outputFormat);
 
 		# Make sure the output format exists
 		if (!is_file(APPLICATION_HOME."/templates/{$this->outputFormat}/{$this->filename}.inc"))
