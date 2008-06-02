@@ -127,35 +127,40 @@ li.current>a { background-color:#cccccc; width:100%; }
 
 /*  Custom buttons for forms */
 button { cursor:pointer; overflow:hidden; vertical-align:middle; }
-/* Rick doesn't want these custom images right now.
-button.login { width:52px; height:15px; padding-top:15px; background: url('images/login.gif') no-repeat; border:0; }
-button.submit { width:70px; height:15px; padding-top:15px; background: url('images/submit.gif') no-repeat; border:0; }
-button.search { width:67px; height:15px; padding-top:15px; background: url('images/search.gif') no-repeat; border:0; }
-button.cancel { width:69px; height:15px; padding-top:15px; background: url('images/cancel.gif') no-repeat; border:0; }
-button.save { width:52px; height:15px; padding-top:15px; background: url('images/save.gif') no-repeat; border:0; }
-button.addLarge { width:52px; height:15px; padding-top:15px; background: url('images/addLarge.gif') no-repeat; border:0; }
-button.editLarge { width:52px; height:15px; padding-top:15px; background: url('images/editLarge.gif') no-repeat; border:0; }
-button.deleteLarge { width:63px; height:15px; padding-top:15px; background: url('images/deleteLarge.gif') no-repeat; border:0; }
-button.start { width:52px; height:15px; padding-top:15px; background: url('images/start.gif') no-repeat; border:0; }
-button.print { }
-*/
+
 button.addSmall { width:15px; height:15px; padding-top:15px; background: url('images/addSmall.gif') no-repeat; border:0; }
-button.editSmall { width:15px; height:15px; padding-top:15px; background: url('images/editSmall.gif') no-repeat; border:0; }
 button.deleteSmall { width:15px; height:15px; padding-top:15px; background: url('images/deleteSmall.gif') no-repeat; border:0; }
 button.excel { width:16px; height:16px; padding-top:16px; background: url('images/excel.gif') no-repeat; border:0; }
-button.printSmall { width:16px; height:16px; padding-top:16px; background: url('images/printer1.png') no-repeat; border:0; }
-button.up { width:16px; height:16px; padding-top:16px; background: url('images/up.png') no-repeat; border:0; }
-button.down { width:16px; height:16px; padding-top:16px; background: url('images/down.png') no-repeat; border:0; }
-button.rssSmall { width:14px; height:14px; padding-top:14px; background:url('images/feed-icon-14x14.png') no-repeat; border:0; }
-button.rss { width:28px; height:28px; padding-top:28px; background:url('images/feed-icon-28x28.png') no-repeat; border:0; }
-button.ical { width:16px; height:16px; padding-top:16px; background: url('images/date.png') no-repeat; border:0; }
-button.kml { width:16px; height:16px; padding-top:16px; background: url('images/kml_feed_small.png') no-repeat; border:0; }
+button.printSmall { width:16px; height:16px; padding-top:16px; background: url('images/pagetools/print.gif') no-repeat; border:0; }
 
-button.previous { width:22px; height:22px; padding-top:22px; background: url('images/previous.png') no-repeat; border:0; }
-button.next { width:22px; height:22px; padding-top:22px; background: url('images/next.png') no-repeat; border:0; }
-button.first { width:22px; height:22px; padding-top:22px; background: url('images/player_start.png') no-repeat; border:0; }
-button.last { width:22px; height:22px; padding-top:22px; background: url('images/player_end.png') no-repeat; border:0; }
-a.rss img { margin:0; }
+button.login { width:52px; height:15px; padding-top:15px; background: url('images/login.gif') no-repeat; border:0; }
+button.submit { width:70px; height:15px; padding-top:15px; background: url('images/submit.gif') no-repeat; border:0; }
+button.save { width:52px; height:15px; padding-top:15px; background: url('images/save.gif') no-repeat; border:0; }
+
+/* All hrefs that are to be rendered as buttons need to include the button class. */
+/* Technique taken from http://www.evotech.net/blog/2007/09/css-image-replacement-method */
+a.button {
+	display:-moz-inline-box; /* Fix for Mozilla */
+	display:inline-block;
+	background:transparent none 0 0 no-repeat;
+	font:0/0 Arial; /* Fix for Safari, With just font-size:0, Safari renders a 1px underline */
+	color:rgba(255,255,255,0) !important; /* If Safari does render the underline, at least it will be white or transparent */
+	overflow:hidden;
+	vertical-align:middle;
+}
+
+/* Image Replacements for hrefs that are to be rendered as buttons */
+a.add { width:15px; height:15px; background-image:url('images/addSmall.gif'); }
+a.edit { width:15px; height:15px; background-image:url('images/editSmall.gif'); }
+a.delete { width:15px; height:15px; background-image:url('images/deleteSmall.gif'); }
+
+a.cancel { width:69px; height:15px; background-image:url('images/cancel.gif'); }
+
+a.previous { width:16px; height:16px; background-image:url('images/previous.png'); }
+a.next { width:16px; height:16px; background-image:url('images/next.png'); }
+a.first { width:22px; height:22px; background-image:url('images/player_start.png'); }
+a.last { width:22px; height:22px; background-image:url('images/player_end.png'); }
+
 
 /* Controls how error messages are displayed */
 #errorMessages { border:2px solid black; }
