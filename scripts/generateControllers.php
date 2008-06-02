@@ -48,7 +48,7 @@ $contents.= $PHP;
 /**
  * Generate the Add controller
  */
-$PHP = "verifyUser();
+$PHP = "verifyUser('Administrator');
 
 if (isset(\$_POST['{$variableName}']))
 {
@@ -80,12 +80,11 @@ $contents.= $PHP;
 /**
  * Generate the Update controller
  */
-$PHP = "verifyUser();
+$PHP = "verifyUser('Administrator');
 
-if (isset(\$_GET['$key[Column_name]'])) { \${$variableName} = new {$className}(\$_GET['$key[Column_name]']); }
-if (isset(\$_POST['$key[Column_name]']))
+\${$variableName} = new {$className}(\$_REQUEST['$key[Column_name]']);
+if (isset(\$_POST['$variableName']))
 {
-	\${$variableName} = new {$className}(\$_POST['$key[Column_name]']);
 	foreach(\$_POST['$variableName'] as \$field=>\$value)
 	{
 		\$set = 'set'.ucfirst(\$field);
