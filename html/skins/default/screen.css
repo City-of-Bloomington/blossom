@@ -83,6 +83,7 @@ li.current>a { background-color:#cccccc; width:100%; }
 .sidebar input { width:140px; }
 	h1 form { margin:0; padding:0; display:inline; height:1em; }
 	h1 form fieldset { margin:0; padding:0; border:0; display:inline; }
+.sidebar #login input { width:80px; }
 
 .left { float:left; clear:left; }
 .right { float:right; clear:right; }
