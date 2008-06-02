@@ -28,8 +28,8 @@ foreach($tables as $tableName)
 	$variableName = Inflector::singularize($tableName);
 
 	/**
-		* Generate the list block
-		*/
+	 * Generate the list block
+	 */
 	$getId = "get".ucwords($key['Column_name']);
 	$HTML = "<div class=\"interfaceBox\">
 	<h1>
@@ -166,7 +166,7 @@ foreach($fields as $field)
 	</table>
 
 	<button type=\"submit\" class=\"submit\">Submit</button>
-	<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">Cancel</button>
+	<a class=\"cancel button\" href=\"<?php echo BASE_URL; ?>/{$variableName}s\">Cancel</a>
 </fieldset>
 </form>";
 
@@ -285,7 +285,7 @@ foreach($fields as $field)
 	</table>
 
 	<button type=\"submit\" class=\"submit\">Submit</button>
-	<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">Cancel</button>
+	<a class=\"cancel button\" href=\"<?php echo BASE_URL; ?>/{$variableName}s\">Cancel</a>
 </fieldset>
 </form>";
 $contents = "<?php\n";
@@ -297,4 +297,3 @@ file_put_contents("$dir/update{$className}Form.inc",$contents);
 
 	echo "$className\n";
 }
-?>
