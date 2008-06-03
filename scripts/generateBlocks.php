@@ -44,7 +44,7 @@ foreach($tables as $tableName)
 	<ul><?php
 			foreach(\$this->{$variableName}List as \${$variableName})
 			{
-				\$editButton = userHasRole('Administrator') ? \"<a href=\\\"\".BASE_URL.\"/$tableName/update$className.php?$key[Column_name]={\${$variableName}->{$getId}()}\\\">Edit</a>\" : '';
+				\$editButton = userHasRole('Administrator') ? \"<a class=\\\"edit button\\\" href=\\\"\".BASE_URL.\"/$tableName/update$className.php?$key[Column_name]={\${$variableName}->{$getId}()}\\\">Edit</a>\" : '';
 				echo \"<li>\$editButton \$$variableName</li>\";
 			}
 		?>
