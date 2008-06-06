@@ -66,7 +66,7 @@ $HTML";
  * Generate the addForm
  */
 $HTML = "<h1>Add $className</h1>
-<form method=\"post\" action=\"<?php echo \$_SERVER['PHP_SELF']; ?>\">
+<form method=\"post\" action=\"<?php echo \$_SERVER['SCRIPT_NAME']; ?>\">
 <fieldset><legend>$className Info</legend>
 	<table>
 ";
@@ -184,7 +184,7 @@ file_put_contents("$dir/add{$className}Form.inc",$contents);
  * Generate the Update Form
  */
 $HTML = "<h1>Update $className</h1>
-<form method=\"post\" action=\"<?php echo \$_SERVER['PHP_SELF']; ?>\">
+<form method=\"post\" action=\"<?php echo \$_SERVER['SCRIPT_NAME']; ?>\">
 <fieldset><legend>$className Info</legend>
 	<input name=\"$key[Column_name]\" type=\"hidden\" value=\"<?php echo \$this->{$variableName}->{$getId}(); ?>\" />
 	<table>
