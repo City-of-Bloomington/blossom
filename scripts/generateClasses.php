@@ -194,6 +194,11 @@ class $className extends ActiveRecord
 $properties
 
 $constructor
+	public function validate()
+	{
+		# Check for required fields here.  Throw an exception if anything is missing.
+
+	}
 
 	/**
 	 * This generates generic SQL that should work right away.
@@ -202,8 +207,8 @@ $constructor
 	 */
 	public function save()
 	{
-		# Check for required fields here.  Throw an exception if anything is missing.
-
+		\$this->validate();
+		
 		\$fields = array();
 ";
 			foreach($fields as $field)
