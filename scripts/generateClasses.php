@@ -257,13 +257,13 @@ $contents.= "
 		\$this->$key[Column_name] = \$PDO->lastInsertID();
 	}
 
-	/**
-	 * Generic Getters
-	 */
+	#----------------------------------------------------------------
+	# Generic Getters
+	#----------------------------------------------------------------
 $getters
-	/**
-	 * Generic Setters
-	 */
+	#----------------------------------------------------------------
+	# Generic Setters
+	#----------------------------------------------------------------
 $setters
 }
 ";
@@ -272,4 +272,3 @@ $setters
 	file_put_contents("$dir/$className.inc",$contents);
 	echo "$className\n";
 }
-?>
