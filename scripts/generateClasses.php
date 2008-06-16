@@ -158,8 +158,7 @@ foreach($tables as $tableName)
 		if (is_array(\$$field[Type])) { \$this->$field[Field] = \$this->dateArrayToTimestamp(\$$field[Type]); }
 		elseif(ctype_digit(\$$field[Type])) { \$this->$field[Field] = \$$field[Type]; }
 		else { \$this->$field[Field] = strtotime(\$$field[Type]); }
-	}
-	";
+	}\n";
 				break;
 
 				case 'float':
@@ -194,6 +193,10 @@ class $className extends ActiveRecord
 $properties
 
 $constructor
+	/**
+	 * Throws an exception if anything's wrong
+	 * @throws Exception \$e
+	 */
 	public function validate()
 	{
 		# Check for required fields here.  Throw an exception if anything is missing.
