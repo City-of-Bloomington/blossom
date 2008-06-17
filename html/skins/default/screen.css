@@ -38,7 +38,7 @@ button { font-size:8pt; }
 table { border-collapse:collapse; border:1px solid black; }
 tr { vertical-align:top; }
 td { padding-left:.5em; padding-right:.5em; background-color:inherit; }
-th { text-align:left; background-color:#dddddd; padding-left:.5em; padding-right:.5em; vertical-align: top; font-weight:bold; }
+th { text-align:left; background-color:#dddddd; padding:.25em .5em; vertical-align: top; font-weight:bold; }
 th a:link,th a:visited { color:#3366cc; background-color:inherit; }
 form table { border:none; }
 
@@ -63,7 +63,7 @@ li.current>a { background-color:#cccccc; width:100%; }
 	.menuBar form fieldset { margin:0; padding:0; border:0; display:inline; }
 
 /* Used to draw fancy bordered boxes around content */
-.interfaceBox { border-bottom:2px dotted black; }
+.interfaceBox { border-bottom:2px dotted black; margin:10px 0 10px 0; }
 .interfaceBox img { margin:0; }
 
 .interfaceBox h1 { background-color:#3366cc; color:white; font-size:14pt; border:2px solid black; font-weight:bold; padding-left:.5em; padding-right:.5em; }
