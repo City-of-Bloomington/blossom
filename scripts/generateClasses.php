@@ -265,6 +265,11 @@ $getters
 	# Generic Setters
 	#----------------------------------------------------------------
 $setters
+	
+	#----------------------------------------------------------------
+	# Custom Functions
+	# We recommend adding all your custom code down here at the bottom
+	#----------------------------------------------------------------
 }
 ";
 	$dir = APPLICATION_HOME.'/scripts/stubs/classes';
