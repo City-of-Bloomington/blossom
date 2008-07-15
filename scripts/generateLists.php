@@ -46,6 +46,7 @@ foreach($tables as $tableName)
 		\$this->sort = \$sort;
 		\$this->limit = \$limit;
 		\$this->groupBy = \$groupBy;
+		\$this->joins = '';
 
 		\$options = array();
 ";

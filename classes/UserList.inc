@@ -16,6 +16,7 @@ class UserList extends PDOResultIterator
 		$this->sort = $sort;
 		$this->limit = $limit;
 		$this->groupBy = $groupBy;
+		$this->joins = '';
 
 		$options = array();
 		if (isset($fields['id'])) { $options[] = "id='$fields[id]'"; }
