@@ -1,12 +1,14 @@
 <?php
-/*
-	$this->userList
-*/
-	if (userHasRole("Administrator"))
-	{
-		$addButton = "<button type=\"button\" class=\"addSmall\" onclick=\"document.location.href='".BASE_URL."/users/addUser.php';\">Add</button>";
-	}
-	else { $addButton = ""; }
+/**
+ * @copyright Copyright (C) 2007-2008 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @param UserList $this->userList
+ */
+if (userHasRole('Administrator'))
+{
+	$addButton = '<a class="add button" href="'.BASE_URL.'/users/addUser.php">Add</a>';
+}
+else { $addButton = ''; }
 ?>
 <div class="interfaceBox">
 	<div class="titleBar"><?php echo $addButton; ?>Users</div>
@@ -14,15 +16,15 @@
 	<?php
 		foreach($this->userList as $user)
 		{
-			if (userHasRole("Administrator"))
+			if (userHasRole('Administrator'))
 			{
-				$editButton = "<button type=\"button\" class=\"editSmall\" onclick=\"document.location.href='updateUser.php?id={$user->getId()}'\">Edit</button>";
+				$editButton = "<a class=\"edit button\" href=\"".BASE_URL."/users/updateUser.php?id={$user->getId()}\">Edit</a>";
 				$deleteButton = "<button type=\"button\" class=\"deleteSmall\" onclick=\"FRAMEWORK.deleteConfirmation('deleteUser.php?id={$user->getId()}');\">Delete</button>";
 			}
 			else
 			{
-				$editButton = "";
-				$deleteButton = "";
+				$editButton = '';
+				$deleteButton = '';
 			}
 			echo "
 			<tr><td>{$editButton}{$deleteButton}</td>
