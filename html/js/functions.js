@@ -74,3 +74,58 @@ FRAMEWORK.limit = function (field,maxNumChars)
 		field.value = field.value.substring(0,maxNumChars);
 	}
 }
+
+/**
+ * A Date Picker built off the YUI Calendar
+ * This required the YUI Toolkit
+ * @param element The form input to put the chosen date
+ */
+FRAMEWORK.calendarInit = true;
+FRAMEWORK.popupCalendar = function (element)
+{
+	if (!document.getElementById("popupDatePicker"))
+	{
+		var div = document.createElement("div");
+		div.setAttribute("id","popupDatePicker");
+		div.setAttribute("class","yui-skin-sam");
+		element.form.appendChild(div);
+	}
+
+	FRAMEWORK.dateField = element;
+
+	if (FRAMEWORK.calendarInit)
+	{
+		FRAMEWORK.calendarInit = false;
+		FRAMEWORK.popupDatePicker = new YAHOO.widget.Calendar("popupDatePicker",{"close":true});
+		FRAMEWORK.popupDatePicker.selectEvent.subscribe(FRAMEWORK.dateSelectionHandler,FRAMEWORK.popupDatePicker,true);
+	}
+	else
+	{
+		if (element.value != "")
+		{
+			FRAMEWORK.popupDatePicker.select(element.value);
+			dates = FRAMEWORK.popupDatePicker.getSelectedDates();
+			if (dates.length > 0)
+			{
+				date = dates[0];
+				FRAMEWORK.popupDatePicker.cfg.setProperty("pagedate",(date.getMonth()+1 + "/" + date.getFullYear()));
+			}
+			else { alert("Invalid date"); }
+		}
+	}
+
+	var xy = YAHOO.util.Dom.getXY(element);
+	xy[0] += 20;
+	xy[1] += 20;
+	YAHOO.util.Dom.setXY ("popupDatePicker", xy, false);
+
+
+	FRAMEWORK.popupDatePicker.render();
+	FRAMEWORK.popupDatePicker.show();
+}
+
+FRAMEWORK.dateSelectionHandler = function (type,args,obj)
+{
+	FRAMEWORK.dateField.value = args[0][0][1] + "/" + args[0][0][2] + "/" + args[0][0][0];
+	FRAMEWORK.popupDatePicker.hide();
+}
