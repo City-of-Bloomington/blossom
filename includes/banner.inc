@@ -17,10 +17,10 @@
 	<script type="text/javascript" src="<?php echo BASE_URL; ?>/js/functions.js"></script>
 
 	<!-- Load the YUI toolkit -->
-	<script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/utilities/utilities.js"></script>
-	<script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-	<style type="text/css" media="screen">@import url('http://yui.yahooapis.com/2.5.2/build/assets/skins/sam/skin.css');</style>
-	<style type="text/css" media="screen">@import url('http://yui.yahooapis.com/2.5.2/build/calendar/assets/skins/sam/calendar.css');</style>
+	<script type="text/javascript" src="<?php echo BASE_URL; ?>/js/yui/build/utilities/utilities.js"></script>
+	<script type="text/javascript" src="<?php echo BASE_URL; ?>/js/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+	<style type="text/css" media="screen">@import url('<?php echo BASE_URL; ?>/js/yui/build/assets/skins/sam/skin.css');</style>
+	<style type="text/css" media="screen">@import url('<?php echo BASE_URL; ?>/js/yui/build/calendar/assets/skins/sam/calendar.css');</style>
 
 	<title>New Application - City of Bloomington, Indiana</title>
 </head>
