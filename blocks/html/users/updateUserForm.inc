@@ -19,7 +19,7 @@
 		</td>
 	</tr>
 	<tr><td><label for="user-username">Username</label></td>
-		<td><input name="user[username]" id="user-username" value="<?php echo $this->user->getUsername(); ?>" /></td></tr>
+		<td><input name="user[username]" id="user-username" value="<?php echo View::escape($this->user->getUsername()); ?>" /></td></tr>
 	<tr><td><label for="user-password">Password</label></td>
 		<td><input name="user[password]" id="user-password" /></td></tr>
 	<tr><td><label for="user-roles">Roles</label></td>
@@ -42,9 +42,9 @@
 <fieldset><legend>Personal Info</legend>
 	<table>
 	<tr><td><label for="user-firstname">Firstname</label></td>
-		<td><input name="user[firstname]" id="user-firstname" value="<?php echo $this->user->getFirstname(); ?>" /></td></tr>
+		<td><input name="user[firstname]" id="user-firstname" value="<?php echo View::escape($this->user->getFirstname()); ?>" /></td></tr>
 	<tr><td><label for="user-lastname">Lastname</label></td>
-		<td><input name="user[lastname]" id="user-lastname" value="<?php echo $this->user->getLastname(); ?>" /></td></tr>
+		<td><input name="user[lastname]" id="user-lastname" value="<?php echo View::escape($this->user->getLastname()); ?>" /></td></tr>
 	</table>
 
 	<button type="submit" class="submit">Submit</button>
