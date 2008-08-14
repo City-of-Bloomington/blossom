@@ -49,15 +49,19 @@ foreach($tables as $tableName)
 		\$this->joins = '';
 
 		\$options = array();
+		\$parameters = array();
 ";
-			foreach($fields as $field) { $findFunction.="\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]='\$fields[$field[Field]]'\"; }\n"; }
+			foreach($fields as $field)
+			{
+				$findFunction.="\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]=:$field[Field]\"; \$parameters[:$field[Field]] = \$fields['$field[Field]']; }\n";
+			}
 	$findFunction.="
 
 		# Finding on fields from other tables required joining those tables.
 		# You can add fields from other tables to \$options by adding the join SQL
 		# to \$this->joins here
 
-		\$this->populateList(\$options);
+		\$this->populateList(\$options,\$parameters);
 	}
 	";
 

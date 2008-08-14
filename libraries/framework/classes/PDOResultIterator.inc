@@ -1,10 +1,10 @@
 <?php
 /**
- * @copyright Copyright (C) 2006 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-	abstract class PDOResultIterator extends Database implements ArrayAccess,SeekableIterator,Countable
+	abstract class PDOResultIterator implements ArrayAccess,SeekableIterator,Countable
 	{
 		protected $select = "";
 		protected $joins = "";
@@ -12,6 +12,7 @@
 		protected $sort = "";
 		protected $limit = "";
 		protected $groupBy = "";
+		protected $parameters;
 		private $sql;
 
 		protected $list = array();
@@ -20,7 +21,7 @@
 		private $cache = array();
 		private $key;
 
-		protected function populateList(array $options=null)
+		protected function populateList(array $options=null,array $parameters=null)
 		{
 			$PDO = Database::getConnection();
 
@@ -33,12 +34,15 @@
 			$limit = $this->limit ? 'limit '.$this->limit : '';
 			$this->sql = "{$this->select} {$this->joins} {$this->where} $groupBy $orderBy $limit";
 
-			$result = $PDO->query($this->sql);
+			$query = $PDO->prepare($this->sql);
+			$this->parameters = $parameters;
+			$query->execute($parameters);
+
+			$result = $query->fetchAll();
 			if ($result)
 			{
 				foreach($result as $row) { $this->list[] = $row['id']; }
 			}
-			else { $e = $PDO->errorInfo(); throw new Exception($this->sql.$e[2]); }
 		}
 
 		public function getPagination($pageSize) { return new Paginator($this,$pageSize); }
@@ -98,10 +102,10 @@
 		public function getGroupBy() { return $this->groupBy; } # IUB Libraries - Added getter for groupBy
 		public function getSort() { return $this->sort; }
 		public function getLimit() { return $this->limit; }
+		public function getParamaters() { return $this->parameters; }
 		public function getSQL() { return $this->sql; }
 
 		# Cache Enable/Disable functions
 		public function enableCache() { $this->cacheEnabled = true; }
 		public function disableCache() { $this->cacheEnabled = false; }
 	}
-?>
