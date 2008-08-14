@@ -17,7 +17,7 @@
 		</td>
 	</tr>
 	<tr><td><label for="user-username">Username</label></td>
-		<td><input name="user[username]" id="user-username" value="<?php if(isset($_POST['user']['username'])) echo $_POST['user']['username']; ?>" /></td></tr>
+		<td><input name="user[username]" id="user-username" value="<?php if(isset($_POST['user']['username'])) echo View::escape($_POST['user']['username']); ?>" /></td></tr>
 	<tr><td><label for="user-password">Password</label></td>
 		<td><input name="user[password]" id="user-password" /></td></tr>
 	<tr><td><label for="user[roles]">Roles</label></td>
@@ -44,9 +44,9 @@
 	<p>This information is only necessary for local users.  For LDAP authentication, this information will be pulled from LDAP.</p>
 	<table>
 	<tr><td><label for="user-firstname">Firstname</label></td>
-		<td><input name="user[firstname]" id="user-firstname" value="<?php if(isset($_POST['user']['firstname'])) echo $_POST['user']['firstname']; ?>" /></td></tr>
+		<td><input name="user[firstname]" id="user-firstname" value="<?php if(isset($_POST['user']['firstname'])) echo View::escape($_POST['user']['firstname']); ?>" /></td></tr>
 	<tr><td><label for="user-lastname">Lastname</label></td>
-		<td><input name="user[lastname]" id="user-lastname" value="<?php if(isset($_POST['user']['lastname'])) echo $_POST['user']['lastname']; ?>" /></td></tr>
+		<td><input name="user[lastname]" id="user-lastname" value="<?php if(isset($_POST['user']['lastname'])) echo View::escape($_POST['user']['lastname']); ?>" /></td></tr>
 	</table>
 
 	<button type="submit" class="submit">Submit</button>
