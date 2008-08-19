@@ -62,7 +62,17 @@ class URL
 		if (count($this->parameters))
 		{
 			$url.= "?";
-			foreach($this->parameters as $key=>$value) { $url.= urlencode($key).'='.urlencode($value).';'; }
+			foreach($this->parameters as $key=>$value)
+			{
+				if (is_array($value))
+				{
+					$url.= $this->smash($value,array($key));
+				}
+				else
+				{
+					$url.= urlencode($key).'='.urlencode($value).';';
+				}
+			}
 		}
 		return $url;
 	}
@@ -79,6 +89,40 @@ class URL
 	}
 
 	public function __toString() { return $this->getURL(); }
+
+	/**
+	 * Converts a multi-dimensional array into a URL parameter string
+	 */
+	private function smash($array, $keyssofar)
+	{
+		$output = '';
+		foreach($array as $key => $value)
+		{
+			if (!is_array($value))
+			{
+				$t = '';
+				foreach($keyssofar as $i=>$k)
+				{
+					if ($i) { $t.= '['.urlencode($k).']'; }
+					else { $t.=urlencode($k); }
+				}
+				$t.='['.urlencode($key).']';
+
+				$output.= $t.'='.urlencode($value).';';
+
+			}
+			else
+			{
+				$t = array();
+				foreach($keyssofar as $k) { $t[] = $k; }
+				$t[] = $key;
+
+				$output.= $this->smash($value,$t);
+			}
+		}
+		return $output;
+	}
+
 
 	/**
 	 * Overloading methods
