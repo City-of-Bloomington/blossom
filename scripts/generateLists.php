@@ -51,10 +51,14 @@ foreach($tables as $tableName)
 		\$options = array();
 		\$parameters = array();
 ";
-			foreach($fields as $field)
-			{
-				$findFunction.="\t\tif (isset(\$fields['$field[Field]'])) { \$options[] = \"$field[Field]=:$field[Field]\"; \$parameters[:$field[Field]] = \$fields['$field[Field]']; }\n";
-			}
+	foreach($fields as $field)
+	{
+		$findFunction.="\t\tif (isset(\$fields['$field[Field]']))
+		{
+			\$options[] = '$field[Field]=:$field[Field]';
+			\$parameters[':$field[Field]'] = \$fields['$field[Field]'];
+		}\n";
+	}
 	$findFunction.="
 
 		# Finding on fields from other tables required joining those tables.
