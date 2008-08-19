@@ -35,6 +35,12 @@ class Role extends ActiveRecord
 		}
 	}
 
+	public function validate()
+	{
+		# Check for required fields here.  Throw an exception if anything is missing.
+		if (!$this->role) { throw new Exception('missingRequiredFields'); }
+	}
+
 	/**
 	 * This generates generic SQL that should work right away.
 	 * You can replace this $fields code with your own custom SQL
@@ -42,8 +48,7 @@ class Role extends ActiveRecord
 	 */
 	public function save()
 	{
-		# Check for required fields here.  Throw an exception if anything is missing.
-		if (!$this->role) { throw new Exception('missingRequiredFields'); }
+		$this->validate();
 
 		$fields = array();
 		$fields['role'] = $this->role;
@@ -93,4 +98,9 @@ class Role extends ActiveRecord
 	 * Generic Setters
 	 */
 	public function setRole($string) { $this->role = trim($string); }
+
+	/**
+	 * Custom Functions
+	 */
+	public function __toString() { return $this->role; }
 }
