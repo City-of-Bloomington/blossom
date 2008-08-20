@@ -1,6 +1,10 @@
 <?php
+/**
+ * Replace this copyright statement with your own.  All the generated code
+ * will include this copyright statement
+ */
 define('COPYRIGHT',"/**
- * @copyright Copyright (C) 2007 City of Bloomington, Indiana. All rights reserved.
+ * @copyright Copyright (C) 2007-2008 City of Bloomington, Indiana. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  */");
 /**
@@ -34,6 +38,9 @@ define('ADMINISTRATOR_EMAIL','admin@servername.com');
 
 /**
  * Database Setup
+ * Refer to the PDO documentation for DSN sytnax
+ * for your database type
+ * http://www.php.net/manual/en/pdo.drivers.php
  */
 define('DB_TYPE','mysql');
 define('DB_DSN','host=localhost;'); # You must include the trailing semi-colon
@@ -46,12 +53,12 @@ define('DB_PASS','password');
  * This is required in order to use the LDAP authentication
  * If you do not want to use LDAP authentication, you can comment this out
  */
-define('LDAP_DOMAIN','city.bloomington.in.us');
+define('LDAP_DOMAIN','ldap.domain.somewhere');
 define('LDAP_DN','ou=people,o='.LDAP_DOMAIN);
 define('LDAP_USERNAME_ATTRIBUTE','uid');
 define('LDAP_ADMIN_USER','username');
 define('LDAP_ADMIN_PASS','password');
-define('LDAP_SERVER','ldap.bloomington.in.gov');
+define('LDAP_SERVER','ldap.somewhere.com');
 define('LDAP_PASSWORD_ATTRIBUTE','userpassword');
 
 /**
