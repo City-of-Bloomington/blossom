@@ -27,8 +27,8 @@ Copyright
 	This scaffolding is written and copyrighted by the
 City of Bloomington, IN.  It is being released as free software;
 you can redistribute it and/or modify it under the terms of the
-GNU General Public License as published by the Free Software Foundation;
-either version 2 of the License, or (at your option) any later version.
+GNU Affero General Public License as published by the Free Software Foundation;
+either version 3 of the License, or (at your option) any later version.
 
 	This scaffolding includes code generators to create classes to
 work with your database.  While the generators fall under the GPL,
@@ -37,15 +37,14 @@ encourage you to uphold the values of Free Software and release your
 application as Free Software as well.
 
 	In any case, you own the copyright to any generated code and should
-edit the copyright statement that will be generated in
-/scripts/generateClasses.php and /scripts/generateLists.php
-as needed.
+edit the copyright statement in the configuration. This will be the
+copyright statement that will be included in all generated code.
 
 
 ---------------------------------------------------------------------
 Requirements
 ---------------------------------------------------------------------
-Framework:
+framework:
 This scaffolding requires our framework to be on the server somewhere.
 It ships with a working version of framework installed in /libraries.
 In the configuration, you can point the application to another copy
@@ -69,7 +68,9 @@ PHP must be compiled with support for:
 	LDAP
 
 	Actually, you can substitute any database support for MySQL, as our
-framework uses PDO for database interaction.
+framework uses PDO for database interaction.  However, the initial SQL
+schema provided is specific to MySQL.  The schema would need to be modified
+for other databases.
 
 MySQL:
 	MySQL should have support for InnoDB.  Foreign keys are written into
