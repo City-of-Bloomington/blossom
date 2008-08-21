@@ -1,7 +1,10 @@
 <?php
 /**
- * Global, shared functions for all PHP web applications
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @package GlobalFunctions
+ * Global, shared functions for all PHP web applications
  */
 /**
  * Load classes on the fly as needed

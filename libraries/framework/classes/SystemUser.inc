@@ -1,5 +1,9 @@
 <?php
 /**
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ *
  * Handles authentication and password handling for all city LDAP people.
  * Applications should extend this class for their own users.  That way,
  * a city employee will have the same username and password on all applications.
@@ -45,9 +49,9 @@ abstract class SystemUser extends ActiveRecord
 		}
 	}
 
-	/*
-	* All applications will have to implement users. They will at least need these fields
-	*/
+	/**
+	 * All applications will have to implement users. They will at least need these fields
+	 */
 	abstract public function getId();
 	abstract public function getUsername();
 	abstract public function getAuthenticationMethod();
@@ -59,22 +63,22 @@ abstract class SystemUser extends ActiveRecord
 	abstract public function setRoles($roles);
 	abstract public function setUsername($username);
 
-	/*
-	* Passwords are set in clear text.  The only times you would want to set a password
-	* is when you're adding a new password or changing a person's password.
-	* Either way, it's up to the individual save routines to handle encrypting the new password
-	* before storing it.  Passwords should not be loaded in the constructor - they're
-	* supposed to be encrypted, so what's the point?
-	*/
+	/**
+	 * Passwords are set in clear text.  The only times you would want to set a password
+	 * is when you're adding a new password or changing a person's password.
+	 * Either way, it's up to the individual save routines to handle encrypting the new password
+	 * before storing it.  Passwords should not be loaded in the constructor - they're
+	 * supposed to be encrypted, so what's the point?
+	 */
 	abstract public function setPassword($password);
 
-	/*
-	*	Used to hand authentication off to the application
-	*/
+	/**
+	 * Used to hand authentication off to the application
+	 */
 	abstract protected function authenticateDatabase($password);
 
-	/*
-	* 	Used to hand password saving off to the application
-	*/
+	/**
+	 * Used to hand password saving off to the application
+	 */
 	abstract protected function saveLocalPassword();
 }

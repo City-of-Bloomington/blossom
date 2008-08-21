@@ -1,3 +1,8 @@
+/**
+ * @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ */
 var FRAMEWORK = {};
 
 /* A handy function for doing pop-up confirmations when deleting something */
@@ -77,7 +82,7 @@ FRAMEWORK.limit = function (field,maxNumChars)
 
 /**
  * A Date Picker built off the YUI Calendar
- * This required the YUI Toolkit
+ * This requires the YUI Toolkit
  * @param element The form input to put the chosen date
  */
 FRAMEWORK.calendarInit = true;
