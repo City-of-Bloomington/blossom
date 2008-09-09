@@ -13,6 +13,7 @@ class User extends SystemUser
 
 	private $firstname;
 	private $lastname;
+	private $email;
 
 	private $roles;
 	private $newPassword; # the User's new password, unencrypted
@@ -51,6 +52,7 @@ class User extends SystemUser
 		# Passwords should not be updated by default.  Use the savePassword() function
 		$fields['firstname'] = $this->firstname ? $this->firstname : null;
 		$fields['lastname'] = $this->lastname ? $this->lastname : null;
+		$fields['email'] = $this->email ? $this->email : null;
 		$fields['authenticationMethod'] = $this->authenticationMethod ? $this->authenticationMethod : null;
 
 		# Split the fields up into a preparedFields array and a values array.
@@ -187,6 +189,7 @@ class User extends SystemUser
 	public function getAuthenticationMethod() { return $this->authenticationMethod; }
 	public function getFirstname() { return $this->firstname; }
 	public function getLastname() { return $this->lastname; }
+	public function getEmail() { return $this->email; }
 	public function getRoles()
 	{
 		if (!$this->roles)
@@ -223,6 +226,7 @@ class User extends SystemUser
 	public function setAuthenticationMethod($string) { $this->authenticationMethod = $string; }
 	public function setFirstname($string) { $this->firstname = trim($string); }
 	public function setLastname($string) { $this->lastname = trim($string); }
+	public function setEmail($string) { $this->email = trim($string); }
 	/**
 	 * Takes an array of role names.  Loads the Roles from the database
 	 * @param array $roleNames An array of names

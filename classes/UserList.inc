@@ -51,6 +51,11 @@ class UserList extends PDOResultIterator
 			$options[] = 'lastname=:lastname';
 			$parameters[':lastname'] = $fields['lastname'];
 		}
+		if (isset($fields['email']))
+		{
+			$options[] = 'email=:email';
+			$parameters[':email'] = $fields['email'];
+		}
 
 		# Finding on fields from other tables required joining those tables.
 		# You can add fields from other tables to $options by adding the join SQL

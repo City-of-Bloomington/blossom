@@ -38,6 +38,23 @@ define('ADMINISTRATOR_NAME','Site Admin');
 define('ADMINISTRATOR_EMAIL','admin@servername.com');
 
 /**
+ * Set how we want to handle errors
+ * PHP_DEFAULT - do whatever's configured in php.ini
+ *
+ * If you do not define error handling to PHP_DEFAULT
+ * the custom error handlers kick in.  All of the custom error display
+ * frunctions are in FRAMEWORK/globalFunctions.inc.  The custom error
+ * function decide what to do based on $ERROR_REPORING array values
+ *
+ * PRETTY_PRINT - Display a message in the browser
+ * EMAIL_ADMIN - email the Administrator
+ * EMAIL_USER - email the logged in user
+*/
+define('ERROR_REPORTING','PHP_DEFAULT');
+#define('ERROR_REPORTING','CUSTOM');
+#$ERROR_REPORTING = array('EMAIL_ADMIN');
+
+/**
  * Database Setup
  * Refer to the PDO documentation for DSN sytnax
  * for your database type

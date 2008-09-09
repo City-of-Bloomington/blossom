@@ -8,7 +8,8 @@ CREATE TABLE users (
 	password varchar(32),
 	authenticationMethod varchar(40) not null default 'LDAP',
 	firstname varchar(128) not null,
-	lastname varchar(128) not null
+	lastname varchar(128) not null,
+	email varchar(255) not null
 ) engine=InnoDB;
 
 CREATE TABLE roles (
