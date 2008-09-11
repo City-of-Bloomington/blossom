@@ -6,13 +6,18 @@
 */
 class RoleList extends PDOResultIterator
 {
+	/**
+	 * Roles are really just an attribute array for users.
+	 * For now, I'm not loading them in as objects.
+	 * This is an optimization to save on database calls
+	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select role from roles';
+		$this->select = 'select name as id from roles';
 		if (is_array($fields)) $this->find($fields);
 	}
 
-	public function find($fields=null,$sort='role',$limit=null,$groupBy=null)
+	public function find($fields=null,$sort='name',$limit=null,$groupBy=null)
 	{
 		$this->sort = $sort;
 		$this->limit = $limit;
@@ -26,10 +31,10 @@ class RoleList extends PDOResultIterator
 			$options[] = 'id=:id';
 			$parameters[':id'] = $fields['id'];
 		}
-		if (isset($fields['role']))
+		if (isset($fields['name']))
 		{
-			$options[] = 'role=:role';
-			$parameters[':role'] = $fields['role'];
+			$options[] = 'name=:name';
+			$parameters[':name'] = $fields['name'];
 		}
 
 
@@ -40,5 +45,6 @@ class RoleList extends PDOResultIterator
 		$this->populateList($options,$parameters);
 	}
 
-	protected function loadResult($key) { return new Role($this->list[$key]); }
+	# For now we are not returning Role objects, only the names of each role
+	protected function loadResult($key) { return $this->list[$key]; }
 }

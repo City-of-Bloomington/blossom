@@ -7,7 +7,7 @@
 class Role extends ActiveRecord
 {
 	private $id;
-	private $role;
+	private $name;
 
 	/**
 	 * This will load all fields in the table as properties of this class.
@@ -20,7 +20,7 @@ class Role extends ActiveRecord
 			$PDO = Database::getConnection();
 
 			if (ctype_digit($id)) { $sql = 'select * from roles where id=?'; }
-			else { $sql = 'select * from roles where role=?'; }
+			else { $sql = 'select * from roles where name=?'; }
 			$query = $PDO->prepare($sql);
 			$query->execute(array($id));
 
@@ -38,7 +38,7 @@ class Role extends ActiveRecord
 	public function validate()
 	{
 		# Check for required fields here.  Throw an exception if anything is missing.
-		if (!$this->role) { throw new Exception('missingRequiredFields'); }
+		if (!$this->name) { throw new Exception('missingName'); }
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Role extends ActiveRecord
 		$this->validate();
 
 		$fields = array();
-		$fields['role'] = $this->role;
+		$fields['name'] = $this->name;
 
 		# Split the fields up into a preparedFields array and a values array.
 		# PDO->execute cannot take an associative array for values, so we have
@@ -88,19 +88,20 @@ class Role extends ActiveRecord
 		$this->id = $PDO->lastInsertID();
 	}
 
-	/**
-	 * Generic Getters
-	 */
+	#----------------------------------------------------------------
+	# Generic Getters
+	#----------------------------------------------------------------
 	public function getId() { return $this->id; }
-	public function getRole() { return $this->role; }
+	public function getName() { return $this->name; }
 
-	/**
-	 * Generic Setters
-	 */
-	public function setRole($string) { $this->role = trim($string); }
+	#----------------------------------------------------------------
+	# Generic Setters
+	#----------------------------------------------------------------
+	public function setName($string) { $this->name = trim($string); }
 
-	/**
-	 * Custom Functions
-	 */
-	public function __toString() { return $this->role; }
+	#----------------------------------------------------------------
+	# Custom Functions
+	# We recommend adding all your custom code down here at the bottom
+	#----------------------------------------------------------------
+	public function __toString() { return $this->name; }
 }

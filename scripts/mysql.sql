@@ -1,7 +1,6 @@
 -- @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
 -- @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
 -- @author Cliff Ingham <inghamn@bloomington.in.gov>
-
 CREATE TABLE users (
 	id int unsigned not null primary key auto_increment,
 	username varchar(30) not null unique,
@@ -14,7 +13,7 @@ CREATE TABLE users (
 
 CREATE TABLE roles (
 	id int unsigned not null primary key auto_increment,
-	role varchar(30) not null unique
+	name varchar(30) not null unique
 ) engine=InnoDB;
 insert roles values(1,'Administrator');
 
