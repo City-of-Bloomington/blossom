@@ -127,23 +127,6 @@ class User extends SystemUser
 	public function getFirstname() { return $this->firstname; }
 	public function getLastname() { return $this->lastname; }
 	public function getEmail() { return $this->email; }
-	public function getRoles()
-	{
-		if (!count($this->roles))
-		{
-			if ($this->id)
-			{
-				$PDO = Database::getConnection();
-				$sql = 'select role_id,name from user_roles left join roles on role_id=id where user_id=?';
-				$query = $PDO->prepare($sql);
-				$query->execute(array($this->id));
-				$result = $query->fetchAll();
-
-				foreach($result as $row) { $this->roles[$row['role_id']] = $row['name']; }
-			}
-		}
-		return $this->roles;
-	}
 
 	#----------------------------------------------------------------
 	# Generic Setters
@@ -173,6 +156,27 @@ class User extends SystemUser
 	# Custom Functions
 	# We recommend adding all your custom code down here at the bottom
 	#----------------------------------------------------------------
+	/**
+	 * Returns an array of Role names with the role id as the array index
+	 * @return array
+	 */
+	public function getRoles()
+	{
+		if (!count($this->roles))
+		{
+			if ($this->id)
+			{
+				$PDO = Database::getConnection();
+				$sql = 'select role_id,name from user_roles left join roles on role_id=id where user_id=?';
+				$query = $PDO->prepare($sql);
+				$query->execute(array($this->id));
+				$result = $query->fetchAll();
+
+				foreach($result as $row) { $this->roles[$row['role_id']] = $row['name']; }
+			}
+		}
+		return $this->roles;
+	}
 	/**
 	 * Takes an array of role names.  Loads the Roles from the database
 	 * @param array $roleNames An array of names
