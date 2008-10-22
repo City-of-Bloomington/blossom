@@ -102,7 +102,7 @@
 		public function getGroupBy() { return $this->groupBy; } # IUB Libraries - Added getter for groupBy
 		public function getSort() { return $this->sort; }
 		public function getLimit() { return $this->limit; }
-		public function getParamaters() { return $this->parameters; }
+		public function getParameters() { return $this->parameters; }
 		public function getSQL() { return $this->sql; }
 
 		# Cache Enable/Disable functions
