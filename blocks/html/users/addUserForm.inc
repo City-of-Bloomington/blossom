@@ -50,6 +50,6 @@
 	</table>
 
 	<button type="submit" class="submit">Submit</button>
-	<a class="cancel button" href="<?php echo BASE_URL; ?>/users">Cancel</a>
+	<button type="button" class="cancel" onclick="document.location.href='<?php echo BASE_URL; ?>/users';">Cancel</button>
 </fieldset>
 </form>

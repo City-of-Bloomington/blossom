@@ -174,7 +174,7 @@ foreach($fields as $field)
 	</table>
 
 	<button type=\"submit\" class=\"submit\">Submit</button>
-	<a class=\"cancel button\" href=\"<?php echo BASE_URL; ?>/{$variableName}s\">Cancel</a>
+	<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">Cancel</button>
 </fieldset>
 </form>";
 
@@ -293,7 +293,7 @@ foreach($fields as $field)
 	</table>
 
 	<button type=\"submit\" class=\"submit\">Submit</button>
-	<a class=\"cancel button\" href=\"<?php echo BASE_URL; ?>/{$variableName}s\">Cancel</a>
+	<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">Cancel</button>
 </fieldset>
 </form>";
 $contents = "<?php\n";
@@ -303,5 +303,5 @@ $contents.="
 $HTML";
 file_put_contents("$dir/update{$className}Form.inc",$contents);
 
-	echo "$className\n";
+echo "$className\n";
 }
