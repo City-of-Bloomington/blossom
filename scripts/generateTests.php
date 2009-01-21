@@ -56,8 +56,7 @@ class {$className}UnitTest extends PHPUnit_Framework_TestCase
 	public function testValidate()
 	{
 		\${$variable} = new {$className}();
-		try
-		{
+		try {
 			\${$variable}->validate();
 			\$this->fail('Missing name failed to throw exception');
 		}
@@ -88,13 +87,14 @@ class {$className}DbTest extends PHPUnit_Framework_TestCase
     {
 		\${$variable} = new {$className}();
 		\${$variable}->setName('Test {$className}');
-    	try
-		{
+    	try {
 			\${$variable}->save();
 			\$id = \${$variable}->getId();
 			\$this->assertGreaterThan(0,\$id);
 		}
-		catch (Exception \$e) { \$this->fail(\$e->getMessage()); }
+		catch (Exception \$e) {
+			\$this->fail(\$e->getMessage());
+		}
 
 		\${$variable} = new {$className}(\$id);
 		\$this->assertEquals(\${$variable}->getName(),'Test {$className}');
@@ -136,8 +136,7 @@ class {$className}ListDbTest extends PHPUnit_Framework_TestCase
 		\$list->find();
 		\$this->assertEquals(\$list->getSort(),'id');
 
-		foreach(\$list as \$i=>\${$variable})
-		{
+		foreach(\$list as \$i=>\${$variable}) {
 			\$this->assertEquals(\${$variable}->getId(),\$result[\$i]['id']);
 		}
     }

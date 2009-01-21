@@ -10,4 +10,4 @@ verifyUser('Administrator');
 $user = new User($_GET['id']);
 $user->delete();
 
-Header('Location: '.BASE_URL.'/users');
+header('Location: '.BASE_URL.'/users');
