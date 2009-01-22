@@ -22,7 +22,7 @@ class UserListDbTest extends PHPUnit_Framework_TestCase
 		$list->find();
 		$this->assertEquals($list->getSort(),'username');
 
-		foreach($list as $i=>$user)
+		foreach ($list as $i=>$user)
 		{
 			$this->assertEquals($user->getId(),$result[$i]['id']);
 		}

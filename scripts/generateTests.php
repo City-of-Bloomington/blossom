@@ -149,7 +149,7 @@ class {$className}ListDbTest extends PHPUnit_Framework_TestCase
 		\$list->find();
 		\$this->assertEquals(\$list->getSort(),'id');
 
-		foreach(\$list as \$i=>\${$variable}) {
+		foreach (\$list as \$i=>\${$variable}) {
 			\$this->assertEquals(\${$variable}->getId(),\$result[\$i]['id']);
 		}
     }

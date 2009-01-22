@@ -61,7 +61,7 @@ abstract class PDOResultIterator implements ArrayAccess,SeekableIterator,Countab
 
 		$result = $query->fetchAll();
 		if ($result) {
-			foreach($result as $row) {
+			foreach ($result as $row) {
 				$this->list[] = $row['id'];
 			}
 		}

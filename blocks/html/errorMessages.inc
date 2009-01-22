@@ -9,7 +9,7 @@
 <div id="errorMessages">
 	<h1>No That's wrong</h1>
 	<?php
-		foreach($this->errorMessages as $e)
+		foreach ($this->errorMessages as $e)
 		{
 			$error = $e->getMessage();
 			if (file_exists(APPLICATION_HOME."/blocks/html/errorMessages/$error.inc"))

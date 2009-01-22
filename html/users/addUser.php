@@ -7,7 +7,7 @@
 verifyUser('Administrator');
 if (isset($_POST['user'])) {
 	$user = new User();
-	foreach($_POST['user'] as $field=>$value) {
+	foreach ($_POST['user'] as $field=>$value) {
 		$set = 'set'.ucfirst($field);
 		$user->$set($value);
 	}

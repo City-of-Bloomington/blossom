@@ -76,7 +76,7 @@ abstract class View
 		$output = '';
 		$words = preg_split('/\s+/',$string);
 		$c = 0;
-		foreach($words as $word) {
+		foreach ($words as $word) {
 			$output.= "$word ";
 			$c++;
 			if ($c >= $numWords) {

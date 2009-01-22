@@ -58,7 +58,7 @@ class Template extends View
 	private function includeBlocks()
 	{
 		ob_start();
-		foreach($this->blocks as $block) {
+		foreach ($this->blocks as $block) {
 			echo $block->render($this->outputFormat);
 		}
 		return ob_get_clean();

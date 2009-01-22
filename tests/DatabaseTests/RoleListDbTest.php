@@ -22,7 +22,7 @@ class RoleListDbTest extends PHPUnit_Framework_TestCase
 		$list->find();
 		$this->assertEquals($list->getSort(),'name');
 
-		foreach($list as $i=>$role)
+		foreach ($list as $i=>$role)
 		{
 			$this->assertEquals($role->getId(),$result[$i]['id']);
 		}

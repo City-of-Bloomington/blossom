@@ -16,7 +16,7 @@ else {
 	<h1><?php echo $addButton; ?>Users</h1>
 	<table>
 	<?php
-		foreach($this->userList as $user) {
+		foreach ($this->userList as $user) {
 			$editButton = '';
 			$deleteButton = '';
 			if (userHasRole('Administrator')) {
@@ -39,7 +39,7 @@ else {
 				<td>{$user->getAuthenticationMethod()}</td>
 				<td>
 			";
-					foreach($user->getRoles() as $role) {
+					foreach ($user->getRoles() as $role) {
 						echo "$role ";
 					}
 			echo "

@@ -34,7 +34,7 @@
 					<?php
 						$roles = new RoleList();
 						$roles->find();
-						foreach($roles as $role) {
+						foreach ($roles as $role) {
 							$selected = in_array($role,$this->user->getRoles())
 										? 'selected="selected"'
 										: '';

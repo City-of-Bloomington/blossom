@@ -32,7 +32,7 @@
 					<?php
 						$roles = new RoleList();
 						$roles->find();
-						foreach($roles as $role) {
+						foreach ($roles as $role) {
 							$selected = (isset($_POST['user']['roles']) && in_array($role,$_POST['user']['roles']))
 										? 'selected="selected"'
 										: '';

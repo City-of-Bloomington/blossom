@@ -32,7 +32,7 @@ class Role extends ActiveRecord
 			if (!count($result)) {
 				throw new Exception('roles/unknownRole');
 			}
-			foreach($result[0] as $field=>$value) {
+			foreach ($result[0] as $field=>$value) {
 				if ($value) {
 					$this->$field = $value;
 				}
@@ -71,7 +71,7 @@ class Role extends ActiveRecord
 		// PDO->execute cannot take an associative array for values, so we have
 		// to strip out the keys from $fields
 		$preparedFields = array();
-		foreach($fields as $key=>$value) {
+		foreach ($fields as $key=>$value) {
 			$preparedFields[] = "$key=?";
 			$values[] = $value;
 		}

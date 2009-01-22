@@ -30,7 +30,7 @@ class Block extends View
 	{
 		$this->file = $file;
 		if (count($vars)) {
-			foreach($vars as $name=>$value) {
+			foreach ($vars as $name=>$value) {
 				$this->vars[$name] = $value;
 			}
 		}

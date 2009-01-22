@@ -41,7 +41,7 @@ class User extends SystemUser
 			if (!count($result)) {
 				throw new Exception('users/unknownUser');
 			}
-			foreach($result[0] as $field=>$value) {
+			foreach ($result[0] as $field=>$value) {
 				if ($value) $this->$field = $value;
 			}
 		}
@@ -81,7 +81,7 @@ class User extends SystemUser
 		// PDO->execute cannot take an associative array for values, so we have
 		// to strip out the keys from $fields
 		$preparedFields = array();
-		foreach($fields as $key=>$value) {
+		foreach ($fields as $key=>$value) {
 			$preparedFields[] = "$key=?";
 			$values[] = $value;
 		}
@@ -267,7 +267,7 @@ class User extends SystemUser
 				$query->execute(array($this->id));
 				$result = $query->fetchAll();
 
-				foreach($result as $row) {
+				foreach ($result as $row) {
 					$this->roles[$row['role_id']] = $row['name'];
 				}
 			}
@@ -281,7 +281,7 @@ class User extends SystemUser
 	public function setRoles($roleNames)
 	{
 		$this->roles = array();
-		foreach($roleNames as $name) {
+		foreach ($roleNames as $name) {
 			$role = new Role($name);
 			$this->roles[$role->getId()] = $role->getName();
 		}
@@ -294,7 +294,7 @@ class User extends SystemUser
 	public function hasRole($roles)
 	{
 		if (is_array($roles)) {
-			foreach($roles as $roleName) {
+			foreach ($roles as $roleName) {
 				if (in_array($roleName,$this->getRoles())) {
 					return true;
 				}
@@ -316,7 +316,7 @@ class User extends SystemUser
 		$query->execute(array($this->id));
 
 		$query = $PDO->prepare('insert user_roles values(?,?)');
-		foreach($roles as $role_id=>$roleName) {
+		foreach ($roles as $role_id=>$roleName) {
 			$query->execute(array($this->id,$role_id));
 		}
 	}

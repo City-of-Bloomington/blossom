@@ -121,7 +121,7 @@ class Inflector
 			return $regs[1] . $irregular[strtolower($regs[2])];
 		}
 
-		foreach($pluralRules as $rule => $replacement) {
+		foreach ($pluralRules as $rule => $replacement) {
 			if (preg_match($rule, $word)) {
 				$replace = preg_replace($rule, $replacement, $word);
 				return $replace;
@@ -231,7 +231,7 @@ class Inflector
 			return $regs[1] . $irregular[strtolower($regs[2])];
 		}
 
-		foreach($singularRules as $rule => $replacement) {
+		foreach ($singularRules as $rule => $replacement) {
 			if (preg_match($rule, $word)) {
 				$replace = preg_replace($rule, $replacement, $word);
 				return $replace;
