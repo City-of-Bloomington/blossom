@@ -21,5 +21,5 @@
 	<style type="text/css" media="screen">@import url('<?php echo BASE_URL; ?>/js/yui/build/assets/skins/sam/skin.css');</style>
 	<style type="text/css" media="screen">@import url('<?php echo BASE_URL; ?>/js/yui/build/calendar/assets/skins/sam/calendar.css');</style>
 
-	<title>New Application - City of Bloomington, Indiana</title>
+	<title>New Application</title>
 </head>

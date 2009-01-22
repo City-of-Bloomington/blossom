@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (C) 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -87,7 +87,7 @@ $HTML = "<h1>Add $className</h1>
 	<fieldset><legend>$className Info</legend>
 		<table>
 ";
-		foreach($fields as $field) {
+		foreach ($fields as $field) {
 			if ($field['Field'] != $key['Column_name']) {
 				$fieldFunctionName = ucwords($field['Field']);
 				switch ($field['Type']) {
@@ -207,7 +207,7 @@ $HTML = "<h1>Update $className</h1>
 		<input name=\"$key[Column_name]\" type=\"hidden\" value=\"<?php echo \$this->{$variableName}->{$getId}(); ?>\" />
 		<table>
 ";
-		foreach($fields as $field) {
+		foreach ($fields as $field) {
 			if ($field['Field'] != $key['Column_name']) {
 				$fieldFunctionName = ucwords($field['Field']);
 				switch ($field['Type']) {

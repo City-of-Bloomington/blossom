@@ -2,7 +2,7 @@
 /**
  * Generates a Collection class for each the ActiveRecord objects
  *
- * @copyright Copyright (C) 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -81,8 +81,7 @@ foreach ($tables as $tableName) {
 		\$options = array();
 		\$parameters = array();
 ";
-	foreach($fields as $field)
-	{
+	foreach ($fields as $field) {
 		$findFunction.= "
 		if (isset(\$fields['$field[Field]'])) {
 			\$options[] = '$field[Field]=:$field[Field]';
