@@ -16,7 +16,7 @@ foreach ($PDO->query('show tables') as $row) {
 
 foreach ($tables as $tableName) {
 	$fields = array();
-	foreach($PDO->query("describe $tableName") as $row) {
+	foreach ($PDO->query("describe $tableName") as $row) {
 		$type = ereg_replace('[^a-z]','',$row['Type']);
 
 		if (ereg('int',$type)) {
@@ -74,7 +74,7 @@ foreach ($tables as $tableName) {
 	//--------------------------------------------------------------------------
 	$properties = '';
 	$linkedProperties = array();
-	foreach($fields as $field) {
+	foreach ($fields as $field) {
 		$properties.= "\tprivate \$$field[Field];\n";
 
 		if (substr($field['Field'],-3) == '_id') {
@@ -84,7 +84,7 @@ foreach ($tables as $tableName) {
 
 	if (count($linkedProperties)) {
 		$properties.="\n\n";
-		foreach($linkedProperties as $property) {
+		foreach ($linkedProperties as $property) {
 			$field = substr($property,0,-3);
 			$properties.= "\tprivate \$$field;\n";
 		}
@@ -94,7 +94,7 @@ foreach ($tables as $tableName) {
 	// Getters
 	//--------------------------------------------------------------------------
 	$getters = '';
-	foreach($fields as $field) {
+	foreach ($fields as $field) {
 		$fieldFunctionName = ucwords($field['Field']);
 
 		switch ($field['Type'])
@@ -163,7 +163,7 @@ foreach ($tables as $tableName) {
 	// Setters
 	//--------------------------------------------------------------------------
 	$setters = '';
-	foreach($fields as $field) 	{
+	foreach ($fields as $field) {
 		if ($field['Field'] != $key['Column_name']) {
 			$fieldFunctionName = ucwords($field['Field']);
 			switch ($field['Type']) {
@@ -275,7 +275,7 @@ foreach ($tables as $tableName) {
 		}
 	}
 
-	foreach($linkedProperties as $field) {
+	foreach ($linkedProperties as $field) {
 		$property = substr($field,0,-3);
 		$object = ucfirst($property);
 		$setters.= "
