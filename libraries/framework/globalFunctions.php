@@ -117,9 +117,11 @@ if (ERROR_REPORTING != 'PHP_DEFAULT') {
 
 /**
  * Makes sure the user is logged in.
+ *
  * If a Role or an array of Roles is passed in, it will check
  * to make sure the user belongs to one of the given roles.
  * If the validation fails, the user will be bounced to the BASE_URL
+ *
  * @param string $role Optional role name
  * @param array $roles Optional array of role names
  */
@@ -133,16 +135,11 @@ function verifyUser($roles=null)
 		exit();
 	}
 
-	// Handle sessions from other applications
-	if ($_SESSION['APPLICATION_NAME'] != APPLICATION_NAME) {
-		$_SESSION['USER']->startNewSession();
-	}
-
 	// Check their roles against the required roles for the page
 	if ($roles) {
 		if (!$_SESSION['USER']->hasRole($roles)) {
 			$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
-			header("Location: ".BASE_URL);
+			header('Location: '.BASE_URL);
 			exit();
 		}
 	}
@@ -154,19 +151,24 @@ function verifyUser($roles=null)
  * or an array of role names to check against.
  * @param string $role
  * @param array $roles
+ * @return boolean
  */
 function userHasRole($roles)
 {
 	if (isset($_SESSION['USER'])) {
 		return $_SESSION['USER']->hasRole($roles);
 	}
+	return false;
 }
 
 /**
- *	Browsers still use & when creating the url's when posting a form.
+ * Browsers still use & when creating the url's when posting a form.
  * This will convert those into XHTML-compliant semicolons for using inside the markup
+ *
+ * @return string
  */
-function getCurrentURL() {
+function getCurrentURL()
+{
 	return strtr($_SERVER['REQUEST_URI'],"&",";");
 }
 

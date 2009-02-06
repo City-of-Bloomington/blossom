@@ -4,7 +4,6 @@
  *
  *	A logged in user will have a $_SESSION['USER']
  *								$_SESSION['IP_ADDRESS']
- *								$_SESSION['APPLICATION_NAME']
  *
  * @copyright 2006-2008 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
