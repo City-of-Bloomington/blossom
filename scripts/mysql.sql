@@ -1,15 +1,23 @@
--- @copyright Copyright (C) 2006-2008 City of Bloomington, Indiana. All rights reserved.
+-- @copyright 2006-2009 City of Bloomington, Indiana
 -- @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
 -- @author Cliff Ingham <inghamn@bloomington.in.gov>
-CREATE TABLE users (
+create table people (
 	id int unsigned not null primary key auto_increment,
-	username varchar(30) not null unique,
-	password varchar(32),
-	authenticationMethod varchar(40) not null default 'LDAP',
 	firstname varchar(128) not null,
 	lastname varchar(128) not null,
 	email varchar(255) not null
 ) engine=InnoDB;
+insert people values(1,'Administrator','','');
+
+CREATE TABLE users (
+	id int unsigned not null primary key auto_increment,
+	person_id int unsigned not null unique,
+	username varchar(30) not null unique,
+	password varchar(32),
+	authenticationMethod varchar(40) not null default 'LDAP',
+	foreign key (person_id) references people(id)
+) engine=InnoDB;
+insert users values(1,1,'admin',md5('admin'),'local');
 
 CREATE TABLE roles (
 	id int unsigned not null primary key auto_increment,
@@ -24,3 +32,4 @@ CREATE TABLE user_roles (
 	foreign key(user_id) references users (id),
 	foreign key(role_id) references roles (id)
 ) engine=InnoDB;
+insert user_roles values(1,1);

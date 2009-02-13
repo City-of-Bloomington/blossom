@@ -5,11 +5,9 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param UserList $this->userList
  */
+$addButton = '';
 if (userHasRole('Administrator')) {
 	$addButton = '<a class="add button" href="'.BASE_URL.'/users/addUser.php">Add</a>';
-}
-else {
-	$addButton = '';
 }
 ?>
 <div class="interfaceBox">
@@ -18,22 +16,14 @@ else {
 	<?php
 		foreach ($this->userList as $user) {
 			$editButton = '';
-			$deleteButton = '';
 			if (userHasRole('Administrator')) {
-				$editButton = "
-				<a class=\"edit button\" href=\"".BASE_URL."/users/updateUser.php?id={$user->getId()}\">
-					Edit
-				</a>
-				";
-				$deleteButton = "
-				<button type=\"button\" class=\"delete\" onclick=\"FRAMEWORK.deleteConfirmation('deleteUser.php?id={$user->getId()}');\">
-					Delete
-				</button>
-				";
+				$url = new URL(BASE_URL.'/users/updateUser.php');
+				$url->user_id = $user->getId();
+				$editButton = "<a class=\"edit button\" href=\"$url\">Edit</a>";
 			}
 
 			echo "
-			<tr><td>{$editButton}{$deleteButton}</td>
+			<tr><td>$editButton</td>
 				<td>{$user->getUsername()}</td>
 				<td>{$user->getFirstname()} {$user->getLastname()}</td>
 				<td>{$user->getAuthenticationMethod()}</td>

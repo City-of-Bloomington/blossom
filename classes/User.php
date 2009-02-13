@@ -7,14 +7,12 @@
 class User extends SystemUser
 {
 	private $id;
+	private $person_id;
 	private $username;
 	private $password;
 	private $authenticationMethod;
 
-	private $firstname;
-	private $lastname;
-	private $email;
-
+	private $person;
 	private $roles = array();
 	private $newPassword; // the User's new password, unencrypted
 
@@ -57,22 +55,30 @@ class User extends SystemUser
 	 */
 	public function validate()
 	{
-		if (!$this->username || !$this->firstname || !$this->lastname) {
-			throw new Exception('missingRequiredFields');
+		if (!$this->person_id) {
+			throw new Exception('users/missingPerson_id');
+		}
+		if (!$this->username) {
+			throw new Exception('users/missingUsername');
 		}
 
 	}
 
+	/**
+	 * Saves this record back to the database
+	 *
+	 * This generates generic SQL that should work right away.
+	 * You can replace this $fields code with your own custom SQL
+	 * for each property of this class,
+	 */
 	public function save()
 	{
 		$this->validate();
 
 		$fields = array();
+		$fields['person_id'] = $this->person_id;
 		$fields['username'] = $this->username;
 		// Passwords should not be updated by default.  Use the savePassword() function
-		$fields['firstname'] = $this->firstname ? $this->firstname : null;
-		$fields['lastname'] = $this->lastname ? $this->lastname : null;
-		$fields['email'] = $this->email ? $this->email : null;
 		$fields['authenticationMethod'] = $this->authenticationMethod
 										? $this->authenticationMethod
 										: null;
@@ -157,6 +163,13 @@ class User extends SystemUser
 		return $this->id;
 	}
 	/**
+	 * @return int
+	 */
+	public function getPerson_id()
+	{
+		return $this->person_id;
+	}
+	/**
 	 * @return string
 	 */
 	public function getUsername()
@@ -171,30 +184,51 @@ class User extends SystemUser
 		return $this->authenticationMethod;
 	}
 	/**
+	 * @return Person
+	 */
+	public function getPerson()
+	{
+		if ($this->person_id) {
+			if (!$this->person) {
+				$this->person = new Person($this->person_id);
+			}
+			return $this->person;
+		}
+		return null;
+	}
+	/**
 	 * @return string
 	 */
 	public function getFirstname()
 	{
-		return $this->firstname;
+		return $this->getPerson()->getFirstname();
 	}
 	/**
 	 * @return string
 	 */
 	public function getLastname()
 	{
-		return $this->lastname;
+		return $this->getPerson()->getLastname();
 	}
 	/**
 	 * @return string
 	 */
 	public function getEmail()
 	{
-		return $this->email;
+		return $this->getPerson()->getEmail();
 	}
 
 	//----------------------------------------------------------------
 	// Generic Setters
 	//----------------------------------------------------------------
+	/**
+	 * @param int $int
+	 */
+	public function setPerson_id($int)
+	{
+		$this->person = new Person($int);
+		$this->person_id = $int;
+	}
 	/**
 	 * @param string $string
 	 */
@@ -226,27 +260,18 @@ class User extends SystemUser
 	public function setAuthenticationMethod($string)
 	{
 		$this->authenticationMethod = $string;
+		if ($this->authenticationMethod != 'local') {
+			$this->password = null;
+			$this->saveLocalPassword();
+		}
 	}
 	/**
-	 * @param string $firstname
+	 * @param Person $person
 	 */
-	public function setFirstname($string)
+	public function setPerson($person)
 	{
-		$this->firstname = trim($string);
-	}
-	/**
-	 * @param string $lastname
-	 */
-	public function setLastname($string)
-	{
-		$this->lastname = trim($string);
-	}
-	/**
-	 * @param string $email
-	 */
-	public function setEmail($string)
-	{
-		$this->email = trim($string);
+		$this->person_id = $person->getId();
+		$this->person = $person;
 	}
 
 	//----------------------------------------------------------------

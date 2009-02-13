@@ -48,15 +48,20 @@
 
 	<fieldset><legend>Personal Info</legend>
 		<p>
-			This information is only necessary for local users.  For LDAP authentication, this information will be pulled from LDAP.
+			This information is only necessary for local users.
+			For LDAP authentication, this information will be pulled from LDAP.
 		</p>
 		<table>
-			<tr><td><label for="user-firstname">Firstname</label></td>
-				<td><input name="user[firstname]" id="user-firstname" value="<?php if(isset($_POST['user']['firstname'])) echo View::escape($_POST['user']['firstname']); ?>" />
+			<tr><td><label for="person-firstname">Firstname</label></td>
+				<td><input name="person[firstname]" id="person-firstname" value="<?php if(isset($_POST['person']['firstname'])) echo View::escape($_POST['person']['firstname']); ?>" />
 				</td>
 			</tr>
-			<tr><td><label for="user-lastname">Lastname</label></td>
-				<td><input name="user[lastname]" id="user-lastname" value="<?php if(isset($_POST['user']['lastname'])) echo View::escape($_POST['user']['lastname']); ?>" />
+			<tr><td><label for="person-lastname">Lastname</label></td>
+				<td><input name="person[lastname]" id="person-lastname" value="<?php if(isset($_POST['person']['lastname'])) echo View::escape($_POST['person']['lastname']); ?>" />
+				</td>
+			</tr>
+			<tr><td><label for="person-email">Email</label></td>
+				<td><input name="person[email]" id="person-email" value="<?php if(isset($_POST['person']['email'])) echo View::escape($_POST['person']['email']); ?>" />
 				</td>
 			</tr>
 		</table>

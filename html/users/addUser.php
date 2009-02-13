@@ -6,6 +6,12 @@
  */
 verifyUser('Administrator');
 if (isset($_POST['user'])) {
+	$person = new Person();
+	foreach($_POST['person'] as $field=>$value) {
+		$set = 'set'.ucfirst($field);
+		$person->$set($value);
+	}
+
 	$user = new User();
 	foreach ($_POST['user'] as $field=>$value) {
 		$set = 'set'.ucfirst($field);
@@ -16,11 +22,13 @@ if (isset($_POST['user'])) {
 	// Delete this statement if you're not using LDAP
 	if ($user->getAuthenticationMethod() == 'LDAP') {
 		$ldap = new LDAPEntry($user->getUsername());
-		$user->setFirstname($ldap->getFirstname());
-		$user->setLastname($ldap->getLastname());
+		$person->setFirstname($ldap->getFirstname());
+		$person->setLastname($ldap->getLastname());
 	}
 
 	try {
+		$person->save();
+		$user->setPerson($person);
 		$user->save();
 		header('Location: '.BASE_URL.'/users');
 		exit();

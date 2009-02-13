@@ -9,7 +9,7 @@
 <h1>Edit <?php echo $this->user->getUsername(); ?></h1>
 <form method="post" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
 	<fieldset><legend>Login Info</legend>
-		<input name="id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
+		<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
 		<table>
 			<tr><td><label for="user-authenticationMethod">Authentication</label></td>
 				<td><select name="user[authenticationMethod]" id="user-authenticationMethod">
@@ -49,12 +49,16 @@
 
 	<fieldset><legend>Personal Info</legend>
 		<table>
-			<tr><td><label for="user-firstname">Firstname</label></td>
-				<td><input name="user[firstname]" id="user-firstname" value="<?php echo View::escape($this->user->getFirstname()); ?>" />
+			<tr><td><label for="person-firstname">Firstname</label></td>
+				<td><input name="person[firstname]" id="person-firstname" value="<?php echo View::escape($this->user->getFirstname()); ?>" />
 				</td>
 			</tr>
-			<tr><td><label for="user-lastname">Lastname</label></td>
-				<td><input name="user[lastname]" id="user-lastname" value="<?php echo View::escape($this->user->getLastname()); ?>" />
+			<tr><td><label for="person-lastname">Lastname</label></td>
+				<td><input name="person[lastname]" id="person-lastname" value="<?php echo View::escape($this->user->getLastname()); ?>" />
+				</td>
+			</tr>
+			<tr><td><label for="person-email">Email</label></td>
+				<td><input name="person[email]" id="person-email" value="<?php echo View::escape($this->user->getEmail()); ?>" />
 				</td>
 			</tr>
 		</table>
