@@ -74,7 +74,7 @@ if (isset(\$_POST['{$variableName}'])) {
 
 	try {
 		\${$variableName}->save();
-		header('Location: '.BASE_URL.\"/$tableName\");
+		header('Location: '.BASE_URL.'/$tableName');
 		exit();
 	}
 	catch(Exception \$e) {
@@ -106,7 +106,7 @@ if (isset(\$_POST['$variableName'])) {
 
 	try {
 		\${$variableName}->save();
-		header('Location: '.BASE_URL.\"/$tableName\");
+		header('Location: '.BASE_URL.'/$tableName');
 		exit();
 	}
 	catch (Exception \$e) {
