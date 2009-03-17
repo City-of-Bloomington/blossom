@@ -61,6 +61,22 @@ function customErrorHandler ($errno, $errstr, $errfile, $errline)
 				 $message,
 				 "From: apache@$_SERVER[SERVER_NAME]");
 		}
+		if (in_array('SKIDDER',$ERROR_REPORTING)) {
+			$message = "Error on line $errline of file $errfile:\n$errstr\n";
+			$message.= print_r(debug_backtrace(),true);
+
+			$skidder = curl_init(SKIDDER_URL);
+			curl_setopt($skidder,CURLOPT_POST,true);
+			curl_setopt($skidder,CURLOPT_HEADER,true);
+			curl_setopt($skidder,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($skidder,
+						CURLOPT_POSTFIELDS,
+						array('application_id'=>SKIDDER_APPLICATION_ID,
+							  'script'=>$_SERVER['REQUEST_URI'],
+							  'type'=>$errstr,
+							  'message'=>$message));
+			curl_exec($skidder);
+		}
 	}
 }
 if (ERROR_REPORTING != 'PHP_DEFAULT') {
@@ -107,6 +123,22 @@ function customExceptionHandler($exception)
 				 $subject,
 				 $message,
 				 "From: apache@$_SERVER[SERVER_NAME]");
+		}
+		if (in_array('SKIDDER',$ERROR_REPORTING)) {
+			$message = "Error on line {$exception->getLine()} of file {$exception->getFile()}:\n{$exception->getMessage()}\n";
+			$message.= print_r(debug_backtrace(),true);
+
+			$skidder = curl_init(SKIDDER_URL);
+			curl_setopt($skidder,CURLOPT_POST,true);
+			curl_setopt($skidder,CURLOPT_HEADER,true);
+			curl_setopt($skidder,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($skidder,
+						CURLOPT_POSTFIELDS,
+						array('application_id'=>SKIDDER_APPLICATION_ID,
+							  'script'=>$_SERVER['REQUEST_URI'],
+							  'type'=>'Uncaught Exception',
+							  'message'=>$message));
+			curl_exec($skidder);
 		}
 	}
 }
