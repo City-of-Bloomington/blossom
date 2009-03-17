@@ -24,6 +24,7 @@ if (isset($_POST['user'])) {
 		$ldap = new LDAPEntry($user->getUsername());
 		$person->setFirstname($ldap->getFirstname());
 		$person->setLastname($ldap->getLastname());
+		$person->setEmail($ldap->getEmail());
 	}
 
 	try {
