@@ -3,14 +3,18 @@
  * @copyright 2006-2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ * @param GET person_id
  */
 verifyUser('Administrator');
-if (isset($_POST['user'])) {
-	$person = new Person();
-	foreach($_POST['person'] as $field=>$value) {
-		$set = 'set'.ucfirst($field);
-		$person->$set($value);
+if (isset($_REQUEST['person_id'])) {
+	try {
+		$person = new Person($_REQUEST['person_id']);
 	}
+	catch (Exception $e) {
+	}
+}
+
+if (isset($_POST['user'])) {
 
 	$user = new User();
 	foreach ($_POST['user'] as $field=>$value) {
@@ -18,18 +22,34 @@ if (isset($_POST['user'])) {
 		$user->$set($value);
 	}
 
-	// Load their information from LDAP
-	// Delete this statement if you're not using LDAP
-	if ($user->getAuthenticationMethod() == 'LDAP') {
-		$ldap = new LDAPEntry($user->getUsername());
-		$person->setFirstname($ldap->getFirstname());
-		$person->setLastname($ldap->getLastname());
-		$person->setEmail($ldap->getEmail());
+	if (isset($person)) {
+		$user->setPerson_id($person->getId());
+	}
+	else {
+		// Load their information from LDAP
+		// Delete this statement if you're not using LDAP
+		if ($user->getAuthenticationMethod() == 'LDAP') {
+			try {
+				$ldap = new LDAPEntry($user->getUsername());
+				try {
+					$person = new Person($ldap->getEmail());
+				}
+				catch (Exception $e) {
+					$person = new Person();
+					$person->setFirstname($ldap->getFirstname());
+					$person->setLastname($ldap->getLastname());
+					$person->setEmail($ldap->getEmail());
+					$person->save();
+				}
+				$user->setPerson($person);
+			}
+			catch (Exception $e) {
+				$_SESSION['errorMessages'][] = $e;
+			}
+		}
 	}
 
 	try {
-		$person->save();
-		$user->setPerson($person);
 		$user->save();
 		header('Location: '.BASE_URL.'/users');
 		exit();
@@ -42,4 +62,7 @@ if (isset($_POST['user'])) {
 $template = new Template();
 $template->title = 'Create a user account';
 $template->blocks[] = new Block('users/addUserForm.inc');
+if (isset($person)) {
+	$template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
+}
 echo $template->render();

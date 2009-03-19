@@ -5,7 +5,7 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 ?>
-<h1>New User</h1>
+<h1>New User Account</h1>
 <form method="post" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
 	<fieldset><legend>Login Info</legend>
 		<table>
@@ -40,28 +40,6 @@
 						}
 					?>
 					</select>
-				</td>
-			</tr>
-		</table>
-
-	</fieldset>
-
-	<fieldset><legend>Personal Info</legend>
-		<p>
-			This information is only necessary for local users.
-			For LDAP authentication, this information will be pulled from LDAP.
-		</p>
-		<table>
-			<tr><td><label for="person-firstname">Firstname</label></td>
-				<td><input name="person[firstname]" id="person-firstname" value="<?php if(isset($_POST['person']['firstname'])) echo View::escape($_POST['person']['firstname']); ?>" />
-				</td>
-			</tr>
-			<tr><td><label for="person-lastname">Lastname</label></td>
-				<td><input name="person[lastname]" id="person-lastname" value="<?php if(isset($_POST['person']['lastname'])) echo View::escape($_POST['person']['lastname']); ?>" />
-				</td>
-			</tr>
-			<tr><td><label for="person-email">Email</label></td>
-				<td><input name="person[email]" id="person-email" value="<?php if(isset($_POST['person']['email'])) echo View::escape($_POST['person']['email']); ?>" />
 				</td>
 			</tr>
 		</table>

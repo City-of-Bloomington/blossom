@@ -22,16 +22,29 @@ class Person extends ActiveRecord
 	public function __construct($id=null)
 	{
 		if ($id) {
-			$PDO = Database::getConnection();
-			$query = $PDO->prepare('select * from people where id=?');
+			if (ctype_digit($id)) {
+				$sql = 'select * from people where id=?';
+			}
+			elseif (false !== strpos($id,'@')) {
+				$sql = 'select * from people where email=?';
+			}
+			else {
+				$sql = 'select p.* from people p left join users on p.id=person_id where username=?';
+			}
+
+			$pdo = Database::getConnection();
+			$query = $pdo->prepare($sql);
 			$query->execute(array($id));
+
 
 			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count($result)) {
 				throw new Exception('people/unknownPerson');
 			}
 			foreach ($result[0] as $field=>$value) {
-				if ($value) $this->$field = $value;
+				if ($value) {
+					$this->$field = $value;
+				}
 			}
 		}
 		else {
@@ -174,17 +187,33 @@ class Person extends ActiveRecord
 	// We recommend adding all your custom code down here at the bottom
 	//----------------------------------------------------------------
 	/**
+	 * @return string
+	 */
+	public function getFullname()
+	{
+		return "{$this->firstname} {$this->lastname}";
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getURL()
+	{
+		return BASE_URL.'/people/viewPerson.php?person_id='.$this->id;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getUser_id()
 	{
 		if (!$this->user_id) {
 			$pdo = Database::getConnection();
-			$query = $pdo->prepare('select user_id from users where person_id=?');
+			$query = $pdo->prepare('select id from users where person_id=?');
 			$query->execute(array($this->id));
 			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 			if (count($result)) {
-				$this->user_id = $result[0]['user_id'];
+				$this->user_id = $result[0]['id'];
 			}
 		}
 		return $this->user_id;
@@ -199,7 +228,7 @@ class Person extends ActiveRecord
 				$this->user = new User($this->getUser_id());
 			}
 		}
-		return $this->getUser();
+		return $this->user;
 	}
 
 	/**

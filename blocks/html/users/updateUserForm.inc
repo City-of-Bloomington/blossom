@@ -45,24 +45,6 @@
 				</td>
 			</tr>
 		</table>
-	</fieldset>
-
-	<fieldset><legend>Personal Info</legend>
-		<table>
-			<tr><td><label for="person-firstname">Firstname</label></td>
-				<td><input name="person[firstname]" id="person-firstname" value="<?php echo View::escape($this->user->getFirstname()); ?>" />
-				</td>
-			</tr>
-			<tr><td><label for="person-lastname">Lastname</label></td>
-				<td><input name="person[lastname]" id="person-lastname" value="<?php echo View::escape($this->user->getLastname()); ?>" />
-				</td>
-			</tr>
-			<tr><td><label for="person-email">Email</label></td>
-				<td><input name="person[email]" id="person-email" value="<?php echo View::escape($this->user->getEmail()); ?>" />
-				</td>
-			</tr>
-		</table>
-
 		<button type="submit" class="submit">Submit</button>
 		<button type="button" class="cancel" onclick="document.location.href='<?php echo BASE_URL; ?>/users';">
 			Cancel
