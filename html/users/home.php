@@ -6,6 +6,7 @@
  */
 verifyUser('Administrator');
 $template = new Template();
+$template->title = 'User accounts';
 
 $userList = new UserList();
 $userList->find();

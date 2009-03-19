@@ -40,5 +40,6 @@ if (isset($_POST['user'])) {
 }
 
 $template = new Template();
+$template->title = 'Create a user account';
 $template->blocks[] = new Block('users/addUserForm.inc');
 echo $template->render();

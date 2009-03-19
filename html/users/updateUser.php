@@ -35,5 +35,6 @@ if (isset($_POST['user_id'])) {
 }
 
 $template = new Template();
+$template->title = 'Update a user account';
 $template->blocks[] = new Block('users/updateUserForm.inc',array('user'=>$user));
 echo $template->render();
