@@ -3,9 +3,10 @@
  * @copyright 2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ * @param Request person_id
  */
 verifyUser('Administrator');
-$person = new Person($_REQUEST['id']);
+$person = new Person($_REQUEST['person_id']);
 
 if (isset($_POST['person'])) {
 	foreach ($_POST['person'] as $field=>$value) {
