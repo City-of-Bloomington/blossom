@@ -61,25 +61,14 @@ ul.pageNavigation li { margin-right:2px; }
 	background:url('images/banner-with-gradient.gif') top left no-repeat;
 	border-bottom:2px solid black;
 }
-	#application_name
-	{
+	#application_name {
 		height: 62px; background:url('images/logos/citylogo-white.gif') top left no-repeat;
 		color:white; text-align:left;
 		padding-top:90px; margin:1px;
 		font-size:1.75em;
 	}
-	#logo
-	{
-		width:284px; height:68px; position:absolute; top:16px; left:16px; text-indent:-9999px;
-	}
 
-	#logo a
-	{
-		display:block; width:246px; height:64px;
-	}
-
-	#location_name
-	{
+	#location_name {
 		display:none;
 	}
 	#banner a { color:white; text-decoration:none; }
