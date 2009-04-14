@@ -35,7 +35,7 @@ fieldset {  }
 legend { border:1px solid black; padding:4px 6px 4px 6px; background-color:#99cccc; font-size:1.25em; }
 label { font-weight:bold; }
 label.required { padding-left:15px; }
-.required { background:url('images/required_asterik.gif') no-repeat; }
+.required { background:url('images/icons/required_asterik.gif') no-repeat; }
 input { font-size:.75em; }
 button { font-size:.75em; }
 
@@ -58,18 +58,23 @@ ul.pageNavigation li { margin-right:2px; }
 #banner {
 	height:126px;
 	padding-left:16px;
-	background:url('images/banner-with-gradient.gif') top left no-repeat;
-	border-bottom:2px solid black;
+	background:url('images/backgrounds/banner.png') top left no-repeat;
 }
 	#application_name {
-		height: 62px; background:url('images/logos/citylogo-white.gif') top left no-repeat;
+		height: 62px;
 		color:white; text-align:left;
 		padding-top:90px; margin:1px;
 		font-size:1.75em;
 	}
 
 	#location_name {
-		display:none;
+		position:absolute; top:20px; left:7px;
+		width:304px; height:68px;
+		background:url('images/logos/logo_with_text.png') top left no-repeat;
+	}
+	#location_name a {
+		display:block;
+		width:300px; height:64px; text-indent:-9999px;
 	}
 	#banner a { color:white; text-decoration:none; }
 
