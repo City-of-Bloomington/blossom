@@ -83,14 +83,17 @@ class URL
 		$url = $this->protocol.$this->script;
 		if (count($this->parameters)) {
 			$url.= '?';
+			$parameters = array();
 			foreach ($this->parameters as $key=>$value) {
 				if (is_array($value)) {
-					$url.= $this->smash($value,array($key));
+					$parameters[] = $this->smash($value,array($key));
 				}
 				else {
-					$url.= urlencode($key).'='.urlencode($value).';';
+					$parameters[] = urlencode($key).'='.urlencode($value);
 				}
 			}
+			$parameters = implode(';',$parameters);
+			$url.= $parameters;
 		}
 		return $url;
 	}
@@ -138,7 +141,7 @@ class URL
 				}
 
 				$t.='['.urlencode($key).']';
-				$output.= $t.'='.urlencode($value).';';
+				$output.= $t.'='.urlencode($value);
 			}
 			else {
 				$t = array();
