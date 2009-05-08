@@ -21,9 +21,7 @@ class Database
 		}
 		if (!self::$pdo) {
 			try {
-				self::$pdo = new PDO(DB_TYPE.':'.DB_DSN.'dbname='.DB_NAME,
-										DB_USER,
-										DB_PASS,
+				self::$pdo = new PDO(DB_DSN,DB_USER,DB_PASS,
 										array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
 			}
 			catch (PDOException $e) {
