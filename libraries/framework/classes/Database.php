@@ -126,7 +126,7 @@ class Database
 				die("unsupported database server\n");
 		}
 		$query = $pdo->prepare($sql);
-		$query->execute(array($parameters));
+		$query->execute($parameters);
 		return $query->fetchAll(PDO::FETCH_ASSOC);
 	}
 }

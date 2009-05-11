@@ -12,7 +12,7 @@ $PDO = Database::getConnection();
 foreach (Database::getTables() as $tableName) {
 	$fields = array();
 	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['type']);
+		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -22,7 +22,7 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>$row['field'],'type'=>$type);
+		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
 	}
 
 	// Only generate code for tables that have a single-column primary key
@@ -31,9 +31,9 @@ foreach (Database::getTables() as $tableName) {
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $primary_keys[0];
+	$key = strtolower($primary_keys[0]['column_name']);
 
-
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	//--------------------------------------------------------------------------
 	// Constructor
@@ -43,14 +43,14 @@ foreach (Database::getTables() as $tableName) {
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
 	 *
-	 * @param int \$$key[column_name]
+	 * @param int \$$key
 	 */
-	public function __construct(\$$key[column_name]=null)
+	public function __construct(\$$key=null)
 	{
-		if (\$$key[column_name]) {
+		if (\$$key) {
 			\$PDO = Database::getConnection();
-			\$query = \$PDO->prepare('select * from $tableName where $key[column_name]=?');
-			\$query->execute(array(\$$key[column_name]));
+			\$query = \$PDO->prepare('select * from $tableName where $key=?');
+			\$query->execute(array(\$$key));
 
 			\$result = \$query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count(\$result)) {
@@ -164,7 +164,7 @@ foreach (Database::getTables() as $tableName) {
 	//--------------------------------------------------------------------------
 	$setters = '';
 	foreach ($fields as $field) {
-		if ($field['field'] != $key['column_name']) {
+		if ($field['field'] != $key) {
 			$fieldFunctionName = ucwords($field['field']);
 			switch ($field['type']) {
 				case 'int':
@@ -325,7 +325,7 @@ $constructor
 		\$fields = array();
 ";
 			foreach ($fields as $field) {
-				if ($field['field'] != $key['column_name']) {
+				if ($field['field'] != $key) {
 					$contents.="\t\t\$fields['$field[field]'] = \$this->$field[field] ? \$this->$field[field] : null;\n";
 				}
 			}
@@ -341,7 +341,7 @@ $contents.= "
 		\$preparedFields = implode(\",\",\$preparedFields);
 
 
-		if (\$this->$key[column_name]) {
+		if (\$this->$key) {
 			\$this->update(\$values,\$preparedFields);
 		}
 		else {
@@ -353,7 +353,7 @@ $contents.= "
 	{
 		\$PDO = Database::getConnection();
 
-		\$sql = \"update $tableName set \$preparedFields where $key[column_name]={\$this->$key[column_name]}\";
+		\$sql = \"update $tableName set \$preparedFields where $key={\$this->$key}\";
 		\$query = \$PDO->prepare(\$sql);
 		\$query->execute(\$values);
 	}
@@ -365,7 +365,7 @@ $contents.= "
 		\$sql = \"insert $tableName set \$preparedFields\";
 		\$query = \$PDO->prepare(\$sql);
 		\$query->execute(\$values);
-		\$this->$key[column_name] = \$PDO->lastInsertID();
+		\$this->$key = \$PDO->lastInsertID();
 	}
 
 	//----------------------------------------------------------------

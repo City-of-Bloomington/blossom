@@ -12,7 +12,7 @@ $PDO = Database::getConnection();
 foreach (Database::getTables() as $tableName) {
 	$fields = array();
 	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['type']);
+		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -22,7 +22,7 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>$row['field'],'type'=>$type);
+		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
 	}
 
 	// Only generate code for tables that have a single-column primary key
@@ -31,9 +31,10 @@ foreach (Database::getTables() as $tableName) {
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $primary_keys[0];
+	$key = strtolower($primary_keys[0]['column_name']);
 
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	//--------------------------------------------------------------------------
 	// Constructor
@@ -47,7 +48,7 @@ foreach (Database::getTables() as $tableName) {
 	 */
 	public function __construct(\$fields=null)
 	{
-		\$this->select = 'select $tableName.$key[column_name] as id from $tableName';
+		\$this->select = 'select $tableName.$key as id from $tableName';
 		if (is_array(\$fields)) {
 			\$this->find(\$fields);
 		}

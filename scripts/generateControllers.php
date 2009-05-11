@@ -10,7 +10,7 @@ $PDO = Database::getConnection();
 foreach (Database::getTables() as $tableName) {
 	$fields = array();
 	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['type']);
+		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -20,7 +20,7 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>$row['field'],'type'=>$type);
+		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
 	}
 
 	// Only generate code for tables that have a single-column primary key
@@ -29,8 +29,9 @@ foreach (Database::getTables() as $tableName) {
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $primary_keys[0];
+	$key = strtolower($primary_keys[0]['column_name']);
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	$variableName = Inflector::singularize($tableName);
 
@@ -93,7 +94,7 @@ $contents.= $PHP;
 $PHP = "
 verifyUser('Administrator');
 
-\${$variableName} = new {$className}(\$_REQUEST['$key[column_name]']);
+\${$variableName} = new {$className}(\$_REQUEST['$key']);
 if (isset(\$_POST['$variableName'])) {
 	foreach (\$_POST['$variableName'] as \$field=>\$value) {
 		\$set = 'set'.ucfirst(\$field);

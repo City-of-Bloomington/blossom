@@ -10,7 +10,7 @@ $pdo = Database::getConnection();
 foreach (Database::getTables() as $tableName) {
 	$fields = array();
 	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['type']);
+		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -20,7 +20,7 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>$row['field'],'type'=>$type);
+		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
 	}
 
 	// Only generate code for tables that have a single-column primary key
@@ -29,16 +29,17 @@ foreach (Database::getTables() as $tableName) {
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $primary_keys[0];
+	$key = strtolower($primary_keys[0]['column_name']);
 
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	$variableName = Inflector::singularize($tableName);
 
 	/**
 	 * Generate the list block
 	 */
-	$getId = "get".ucwords($key['column_name']);
+	$getId = "get".ucwords($key);
 	$HTML = "<div class=\"interfaceBox\">
 	<h1>
 		<?php
@@ -53,7 +54,7 @@ foreach (Database::getTables() as $tableName) {
 				\$editButton = '';
 				if (userHasRole('Administrator')) {
 					\$url = new URL(BASE_URL.'/$tableName/update$className.php');
-					\$url->$key[column_name] = \${$variableName}->{$getId}();
+					\$url->$key = \${$variableName}->{$getId}();
 					\$editButton = \"<a class=\\\"edit button\\\" href=\\\"\$url\\\">Edit</a>\";
 				}
 				echo \"<li>\$editButton \$$variableName</li>\";
@@ -84,7 +85,7 @@ $HTML = "<h1>Add $className</h1>
 		<table>
 ";
 		foreach ($fields as $field) {
-			if ($field['field'] != $key['column_name']) {
+			if ($field['field'] != $key) {
 				$fieldFunctionName = ucwords($field['field']);
 				switch ($field['type']) {
 					case 'date':
@@ -200,11 +201,11 @@ file_put_contents("$dir/add{$className}Form.inc",$contents);
 $HTML = "<h1>Update $className</h1>
 <form method=\"post\" action=\"<?php echo \$_SERVER['SCRIPT_NAME']; ?>\">
 	<fieldset><legend>$className Info</legend>
-		<input name=\"$key[column_name]\" type=\"hidden\" value=\"<?php echo \$this->{$variableName}->{$getId}(); ?>\" />
+		<input name=\"$key\" type=\"hidden\" value=\"<?php echo \$this->{$variableName}->{$getId}(); ?>\" />
 		<table>
 ";
 		foreach ($fields as $field) {
-			if ($field['field'] != $key['column_name']) {
+			if ($field['field'] != $key) {
 				$fieldFunctionName = ucwords($field['field']);
 				switch ($field['type']) {
 					case 'date':
