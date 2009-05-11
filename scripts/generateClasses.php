@@ -9,17 +9,12 @@
 include '../configuration.inc';
 $PDO = Database::getConnection();
 
-$tables = array();
-foreach ($PDO->query('show tables') as $row) {
-	list($tables[]) = $row;
-}
-
-foreach ($tables as $tableName) {
+foreach (Database::getTables() as $tableName) {
 	$fields = array();
-	foreach ($PDO->query("describe $tableName") as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['Type']);
+	foreach (Database::getFields($tableName) as $row) {
+		$type = preg_replace("/[^a-z]/","",$row['type']);
 
-		// Translate any MySQL datatype names into PHP datatype names
+		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
 			$type = 'int';
 		}
@@ -27,14 +22,16 @@ foreach ($tables as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('Field'=>$row['Field'],'Type'=>$type);
+		$fields[] = array('field'=>$row['field'],'type'=>$type);
 	}
 
-	$result = $PDO->query("show index from $tableName where key_name='PRIMARY'")->fetchAll();
-	if (count($result) != 1) {
+	// Only generate code for tables that have a single-column primary key
+	// Code for other tables will need to be created by hand
+	$primary_keys = Database::getPrimaryKeyInfo($tableName);
+	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $result[0];
+	$key = $primary_keys[0];
 
 
 	$className = Inflector::classify($tableName);
@@ -46,14 +43,14 @@ foreach ($tables as $tableName) {
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
 	 *
-	 * @param int \$$key[Column_name]
+	 * @param int \$$key[column_name]
 	 */
-	public function __construct(\$$key[Column_name]=null)
+	public function __construct(\$$key[column_name]=null)
 	{
-		if (\$$key[Column_name]) {
+		if (\$$key[column_name]) {
 			\$PDO = Database::getConnection();
-			\$query = \$PDO->prepare('select * from $tableName where $key[Column_name]=?');
-			\$query->execute(array(\$$key[Column_name]));
+			\$query = \$PDO->prepare('select * from $tableName where $key[column_name]=?');
+			\$query->execute(array(\$$key[column_name]));
 
 			\$result = \$query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count(\$result)) {
@@ -78,10 +75,10 @@ foreach ($tables as $tableName) {
 	$properties = '';
 	$linkedProperties = array();
 	foreach ($fields as $field) {
-		$properties.= "\tprivate \$$field[Field];\n";
+		$properties.= "\tprivate \$$field[field];\n";
 
-		if (substr($field['Field'],-3) == '_id') {
-			$linkedProperties[] = $field['Field'];
+		if (substr($field['field'],-3) == '_id') {
+			$linkedProperties[] = $field['field'];
 		}
 	}
 
@@ -98,9 +95,9 @@ foreach ($tables as $tableName) {
 	//--------------------------------------------------------------------------
 	$getters = '';
 	foreach ($fields as $field) {
-		$fieldFunctionName = ucwords($field['Field']);
+		$fieldFunctionName = ucwords($field['field']);
 
-		switch ($field['Type'])
+		switch ($field['type'])
 		{
 			case 'date':
 			case 'datetime':
@@ -114,16 +111,16 @@ foreach ($tables as $tableName) {
 	 */
 	public function get$fieldFunctionName(\$format=null)
 	{
-		if (\$format && \$this->$field[Field]) {
+		if (\$format && \$this->$field[field]) {
 			if (strpos(\$format,'%')!==false) {
-				return strftime(\$format,\$this->$field[Field]);
+				return strftime(\$format,\$this->$field[field]);
 			}
 			else {
-				return date(\$format,\$this->$field[Field]);
+				return date(\$format,\$this->$field[field]);
 			}
 		}
 		else {
-			return \$this->$field[Field];
+			return \$this->$field[field];
 		}
 	}
 ";
@@ -131,11 +128,11 @@ foreach ($tables as $tableName) {
 
 			default: $getters.= "
 	/**
-	 * @return $field[Type]
+	 * @return $field[type]
 	 */
 	public function get$fieldFunctionName()
 	{
-		return \$this->$field[Field];
+		return \$this->$field[field];
 	}
 ";
 		}
@@ -167,32 +164,32 @@ foreach ($tables as $tableName) {
 	//--------------------------------------------------------------------------
 	$setters = '';
 	foreach ($fields as $field) {
-		if ($field['Field'] != $key['Column_name']) {
-			$fieldFunctionName = ucwords($field['Field']);
-			switch ($field['Type']) {
+		if ($field['field'] != $key['column_name']) {
+			$fieldFunctionName = ucwords($field['field']);
+			switch ($field['type']) {
 				case 'int':
-					if (in_array($field['Field'],$linkedProperties)) {
-						$property = substr($field['Field'],0,-3);
+					if (in_array($field['field'],$linkedProperties)) {
+						$property = substr($field['field'],0,-3);
 						$object = ucfirst($property);
 						$setters.= "
 	/**
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
 		\$this->$property = new $object(\$int);
-		\$this->$field[Field] = \$$field[Type];
+		\$this->$field[field] = \$$field[type];
 	}
 ";
 					}
 					else {
 						$setters.= "
 	/**
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		\$this->$field[Field] = preg_replace(\"/[^0-9]/\",\"\",\$$field[Type]);
+		\$this->$field[field] = preg_replace(\"/[^0-9]/\",\"\",\$$field[type]);
 	}
 ";
 					}
@@ -201,11 +198,11 @@ foreach ($tables as $tableName) {
 				case 'string':
 					$setters.= "
 	/**
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		\$this->$field[Field] = trim(\$$field[Type]);
+		\$this->$field[field] = trim(\$$field[type]);
 	}
 ";
 					break;
@@ -223,18 +220,18 @@ foreach ($tables as $tableName) {
 	 * 		array - in the form of PHP getdate()
 	 *		timestamp
 	 *		string - anything strtotime understands
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		if (is_array(\$$field[Type])) {
-			\$this->$field[Field] = \$this->dateArrayToTimestamp(\$$field[Type]);
+		if (is_array(\$$field[type])) {
+			\$this->$field[field] = \$this->dateArrayToTimestamp(\$$field[type]);
 		}
-		elseif (ctype_digit(\$$field[Type])) {
-			\$this->$field[Field] = \$$field[Type];
+		elseif (ctype_digit(\$$field[type])) {
+			\$this->$field[field] = \$$field[type];
 		}
 		else {
-			\$this->$field[Field] = strtotime(\$$field[Type]);
+			\$this->$field[field] = strtotime(\$$field[type]);
 		}
 	}
 ";
@@ -243,11 +240,11 @@ foreach ($tables as $tableName) {
 				case 'float':
 					$setters.= "
 	/**
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		\$this->$field[Field] = preg_replace(\"/[^0-9.\-]/\",\"\",\$$field[Type]);
+		\$this->$field[field] = preg_replace(\"/[^0-9.\-]/\",\"\",\$$field[type]);
 	}
 ";
 					break;
@@ -255,11 +252,11 @@ foreach ($tables as $tableName) {
 				case 'bool':
 					$setters.= "
 	/**
-	 * @param boolean \$$field[Type]
+	 * @param boolean \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		\$this->$field[Field] = \$$field[Type] ? true : false;
+		\$this->$field[field] = \$$field[type] ? true : false;
 	}
 ";
 					break;
@@ -267,11 +264,11 @@ foreach ($tables as $tableName) {
 				default:
 					$setters.= "
 	/**
-	 * @param $field[Type] \$$field[Type]
+	 * @param $field[type] \$$field[type]
 	 */
-	public function set$fieldFunctionName(\$$field[Type])
+	public function set$fieldFunctionName(\$$field[type])
 	{
-		\$this->$field[Field] = \$$field[Type];
+		\$this->$field[field] = \$$field[type];
 	}
 ";
 			}
@@ -328,8 +325,8 @@ $constructor
 		\$fields = array();
 ";
 			foreach ($fields as $field) {
-				if ($field['Field'] != $key['Column_name']) {
-					$contents.="\t\t\$fields['$field[Field]'] = \$this->$field[Field] ? \$this->$field[Field] : null;\n";
+				if ($field['field'] != $key['column_name']) {
+					$contents.="\t\t\$fields['$field[field]'] = \$this->$field[field] ? \$this->$field[field] : null;\n";
 				}
 			}
 $contents.= "
@@ -344,7 +341,7 @@ $contents.= "
 		\$preparedFields = implode(\",\",\$preparedFields);
 
 
-		if (\$this->$key[Column_name]) {
+		if (\$this->$key[column_name]) {
 			\$this->update(\$values,\$preparedFields);
 		}
 		else {
@@ -356,7 +353,7 @@ $contents.= "
 	{
 		\$PDO = Database::getConnection();
 
-		\$sql = \"update $tableName set \$preparedFields where $key[Column_name]={\$this->$key[Column_name]}\";
+		\$sql = \"update $tableName set \$preparedFields where $key[column_name]={\$this->$key[column_name]}\";
 		\$query = \$PDO->prepare(\$sql);
 		\$query->execute(\$values);
 	}
@@ -368,7 +365,7 @@ $contents.= "
 		\$sql = \"insert $tableName set \$preparedFields\";
 		\$query = \$PDO->prepare(\$sql);
 		\$query->execute(\$values);
-		\$this->$key[Column_name] = \$PDO->lastInsertID();
+		\$this->$key[column_name] = \$PDO->lastInsertID();
 	}
 
 	//----------------------------------------------------------------

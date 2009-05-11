@@ -9,17 +9,12 @@
 include '../configuration.inc';
 $PDO = Database::getConnection();
 
-$tables = array();
-foreach ($PDO->query('show tables') as $row) {
-	list($tables[]) = $row;
-}
-
-foreach ($tables as $tableName) {
+foreach (Database::getTables() as $tableName) {
 	$fields = array();
-	foreach ($PDO->query("describe $tableName") as $row) {
-		$type = preg_replace("/[^a-z]/","",$row['Type']);
+	foreach (Database::getFields($tableName) as $row) {
+		$type = preg_replace("/[^a-z]/","",$row['type']);
 
-		// Translate any MySQL datatype names into PHP datatype names
+		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
 			$type = 'int';
 		}
@@ -27,15 +22,16 @@ foreach ($tables as $tableName) {
 			$type = 'string';
 		}
 
-
-		$fields[] = array('Field'=>$row['Field'],'Type'=>$type);
+		$fields[] = array('field'=>$row['field'],'type'=>$type);
 	}
 
-	$result = $PDO->query("show index from $tableName where key_name='PRIMARY'")->fetchAll();
-	if (count($result) != 1) {
+	// Only generate code for tables that have a single-column primary key
+	// Code for other tables will need to be created by hand
+	$primary_keys = Database::getPrimaryKeyInfo($tableName);
+	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = $result[0];
+	$key = $primary_keys[0];
 
 
 	$className = Inflector::classify($tableName);
@@ -51,7 +47,7 @@ foreach ($tables as $tableName) {
 	 */
 	public function __construct(\$fields=null)
 	{
-		\$this->select = 'select $tableName.$key[Column_name] as id from $tableName';
+		\$this->select = 'select $tableName.$key[column_name] as id from $tableName';
 		if (is_array(\$fields)) {
 			\$this->find(\$fields);
 		}
@@ -83,9 +79,9 @@ foreach ($tables as $tableName) {
 ";
 	foreach ($fields as $field) {
 		$findFunction.= "
-		if (isset(\$fields['$field[Field]'])) {
-			\$options[] = '$field[Field]=:$field[Field]';
-			\$parameters[':$field[Field]'] = \$fields['$field[Field]'];
+		if (isset(\$fields['$field[field]'])) {
+			\$options[] = '$field[field]=:$field[field]';
+			\$parameters[':$field[field]'] = \$fields['$field[field]'];
 		}
 ";
 	}
