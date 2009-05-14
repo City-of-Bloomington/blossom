@@ -8,7 +8,7 @@
  */
 class Database
 {
-	private static $pdo;
+	private static $connection;
 
 	/**
 	 * @param boolean $reconnect If true, drops the connection and reconnects
@@ -17,23 +17,23 @@ class Database
 	public static function getConnection($reconnect=false)
 	{
 		if ($reconnect) {
-			self::$pdo=null;
+			self::$connection=null;
 		}
-		if (!self::$pdo) {
+		if (!self::$connection) {
 			try {
-				self::$pdo = new PDO(DB_DSN,DB_USER,DB_PASS,
-										array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
-											  PDO::ATTR_CASE=>PDO::CASE_LOWER));
-				if (self::$pdo->getAttribute(PDO::ATTR_DRIVER_NAME)=='oci') {
-					$query = self::$pdo->prepare('alter session set current_schema=?');
-					$query->execute(array(DB_USER));
-				}
+				$parameters = array('host'=>DB_HOST,
+									'username'=>DB_USER,
+									'password'=>DB_PASS,
+									'dbname'=>DB_NAME,
+									'options'=>array(Zend_Db::CASE_FOLDING=>Zend_Db::CASE_LOWER));
+				self::$connection = Zend_Db::factory(DB_ADAPTER,$parameters);
+				self::$connection->getConnection();
 			}
-			catch (PDOException $e) {
+			catch (Exception $e) {
 				die($e->getMessage());
 			}
 		}
-		return self::$pdo;
+		return self::$connection;
 	}
 
 	/**

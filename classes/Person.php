@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Person extends ActiveRecord
+class Person
 {
 	private $id;
 	private $firstname;
@@ -22,26 +22,27 @@ class Person extends ActiveRecord
 	public function __construct($id=null)
 	{
 		if ($id) {
-			if (ctype_digit($id)) {
-				$sql = 'select * from people where id=?';
-			}
-			elseif (false !== strpos($id,'@')) {
-				$sql = 'select * from people where email=?';
+			if (is_array($id)) {
+				$result = $id;
 			}
 			else {
-				$sql = 'select p.* from people p left join users on p.id=person_id where username=?';
+				$zend_db = Database::getConnection();
+				if (ctype_digit($id)) {
+					$sql = 'select * from people where id=?';
+				}
+				elseif (false !== strpos($id,'@')) {
+					$sql = 'select * from people where email=?';
+				}
+				else {
+					$sql = 'select p.* from people p left join users on p.id=person_id where username=?';
+				}
+				$result = $zend_db->fetchRow($sql,array($id));
 			}
 
-			$pdo = Database::getConnection();
-			$query = $pdo->prepare($sql);
-			$query->execute(array($id));
-
-
-			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count($result)) {
 				throw new Exception('people/unknownPerson');
 			}
-			foreach ($result[0] as $field=>$value) {
+			foreach ($result as $field=>$value) {
 				if ($value) {
 					$this->$field = $value;
 				}
@@ -76,47 +77,30 @@ class Person extends ActiveRecord
 	{
 		$this->validate();
 
-		$fields = array();
-		$fields['firstname'] = $this->firstname;
-		$fields['lastname'] = $this->lastname;
-		$fields['email'] = $this->email ? $this->email : null;
-
-		// Split the fields up into a preparedFields array and a values array.
-		// PDO->execute cannot take an associative array for values, so we have
-		// to strip out the keys from $fields
-		$preparedFields = array();
-		foreach ($fields as $key=>$value) {
-			$preparedFields[] = "$key=?";
-			$values[] = $value;
-		}
-		$preparedFields = implode(",",$preparedFields);
-
+		$data = array();
+		$data['firstname'] = $this->firstname;
+		$data['lastname'] = $this->lastname;
+		$data['email'] = $this->email ? $this->email : null;
 
 		if ($this->id) {
-			$this->update($values,$preparedFields);
+			$this->update($data);
 		}
 		else {
-			$this->insert($values,$preparedFields);
+			$this->insert($data);
 		}
 	}
 
-	private function update($values,$preparedFields)
+	private function update($data)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "update people set $preparedFields where id={$this->id}";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
+		$zend_db = Database::getConnection();
+		$zend_db->update('people',$data,"id={$this->id}");
 	}
 
 	private function insert($values,$preparedFields)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "insert people set $preparedFields";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
-		$this->id = $PDO->lastInsertID();
+		$zend_db = Database::getConnection();
+		$zend_db->insert('people',$data);
+		$this->id = $zend_db->lastInsertId();
 	}
 
 	//----------------------------------------------------------------
@@ -208,13 +192,8 @@ class Person extends ActiveRecord
 	public function getUser_id()
 	{
 		if (!$this->user_id) {
-			$pdo = Database::getConnection();
-			$query = $pdo->prepare('select id from users where person_id=?');
-			$query->execute(array($this->id));
-			$result = $query->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result)) {
-				$this->user_id = $result[0]['id'];
-			}
+			$zend_db = Database::getConnection();
+			$this->user_id = $zend_db->fetchOne('select id from users where person_id=?',$this->id);
 		}
 		return $this->user_id;
 	}
