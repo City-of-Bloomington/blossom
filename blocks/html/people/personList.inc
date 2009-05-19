@@ -25,7 +25,7 @@
 
 				if (userHasRole('Administrator')) {
 					$url = new URL(BASE_URL.'/people/updatePerson.php');
-					$url->id = $person->getId();
+					$url->person_id = $person->getId();
 					$editButton = "
 					<a class=\"edit button\" href=\"$url\" title=\"Edit Person\">
 						Edit
