@@ -46,13 +46,15 @@ class Person
 				$result = $zend_db->fetchRow($sql,array($id));
 			}
 
-			if (!count($result)) {
-				throw new Exception('people/unknownPerson');
-			}
-			foreach ($result as $field=>$value) {
-				if ($value) {
-					$this->$field = $value;
+			if ($result) {
+				foreach ($result as $field=>$value) {
+					if ($value) {
+						$this->$field = $value;
+					}
 				}
+			}
+			else {
+				throw new Exception('people/unknownPerson');
 			}
 		}
 		else {
@@ -103,7 +105,7 @@ class Person
 	{
 		$zend_db = Database::getConnection();
 		$zend_db->insert('people',$data);
-		$this->id = $zend_db->lastInsertId();
+		$this->id = $zend_db->lastInsertId('people','id');
 	}
 
 	//----------------------------------------------------------------

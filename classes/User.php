@@ -35,14 +35,15 @@ class User extends SystemUser
 				$zend_db = Database::getConnection();
 				$result = $zend_db->fetchRow($sql,array($id));
 			}
-
-			if (!count($result)) {
-				throw new Exception('users/unknownUser');
-			}
-			foreach ($result as $field=>$value) {
-				if ($value) {
-					$this->$field = $value;
+			if ($result) {
+				foreach ($result as $field=>$value) {
+					if ($value) {
+						$this->$field = $value;
+					}
 				}
+			}
+			else {
+				throw new Exception('users/unknownUser');
 			}
 		}
 		else {
@@ -112,7 +113,7 @@ class User extends SystemUser
 	{
 		$zend_db = Database::getConnection();
 		$zend_db->insert('users',$data);
-		$this->id = $zend_db->lastInsertId();
+		$this->id = $zend_db->lastInsertId('users','id');
 	}
 
 	/**
@@ -153,9 +154,9 @@ class User extends SystemUser
 	/**
 	 * @return string
 	 */
-	public function getAuthenticationMethod()
+	public function getAuthenticationmethod()
 	{
-		return $this->authenticationMethod;
+		return $this->authenticationmethod;
 	}
 	/**
 	 * @return Person
@@ -262,8 +263,8 @@ class User extends SystemUser
 			if ($this->id) {
 				$zend_db = Database::getConnection();
 				$select = new Zend_Db_Select($zend_db);
-				$select->from('user_roles',array('role_id','name'))
-						->joinLeft('roles','role_id=id')
+				$select->from('user_roles','role_id')
+						->joinLeft('roles','role_id=id','name')
 						->where('user_id=?');
 				$result = $zend_db->fetchAll($select,$this->id);
 

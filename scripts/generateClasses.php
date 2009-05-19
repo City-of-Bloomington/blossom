@@ -67,13 +67,15 @@ foreach ($zend_db->listTables() as $tableName) {
 				\$result = \$zend_db->fetchRow(\$sql,array(\$$key));
 			}
 
-			if (!count(\$result)) {
-				throw new Exception('$tableName/unknown$className');
-			}
-			foreach (\$result as \$field=>\$value) {
-				if (\$value) {
-					\$this->\$field = \$value;
+			if (\$reasult) {
+				foreach (\$result as \$field=>\$value) {
+					if (\$value) {
+						\$this->\$field = \$value;
+					}
 				}
+			}
+			else {
+				throw new Exception('$tableName/unknown$className');
 			}
 		}
 		else {
@@ -358,7 +360,7 @@ $contents.= "
 	{
 		\$zend_db = Database::getConnection();
 		\$zend_db->insert('$tableName',\$data);
-		\$this->id = \$zend_db->lastInsertId();
+		\$this->id = \$zend_db->lastInsertId('$tableName','$key');
 	}
 
 	//----------------------------------------------------------------

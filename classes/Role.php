@@ -37,13 +37,15 @@ class Role
 				}
 				$result = $zend_db->fetchRow($sql,array($id));
 			}
-			if (!count($result)) {
-				throw new Exception('roles/unknownRole');
-			}
-			foreach ($result as $field=>$value) {
-				if ($value) {
-					$this->$field = $value;
+			if ($result) {
+				foreach ($result as $field=>$value) {
+					if ($value) {
+						$this->$field = $value;
+					}
 				}
+			}
+			else {
+				throw new Exception('roles/unknownRole');
 			}
 		}
 		else {
@@ -94,7 +96,7 @@ class Role
 	{
 		$zend_db = Database::getConnection();
 		$zend_db->insert('roles',$data);
-		$this->id = $zend_db->lastInsertId();
+		$this->id = $zend_db->lastInsertId('roles','id');
 	}
 
 	//----------------------------------------------------------------
