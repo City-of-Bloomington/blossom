@@ -37,6 +37,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	}
 	$key = $primary_keys[0];
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 
 	//--------------------------------------------------------------------------
@@ -82,7 +83,7 @@ class {$className}List extends ZendDbResultIterator
 	 * @param int \$limit
 	 * @param string|array \$groupBy Multi-column group by should be given as an array
 	 */
-	public function find(\$fields=null,\$order='id',\$limit=null,\$groupBy=null)
+	public function find(\$fields=null,\$order='$key',\$limit=null,\$groupBy=null)
 	{
 		if (count(\$fields)) {
 			foreach (\$fields as \$key=>\$value) {

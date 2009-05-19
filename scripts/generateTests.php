@@ -53,6 +53,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	}
 	$key = $primary_keys[0];
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	$classes[] = $className;
 

@@ -37,6 +37,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	}
 	$key = $primary_keys[0];
 
+	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	//--------------------------------------------------------------------------
 	// Constructor
@@ -62,7 +63,7 @@ foreach ($zend_db->listTables() as $tableName) {
 			}
 			else {
 				\$zend_db = Database::getConnection();
-				\$sql = 'select * from people where id=?';
+				\$sql = 'select * from $tableName where id=?';
 				\$result = \$zend_db->fetchRow(\$sql,array(\$$key));
 			}
 
