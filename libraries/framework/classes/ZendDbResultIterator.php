@@ -16,7 +16,7 @@ abstract class ZendDbResultIterator implements ArrayAccess,SeekableIterator,Coun
 	private $cache = array();
 	private $key;
 
-	abstract public function find($fields=null,$sort='',$limit=null,$groupBy=null);
+	abstract public function find($fields=null,$order='',$limit=null,$groupBy=null);
 	abstract protected function loadResult($key);
 
 	public function __construct()

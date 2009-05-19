@@ -13,11 +13,18 @@ class Person
 
 	private $user_id;
 	private $user;
+
 	/**
+	 * Populates the object with data
+	 *
+	 * Passing in an associative array of data will populate this object without
+	 * hitting the database.
+	 *
+	 * Passing in a scalar will load the data from the database.
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
 	 *
-	 * @param int $id
+	 * @param int|string|array $id (ID, email, username)
 	 */
 	public function __construct($id=null)
 	{
@@ -68,10 +75,6 @@ class Person
 
 	/**
 	 * Saves this record back to the database
-	 *
-	 * This generates generic SQL that should work right away.
-	 * You can replace this $fields code with your own custom SQL
-	 * for each property of this class,
 	 */
 	public function save()
 	{
@@ -96,7 +99,7 @@ class Person
 		$zend_db->update('people',$data,"id={$this->id}");
 	}
 
-	private function insert($values,$preparedFields)
+	private function insert($values)
 	{
 		$zend_db = Database::getConnection();
 		$zend_db->insert('people',$data);

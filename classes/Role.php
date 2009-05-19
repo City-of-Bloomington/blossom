@@ -10,8 +10,14 @@ class Role
 	private $name;
 
 	/**
+	 * Passing in an associative array of data will populate this object without
+	 * hitting the database.
+	 *
+	 * Passing in an int will load the data from the database for the given ID.
+	 *
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
+	 *
 	 * @param int|string|array $id
 	 */
 	public function __construct($id=null)

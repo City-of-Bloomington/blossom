@@ -24,12 +24,14 @@ class UserList extends ZendDbResultIterator
 	}
 
 	/**
+	 * Populates the collection
+	 *
 	 * @param array $fields
-	 * @param string $sort
-	 * @param string $limit
-	 * @param string $groupBy
+	 * @param string|array $order Multi-column sort should be given as an array
+	 * @param int $limit
+	 * @param string|array $groupBy Multi-column group by should be given as an array
 	 */
-	public function find($fields=null,$sort='username',$limit=null,$groupBy=null)
+	public function find($fields=null,$order='username',$limit=null,$groupBy=null)
 	{
 		$this->select->from(array('u'=>'users'));
 
@@ -40,7 +42,6 @@ class UserList extends ZendDbResultIterator
 				}
 			}
 		}
-
 
 		// Finding on fields from other tables required joining those tables.
 		// You can add fields from other tables to $options by adding the join SQL
@@ -69,6 +70,15 @@ class UserList extends ZendDbResultIterator
 			$this->select->joinLeft(array($key=>$join['table']),$join['condition']);
 		}
 
+
+
+		$this->select->order($order);
+		if ($limit) {
+			$this->select->limit($limit);
+		}
+		if ($groupBy) {
+			$this->select->group($groupBy);
+		}
 		$this->populateList();
 	}
 
