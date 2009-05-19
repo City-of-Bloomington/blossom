@@ -10,7 +10,7 @@
  * Load classes on the fly as needed
  * @param string $class
  */
-function __autoload($class)
+function autoload($class)
 {
 	if (file_exists(APPLICATION_HOME."/classes/$class.php")) {
 		require_once(APPLICATION_HOME."/classes/$class.php");

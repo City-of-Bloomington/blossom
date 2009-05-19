@@ -7,12 +7,13 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 include '../configuration.inc';
-$PDO = Database::getConnection();
+$zend_db = Database::getConnection();
 
-foreach (Database::getTables() as $tableName) {
+foreach ($zend_db->listTables() as $tableName) {
 	$fields = array();
-	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
+	$primary_keys = array();
+	foreach ($zend_db->describeTable($tableName) as $row) {
+		$type = preg_replace("/[^a-z]/","",strtolower($row['DATA_TYPE']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -22,81 +23,22 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
+		$fields[] = array('field'=>$row['COLUMN_NAME'],'type'=>$type);
+
+		if ($row['PRIMARY']) {
+			$primary_keys[] = $row['COLUMN_NAME'];
+		}
 	}
 
 	// Only generate code for tables that have a single-column primary key
 	// Code for other tables will need to be created by hand
-	$primary_keys = Database::getPrimaryKeyInfo($tableName);
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = strtolower($primary_keys[0]['column_name']);
-
+	$key = $primary_keys[0];
 
 	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
-	//--------------------------------------------------------------------------
-	// Constructor
-	//--------------------------------------------------------------------------
-	$constructor = "
-	/**
-	 * Creates a basic select statement for the collection.
-	 * Populates the collection if you pass in \$fields
-	 *
-	 * @param array \$fields
-	 */
-	public function __construct(\$fields=null)
-	{
-		\$this->select = 'select $tableName.$key as id from $tableName';
-		if (is_array(\$fields)) {
-			\$this->find(\$fields);
-		}
-	}
-";
-
-
-	//--------------------------------------------------------------------------
-	// Find
-	//--------------------------------------------------------------------------
-	$findFunction = "
-	/**
-	 * Populates the collection from the database based on the \$fields you handle
-	 *
-	 * @param array \$fields
-	 * @param string \$sort
-	 * @param int \$limit
-	 * @param string \$groupBy
-	 */
-	public function find(\$fields=null,\$sort='id',\$limit=null,\$groupBy=null)
-	{
-		\$this->sort = \$sort;
-		\$this->limit = \$limit;
-		\$this->groupBy = \$groupBy;
-		\$this->joins = '';
-
-		\$options = array();
-		\$parameters = array();
-";
-	foreach ($fields as $field) {
-		$findFunction.= "
-		if (isset(\$fields['$field[field]'])) {
-			\$options[] = '$field[field]=:$field[field]';
-			\$parameters[':$field[field]'] = \$fields['$field[field]'];
-		}
-";
-	}
-	$findFunction.= "
-
-		// Finding on fields from other tables required joining those tables.
-		// You can add fields from other tables to \$options by adding the join SQL
-		// to \$this->joins here
-
-		\$this->populateList(\$options,\$parameters);
-	}
-";
-
-
 
 	//--------------------------------------------------------------------------
 	// Output the class
@@ -105,33 +47,72 @@ $contents = "<?php
 /**
  * A collection class for $className objects
  *
- * This class creates a select statement, only selecting the ID from each row
- * PDOResultIterator handles iterating and paginating those results.
- * As the results are iterated over, PDOResultIterator will pass each desired
- * ID back to this class's loadResult() which will be responsible for hydrating
+ * This class creates a zend_db select statement.
+ * ZendDbResultIterator handles iterating and paginating those results.
+ * As the results are iterated over, ZendDbResultIterator will pass each desired
+ * row back to this class's loadResult() which will be responsible for hydrating
  * each $className object
  *
  * Beyond the basic \$fields handled, you will need to write your own handling
  * of whatever extra \$fields you need
- *
- * The PDOResultIterator uses prepared queries; it is recommended to use bound
- * parameters for each of the options you handle
  */
 ";
 $contents.= COPYRIGHT;
 $contents.="
-class {$className}List extends PDOResultIterator
+class {$className}List extends ZendDbResultIterator
 {
-$constructor
-$findFunction
+	/**
+	 * Creates a basic select statement for the collection.
+	 * Populates the collection if you pass in \$fields
+	 *
+	 * @param array \$fields
+	 */
+	public function __construct(\$fields=null)
+	{
+		parent::__construct();
+		if (is_array(\$fields)) {
+			\$this->find(\$fields);
+		}
+	}
 
 	/**
-	 * Loads a single $className object for the key returned from PDOResultIterator
+	 * Populates the collection
+	 *
+	 * @param array \$fields
+	 * @param string|array \$order Multi-column sort should be given as an array
+	 * @param int \$limit
+	 * @param string|array \$groupBy Multi-column group by should be given as an array
+	 */
+	public function find(\$fields=null,\$order='$key',\$limit=null,\$groupBy=null)
+	{
+		if (count(\$fields)) {
+			foreach (\$fields as \$key=>\$value) {
+				\$this->select->where(\"\$key=?\",\$value);
+			}
+		}
+
+		// Finding on fields from other tables requires joining those tables.
+		// You can handle fields from other tables by adding the joins here
+		// If you add more joins you probably want to make sure that the
+		// above foreach only handles fields from the $tableName table.
+
+		\$this->select->order(\$order);
+		if (\$limit) {
+			\$this->select->limit(\$limit);
+		}
+		if (\$groupBy) {
+			\$this->select->group(\$groupBy);
+		}
+		\$this->populateList();
+	}
+
+	/**
+	 * Hydrates each $className object as we iterate through the results
 	 * @param int \$key
 	 */
 	protected function loadResult(\$key)
 	{
-		return new $className(\$this->list[\$key]);
+		return new $className(\$this->result[\$key]);
 	}
 }
 ";

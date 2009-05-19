@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2006-2008 City of Bloomington, Indiana
+ * @copyright 2006-2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -10,7 +10,7 @@ class User extends SystemUser
 	private $person_id;
 	private $username;
 	private $password;
-	private $authenticationMethod;
+	private $authenticationmethod;
 
 	private $person;
 	private $roles = array();
@@ -22,25 +22,27 @@ class User extends SystemUser
 	public function __construct($id = null)
 	{
 		if ($id) {
-			$PDO = Database::getConnection();
-
-			// Load an existing user
-			if (ctype_digit($id)) {
-				$sql = 'select * from users where id=?';
+			if (is_array($id)) {
+				$result = $id;
 			}
 			else {
-				$sql = 'select * from users where username=?';
+				if (ctype_digit($id)) {
+					$sql = 'select * from users where id=?';
+				}
+				else {
+					$sql = 'select * from users where username=?';
+				}
+				$zend_db = Database::getConnection();
+				$result = $zend_db->fetchRow($sql,array($id));
 			}
 
-			$query = $PDO->prepare($sql);
-			$query->execute(array($id));
-
-			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count($result)) {
 				throw new Exception('users/unknownUser');
 			}
-			foreach ($result[0] as $field=>$value) {
-				if ($value) $this->$field = $value;
+			foreach ($result as $field=>$value) {
+				if ($value) {
+					$this->$field = $value;
+				}
 			}
 		}
 		else {
@@ -75,30 +77,21 @@ class User extends SystemUser
 	{
 		$this->validate();
 
-		$fields = array();
-		$fields['person_id'] = $this->person_id;
-		$fields['username'] = $this->username;
+		$data = array();
+		$data['person_id'] = $this->person_id;
+		$data['username'] = $this->username;
 		// Passwords should not be updated by default.  Use the savePassword() function
-		$fields['authenticationMethod'] = $this->authenticationMethod
-										? $this->authenticationMethod
+		$data['authenticationmethod'] = $this->authenticationmethod
+										? $this->authenticationmethod
 										: null;
 
-		// Split the fields up into a preparedFields array and a values array.
-		// PDO->execute cannot take an associative array for values, so we have
-		// to strip out the keys from $fields
-		$preparedFields = array();
-		foreach ($fields as $key=>$value) {
-			$preparedFields[] = "$key=?";
-			$values[] = $value;
-		}
-		$preparedFields = implode(",",$preparedFields);
 
 		// Do the database calls
 		if ($this->id) {
-			$this->update($values,$preparedFields);
+			$this->update($data);
 		}
 		else {
-			$this->insert($values,$preparedFields);
+			$this->insert($data);
 		}
 
 		// Save the password only if it's changed
@@ -109,23 +102,17 @@ class User extends SystemUser
 		$this->updateRoles();
 	}
 
-	private function update($values,$preparedFields)
+	private function update($data)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "update users set $preparedFields where id={$this->id}";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
+		$zend_db = Database::getConnection();
+		$zend_db->update('users',$data,"id={$this->id}");
 	}
 
-	private function insert($values,$preparedFields)
+	private function insert($data)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "insert users set $preparedFields";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
-		$this->id = $PDO->lastInsertID();
+		$zend_db = Database::getConnection();
+		$zend_db->insert('users',$data);
+		$this->id = $zend_db->lastInsertId();
 	}
 
 	/**
@@ -133,22 +120,9 @@ class User extends SystemUser
 	 */
 	public function delete()
 	{
-		$PDO = Database::getConnection();
-		$PDO->beginTransaction();
-
-		try {
-			$query = $PDO->prepare('delete from user_roles where user_id=?');
-			$query->execute(array($this->id));
-
-			$query = $PDO->prepare('delete from users where id=?');
-			$query->execute(array($this->id));
-
-			$PDO->commit();
-		}
-		catch(Exception $e) {
-			$PDO->rollBack();
-			throw $e;
-		}
+		$zend_db = Database::getConnection();
+		$zend_db->delete('user_roles',"user_id={$this->id}");
+		$zend_db->delete('users',"id={$this->id}");
 	}
 
 
@@ -257,10 +231,10 @@ class User extends SystemUser
 	/**
 	 * @param string $authenticationMethod
 	 */
-	public function setAuthenticationMethod($string)
+	public function setAuthenticationmethod($string)
 	{
-		$this->authenticationMethod = $string;
-		if ($this->authenticationMethod != 'local') {
+		$this->authenticationmethod = $string;
+		if ($this->authenticationmethod != 'local') {
 			$this->password = null;
 			$this->saveLocalPassword();
 		}
@@ -286,11 +260,12 @@ class User extends SystemUser
 	{
 		if (!count($this->roles)) {
 			if ($this->id) {
-				$PDO = Database::getConnection();
-				$sql = 'select role_id,name from user_roles left join roles on role_id=id where user_id=?';
-				$query = $PDO->prepare($sql);
-				$query->execute(array($this->id));
-				$result = $query->fetchAll();
+				$zend_db = Database::getConnection();
+				$select = new Zend_Db_Select($zend_db);
+				$select->from('user_roles',array('role_id','name'))
+						->joinLeft('roles','role_id=id')
+						->where('user_id=?');
+				$result = $zend_db->fetchAll($select,$this->id);
 
 				foreach ($result as $row) {
 					$this->roles[$row['role_id']] = $row['name'];
@@ -333,16 +308,15 @@ class User extends SystemUser
 
 	private function updateRoles()
 	{
-		$PDO = Database::getConnection();
+		$zend_db = Database::getConnection();
 
 		$roles = $this->getRoles();
 
-		$query = $PDO->prepare('delete from user_roles where user_id=?');
-		$query->execute(array($this->id));
+		$zend_db->delete('user_roles',"user_id={$this->id}");
 
-		$query = $PDO->prepare('insert user_roles values(?,?)');
-		foreach ($roles as $role_id=>$roleName) {
-			$query->execute(array($this->id,$role_id));
+		foreach ($roles as $id=>$name) {
+			$data = array('user_id'=>$this->id,'role_id'=>$id);
+			$zend_db->insert('user_roles',$data);
 		}
 	}
 
@@ -363,11 +337,10 @@ class User extends SystemUser
 	 */
 	protected function saveLocalPassword()
 	{
-		$PDO = Database::getConnection();
+		$zend_db = Database::getConnection();
 
 		// Passwords in the class should already be MD5 hashed
-		$query = $PDO->prepare('update users set password=? where id=?');
-		$query->execute(array($this->password,$this->id));
+		$zend_db->update('users',array('password'=>$this->password),"id={$this->id}");
 	}
 
 	/**
@@ -380,11 +353,12 @@ class User extends SystemUser
 	 */
 	protected function authenticateDatabase($password)
 	{
-		$PDO = Database::getConnection();
+		$zend_db = Database::getConnection();
 
-		$query = $PDO->prepare('select id from users where username=? and password=md5(?)');
-		$query->execute(array($this->username,$password));
-		$result = $query->fetchAll();
-		return count($result) ? true : false;
+		$md5 = md5($password);
+
+		$id = $zend_db->fetchOne('select id from users where username=? and password=?',
+								array($this->username,$md5));
+		return $id ? true : false;
 	}
 }

@@ -5,12 +5,13 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 include '../configuration.inc';
-$PDO = Database::getConnection();
+$zend_db = Database::getConnection();
 
-foreach (Database::getTables() as $tableName) {
+foreach ($zend_db->listTables() as $tableName) {
 	$fields = array();
-	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
+	$primary_keys = array();
+	foreach ($zend_db->describeTable($tableName) as $row) {
+		$type = preg_replace("/[^a-z]/","",strtolower($row['DATA_TYPE']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -20,16 +21,19 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
+		$fields[] = array('field'=>$row['COLUMN_NAME'],'type'=>$type);
+
+		if ($row['PRIMARY']) {
+			$primary_keys[] = $row['COLUMN_NAME'];
+		}
 	}
 
 	// Only generate code for tables that have a single-column primary key
 	// Code for other tables will need to be created by hand
-	$primary_keys = Database::getPrimaryKeyInfo($tableName);
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = strtolower($primary_keys[0]['column_name']);
+	$key = $primary_keys[0];
 
 	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);

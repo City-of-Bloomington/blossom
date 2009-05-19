@@ -2,90 +2,58 @@
 /**
  * A collection class for Person objects
  *
- * This class creates a select statement, only selecting the ID from each row
- * PDOResultIterator handles iterating and paginating those results.
- * As the results are iterated over, PDOResultIterator will pass each desired
- * ID back to this class's loadResult() which will be responsible for hydrating
- * each Person object
- *
- * Beyond the basic $fields handled, you will need to write your own handling
- * of whatever extra $fields you need
- *
- * The PDOResultIterator uses prepared queries; it is recommended to use bound
- * parameters for each of the options you handle
- *
  * @copyright 2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class PersonList extends PDOResultIterator
+class PersonList extends ZendDbResultIterator
 {
 	/**
-	 * Creates a basic select statement for the collection.
-	 * Populates the collection if you pass in $fields
-	 *
 	 * @param array $fields
 	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select people.id as id from people';
+		parent::__construct();
 		if (is_array($fields)) {
 			$this->find($fields);
 		}
 	}
 
 	/**
-	 * Populates the collection from the database based on the $fields you handle
+	 * Populates the collection
 	 *
 	 * @param array $fields
-	 * @param string $sort
+	 * @param string|array $order Multi-column sort should be given as an array
 	 * @param int $limit
-	 * @param string $groupBy
+	 * @param string|array $groupBy Multi-column group by should be given as an array
 	 */
-	public function find($fields=null,$sort='id',$limit=null,$groupBy=null)
+	public function find($fields=null,$order='lastname',$limit=null,$groupBy=null)
 	{
-		$this->sort = $sort;
-		$this->limit = $limit;
-		$this->groupBy = $groupBy;
-		$this->joins = '';
+		$this->select->from('people');
 
-		$options = array();
-		$parameters = array();
-
-		if (isset($fields['id'])) {
-			$options[] = 'id=:id';
-			$parameters[':id'] = $fields['id'];
+		if (count($fields)) {
+			foreach ($fields as $key=>$value) {
+				$this->select->where("$key=?",$value);
+			}
 		}
 
-		if (isset($fields['firstname'])) {
-			$options[] = 'firstname=:firstname';
-			$parameters[':firstname'] = $fields['firstname'];
+		$this->select->order($order);
+		if ($limit) {
+			$this->select->limit($limit);
 		}
-
-		if (isset($fields['lastname'])) {
-			$options[] = 'lastname=:lastname';
-			$parameters[':lastname'] = $fields['lastname'];
+		if ($groupBy) {
+			$this->select->group($groupBy);
 		}
-
-		if (isset($fields['email'])) {
-			$options[] = 'email=:email';
-			$parameters[':email'] = $fields['email'];
-		}
-
-
-		// Finding on fields from other tables required joining those tables.
-		// You can add fields from other tables to $options by adding the join SQL
-		// to $this->joins here
-
-		$this->populateList($options,$parameters);
+		$this->populateList();
 	}
 
 	/**
-	 * Loads a single Person object for the key returned from PDOResultIterator
-	 * @param int $key
+	 * Hydrates all the objects from a database result set
+	 *
+	 * @return array An array of Role objects
 	 */
 	protected function loadResult($key)
 	{
-		return new Person($this->list[$key]);
+		return new Person($this->result[$key]);
 	}
 }

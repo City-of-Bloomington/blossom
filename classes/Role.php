@@ -4,35 +4,43 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Role extends ActiveRecord
+class Role
 {
 	private $id;
 	private $name;
 
 	/**
+	 * Passing in an associative array of data will populate this object without
+	 * hitting the database.
+	 *
+	 * Passing in an int will load the data from the database for the given ID.
+	 *
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
-	 * @param int|string $id
+	 *
+	 * @param int|string|array $id
 	 */
 	public function __construct($id=null)
 	{
 		if ($id) {
-			$PDO = Database::getConnection();
-
-			if (ctype_digit($id)) {
-				$sql = 'select * from roles where id=?';
+			if (is_array($id)) {
+				$result = $id;
 			}
 			else {
-				$sql = 'select * from roles where name=?';
-			}
-			$query = $PDO->prepare($sql);
-			$query->execute(array($id));
+				$zend_db = Database::getConnection();
 
-			$result = $query->fetchAll(PDO::FETCH_ASSOC);
+				if (is_int($id) || ctype_digit($id)) {
+					$sql = 'select * from roles where id=?';
+				}
+				else {
+					$sql = 'select * from roles where name=?';
+				}
+				$result = $zend_db->fetchRow($sql,array($id));
+			}
 			if (!count($result)) {
 				throw new Exception('roles/unknownRole');
 			}
-			foreach ($result[0] as $field=>$value) {
+			foreach ($result as $field=>$value) {
 				if ($value) {
 					$this->$field = $value;
 				}
@@ -64,45 +72,29 @@ class Role extends ActiveRecord
 	{
 		$this->validate();
 
-		$fields = array();
-		$fields['name'] = $this->name;
-
-		// Split the fields up into a preparedFields array and a values array.
-		// PDO->execute cannot take an associative array for values, so we have
-		// to strip out the keys from $fields
-		$preparedFields = array();
-		foreach ($fields as $key=>$value) {
-			$preparedFields[] = "$key=?";
-			$values[] = $value;
-		}
-		$preparedFields = implode(",",$preparedFields);
+		$data = array();
+		$data['name'] = $this->name;
 
 
 		if ($this->id) {
-			$this->update($values,$preparedFields);
+			$this->update($data);
 		}
 		else {
-			$this->insert($values,$preparedFields);
+			$this->insert($data);
 		}
 	}
 
-	private function update($values,$preparedFields)
+	private function update($data)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "update roles set $preparedFields where id={$this->id}";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
+		$zend_db = Database::getConnection();
+		$zend_db->update('roles',$data,"id={$this->id}");
 	}
 
-	private function insert($values,$preparedFields)
+	private function insert($data)
 	{
-		$PDO = Database::getConnection();
-
-		$sql = "insert roles set $preparedFields";
-		$query = $PDO->prepare($sql);
-		$query->execute($values);
-		$this->id = $PDO->lastInsertID();
+		$zend_db = Database::getConnection();
+		$zend_db->insert('roles',$data);
+		$this->id = $zend_db->lastInsertId();
 	}
 
 	//----------------------------------------------------------------

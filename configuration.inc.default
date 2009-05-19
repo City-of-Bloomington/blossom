@@ -24,6 +24,16 @@ define('APPLICATION_HOME','/var/www/sites/application_name');
 define('FRAMEWORK',APPLICATION_HOME.'/libraries/framework');
 
 /**
+ * This needs to point to the library directory inside your
+ * installation of the ZendFramework
+ * http://framework.zend.com
+ */
+define('ZEND',APPLICATION_HOME.'/libraries/ZendFramework/library');
+ini_set('include_path',ini_get('include_path').':'.ZEND);
+require_once 'Zend/Loader/Autoloader.php';
+Zend_Loader_Autoloader::getInstance();
+
+/**
  * The URL to get to this site
  * Do NOT use a trailing slash
  */
@@ -67,7 +77,9 @@ define('ERROR_REPORTING','PHP_DEFAULT');
  * Refer to the PDO documentation for DSN sytnax for your database type
  * http://www.php.net/manual/en/pdo.drivers.php
  */
-define('DB_DSN','mysql://unix_socket=/tmp/mysql.sock;dbname='.APPLICATION_NAME);
+define('DB_ADAPTER','Pdo_Mysql');
+define('DB_HOST','localhost');
+define('DB_NAME',APPLICATION_NAME);
 define('DB_USER',APPLICATION_NAME);
 define('DB_PASS','password');
 
@@ -88,6 +100,7 @@ define('LDAP_PASSWORD_ATTRIBUTE','userpassword');
  * Import global functions that we use for many applications we write
  */
 include FRAMEWORK.'/globalFunctions.php';
+spl_autoload_register('autoload');
 
 /**
  * Session Startup

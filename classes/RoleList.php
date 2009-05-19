@@ -1,63 +1,58 @@
 <?php
 /**
- * @copyright 2006-2008 City of Bloomington, Indiana
+ * @copyright 2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
 */
-class RoleList extends PDOResultIterator
+class RoleList extends ZendDbResultIterator
 {
 	/**
-	 * Roles are really just an attribute array for users.
-	 * For now, I'm not loading them in as objects.
-	 * This is an optimization to save on database calls
 	 * @param array $fields
 	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select name as id from roles';
+		parent::__construct();
+
 		if (is_array($fields)) {
 			$this->find($fields);
 		}
 	}
 
 	/**
+	 * Populates the collection
+	 *
 	 * @param array $fields
-	 * @param string $sort
-	 * @param string $limit
-	 * @param string $groupBy
+	 * @param string|array $order Multi-column sort should be given as an array
+	 * @param int $limit
+	 * @param string|array $groupBy Multi-column group by should be given as an array
 	 */
-	public function find($fields=null,$sort='name',$limit=null,$groupBy=null)
+	public function find($fields=null,$order='name',$limit=null,$groupBy=null)
 	{
-		$this->sort = $sort;
-		$this->limit = $limit;
-		$this->groupBy = $groupBy;
-		$this->joins = '';
+		$this->select->from('roles');
 
-		$options = array();
-		$parameters = array();
-		if (isset($fields['id'])) {
-			$options[] = 'id=:id';
-			$parameters[':id'] = $fields['id'];
-		}
-		if (isset($fields['name'])) {
-			$options[] = 'name=:name';
-			$parameters[':name'] = $fields['name'];
+		if (count($fields)) {
+			foreach ($fields as $key=>$value) {
+				$this->select->where("$key=?",$value);
+			}
 		}
 
-
-		// Finding on fields from other tables required joining those tables.
-		// You can add fields from other tables to $options by adding the join SQL
-		// to $this->joins here
-
-		$this->populateList($options,$parameters);
+		$this->select->order($order);
+		if ($limit) {
+			$this->select->limit($limit);
+		}
+		if ($groupBy) {
+			$this->select->group($groupBy);
+		}
+		$this->populateList();
 	}
 
 	/**
-	 * For now we are not returning Role objects, only the names of each role
-	 * @param mixed $key
+	 * Load each Role object as we iterate through the results
+	 *
+	 * @return array An array of Role objects
 	 */
 	protected function loadResult($key)
 	{
-		return $this->list[$key];
+		return new Role($this->result[$key]);
 	}
 }

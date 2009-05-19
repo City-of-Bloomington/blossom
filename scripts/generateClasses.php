@@ -7,12 +7,13 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 include '../configuration.inc';
-$PDO = Database::getConnection();
+$zend_db = Database::getConnection();
 
-foreach (Database::getTables() as $tableName) {
+foreach ($zend_db->listTables() as $tableName) {
 	$fields = array();
-	foreach (Database::getFields($tableName) as $row) {
-		$type = preg_replace("/[^a-z]/","",strtolower($row['type']));
+	$primary_keys = array();
+	foreach ($zend_db->describeTable($tableName) as $row) {
+		$type = preg_replace("/[^a-z]/","",strtolower($row['DATA_TYPE']));
 
 		// Translate database datatypes into PHP datatypes
 		if (preg_match('/int/',$type)) {
@@ -22,16 +23,19 @@ foreach (Database::getTables() as $tableName) {
 			$type = 'string';
 		}
 
-		$fields[] = array('field'=>strtolower($row['field']),'type'=>$type);
+		$fields[] = array('field'=>$row['COLUMN_NAME'],'type'=>$type);
+
+		if ($row['PRIMARY']) {
+			$primary_keys[] = $row['COLUMN_NAME'];
+		}
 	}
 
 	// Only generate code for tables that have a single-column primary key
 	// Code for other tables will need to be created by hand
-	$primary_keys = Database::getPrimaryKeyInfo($tableName);
 	if (count($primary_keys) != 1) {
 		continue;
 	}
-	$key = strtolower($primary_keys[0]['column_name']);
+	$key = $primary_keys[0];
 
 	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
@@ -40,23 +44,33 @@ foreach (Database::getTables() as $tableName) {
 	//--------------------------------------------------------------------------
 	$constructor = "
 	/**
+	 * Populates the object with data
+	 *
+	 * Passing in an associative array of data will populate this object without
+	 * hitting the database.
+	 *
+	 * Passing in a scalar will load the data from the database.
 	 * This will load all fields in the table as properties of this class.
 	 * You may want to replace this with, or add your own extra, custom loading
 	 *
-	 * @param int \$$key
+	 * @param int|array \$$key
 	 */
 	public function __construct(\$$key=null)
 	{
 		if (\$$key) {
-			\$PDO = Database::getConnection();
-			\$query = \$PDO->prepare('select * from $tableName where $key=?');
-			\$query->execute(array(\$$key));
+			if (is_array(\$$key)) {
+				\$result = \$$key;
+			}
+			else {
+				\$zend_db = Database::getConnection();
+				\$sql = 'select * from $tableName where id=?';
+				\$result = \$zend_db->fetchRow(\$sql,array(\$$key));
+			}
 
-			\$result = \$query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count(\$result)) {
 				throw new Exception('$tableName/unknown$className');
 			}
-			foreach (\$result[0] as \$field=>\$value) {
+			foreach (\$result as \$field=>\$value) {
 				if (\$value) {
 					\$this->\$field = \$value;
 				}
@@ -313,59 +327,38 @@ $constructor
 
 	/**
 	 * Saves this record back to the database
-	 *
-	 * This generates generic SQL that should work right away.
-	 * You can replace this \$fields code with your own custom SQL
-	 * for each property of this class,
 	 */
 	public function save()
 	{
 		\$this->validate();
 
-		\$fields = array();
+		\$data = array();
 ";
 			foreach ($fields as $field) {
 				if ($field['field'] != $key) {
-					$contents.="\t\t\$fields['$field[field]'] = \$this->$field[field] ? \$this->$field[field] : null;\n";
+					$contents.="\t\t\$data['$field[field]'] = \$this->$field[field] ? \$this->$field[field] : null;\n";
 				}
 			}
 $contents.= "
-		// Split the fields up into a preparedFields array and a values array.
-		// PDO->execute cannot take an associative array for values, so we have
-		// to strip out the keys from \$fields
-		\$preparedFields = array();
-		foreach (\$fields as \$key=>\$value) {
-			\$preparedFields[] = \"\$key=?\";
-			\$values[] = \$value;
-		}
-		\$preparedFields = implode(\",\",\$preparedFields);
-
-
 		if (\$this->$key) {
-			\$this->update(\$values,\$preparedFields);
+			\$this->update(\$data);
 		}
 		else {
-			\$this->insert(\$values,\$preparedFields);
+			\$this->insert(\$data);
 		}
 	}
 
-	private function update(\$values,\$preparedFields)
+	private function update(\$data)
 	{
-		\$PDO = Database::getConnection();
-
-		\$sql = \"update $tableName set \$preparedFields where $key={\$this->$key}\";
-		\$query = \$PDO->prepare(\$sql);
-		\$query->execute(\$values);
+		\$zend_db = Database::getConnection();
+		\$zend_db->update('$tableName',\$data,\"$key='{\$this->$key}'\");
 	}
 
-	private function insert(\$values,\$preparedFields)
+	private function insert(\$data)
 	{
-		\$PDO = Database::getConnection();
-
-		\$sql = \"insert $tableName set \$preparedFields\";
-		\$query = \$PDO->prepare(\$sql);
-		\$query->execute(\$values);
-		\$this->$key = \$PDO->lastInsertID();
+		\$zend_db = Database::getConnection();
+		\$zend_db->insert('$tableName',\$data);
+		\$this->id = \$zend_db->lastInsertId();
 	}
 
 	//----------------------------------------------------------------
