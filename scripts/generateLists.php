@@ -85,6 +85,8 @@ class {$className}List extends ZendDbResultIterator
 	 */
 	public function find(\$fields=null,\$order='$key',\$limit=null,\$groupBy=null)
 	{
+		\$this->select->from('$tableName');
+		
 		// Finding on fields from the $tableName table is handled here
 		if (count(\$fields)) {
 			foreach (\$fields as \$key=>\$value) {
