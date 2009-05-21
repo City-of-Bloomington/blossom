@@ -85,6 +85,7 @@ class {$className}List extends ZendDbResultIterator
 	 */
 	public function find(\$fields=null,\$order='$key',\$limit=null,\$groupBy=null)
 	{
+		// Finding on fields from the $tableName table is handled here
 		if (count(\$fields)) {
 			foreach (\$fields as \$key=>\$value) {
 				\$this->select->where(\"\$key=?\",\$value);
@@ -107,8 +108,13 @@ class {$className}List extends ZendDbResultIterator
 	}
 
 	/**
-	 * Hydrates each $className object as we iterate through the results
-	 * @param int \$key
+	 * Hydrates all the $className objects from a database result set
+	 *
+	 * This is a callback function, called from ZendDbResultIterator.  It is
+	 * called once per row of the result.
+	 *
+	 * @param int \$key The index of the result row to load
+	 * @return $className
 	 */
 	protected function loadResult(\$key)
 	{
