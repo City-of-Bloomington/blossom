@@ -63,11 +63,11 @@ foreach ($zend_db->listTables() as $tableName) {
 			}
 			else {
 				\$zend_db = Database::getConnection();
-				\$sql = 'select * from $tableName where id=?';
+				\$sql = 'select * from $tableName where $key=?';
 				\$result = \$zend_db->fetchRow(\$sql,array(\$$key));
 			}
 
-			if (\$reasult) {
+			if (\$result) {
 				foreach (\$result as \$field=>\$value) {
 					if (\$value) {
 						\$this->\$field = \$value;
@@ -312,7 +312,7 @@ foreach ($zend_db->listTables() as $tableName) {
 $contents = "<?php\n";
 $contents.= COPYRIGHT;
 $contents.= "
-class $className extends ActiveRecord
+class $className
 {
 $properties
 
