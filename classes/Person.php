@@ -101,7 +101,7 @@ class Person
 		$zend_db->update('people',$data,"id={$this->id}");
 	}
 
-	private function insert($values)
+	private function insert($data)
 	{
 		$zend_db = Database::getConnection();
 		$zend_db->insert('people',$data);
