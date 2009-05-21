@@ -2,6 +2,15 @@
 /**
  * A collection class for User objects
  *
+ * This class creates a zend_db select statement.
+ * ZendDbResultIterator handles iterating and paginating those results.
+ * As the results are iterated over, ZendDbResultIterator will pass each desired
+ * row back to this class's loadResult() which will be responsible for hydrating
+ * each User object
+ *
+ * Beyond the basic $fields handled, you will need to write your own handling
+ * of whatever extra $fields you need
+ *
  * @copyright 2009 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
@@ -35,6 +44,7 @@ class UserList extends ZendDbResultIterator
 	{
 		$this->select->from(array('u'=>'users'));
 
+		// Finding on fields from the Users table is handled here
 		if (count($fields)) {
 			foreach ($fields as $key=>$value) {
 				if (array_key_exists($key,$this->columns)) {
@@ -43,11 +53,13 @@ class UserList extends ZendDbResultIterator
 			}
 		}
 
-		// Finding on fields from other tables required joining those tables.
-		// You can add fields from other tables to $options by adding the join SQL
-		// to $this->joins here
+		// Finding on fields from other tables requires joining those tables.
+		// You can handle fields from other tables by adding the joins here
+		// If you add more joins you probably want to make sure that the
+		// above foreach only handles fields from the users table.
 		$joins = array();
 
+		// Firstname, lastname, and email come from the People table
 		if (isset($fields['firstname'])) {
 			$joins['p'] = array('table'=>'people','condition'=>'u.id=p.user_id');
 			$this->select->where('p.firstname=?',$fields['firstname']);
@@ -60,12 +72,15 @@ class UserList extends ZendDbResultIterator
 			$joins['p'] = array('table'=>'people','condition'=>'u.id=p.user_id');
 			$this->select->where('p.email=?',$fields['email']);
 		}
+
+		// To get the Role, we have to join the user_roles and roles tables
 		if (isset($fields['role'])) {
 			$joins['ur'] = array('table'=>'user_roles','condition'=>'u.id=ur.user_id');
 			$joins['r'] = array('table'=>'roles','condition'=>'ur.role_id=r.id');
 			$this->select->where('r.name=?',$fields['role']);
 		}
 
+		// Add all the joins we've created to the select
 		foreach ($joins as $key=>$join) {
 			$this->select->joinLeft(array($key=>$join['table']),$join['condition']);
 		}
@@ -85,7 +100,11 @@ class UserList extends ZendDbResultIterator
 	/**
 	 * Hydrates all the objects from a database result set
 	 *
-	 * @return array An array of objects
+	 * This is a callback function, called from ZendDbResultIterator.  It is
+	 * called once per row of the result.
+	 *
+	 * @param int $key The index of the result row to load
+	 * @return User
 	 */
 	protected function loadResult($key)
 	{
