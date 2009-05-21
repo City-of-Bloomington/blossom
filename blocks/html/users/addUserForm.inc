@@ -10,11 +10,11 @@
 	<fieldset><legend>Login Info</legend>
 		<table>
 			<tr><td><label for="user-authenticationMethod">Authentication</label></td>
-				<td><select name="user[authenticationMethod]" id="user-authenticationMethod">
-						<option <?php if(isset($_POST['user']['authenticationMethod']) && $_POST['user']['authenticationMethod']=="LDAP") echo "selected=\"selected\""; ?>>
+				<td><select name="user[authenticationmethod]" id="user-authenticationmethod">
+						<option <?php if(isset($_POST['user']['authenticationmethod']) && $_POST['user']['authenticationMethod']=="LDAP") echo "selected=\"selected\""; ?>>
 							LDAP
 						</option>
-						<option <?php if(isset($_POST['user']['authenticationMethod']) && $_POST['user']['authenticationMethod']=="local") echo "selected=\"selected\""; ?>>
+						<option <?php if(isset($_POST['user']['authenticationmethod']) && $_POST['user']['authenticationMethod']=="local") echo "selected=\"selected\""; ?>>
 							local
 						</option>
 					</select>
