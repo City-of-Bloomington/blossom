@@ -360,7 +360,7 @@ $contents.= "
 	{
 		\$zend_db = Database::getConnection();
 		\$zend_db->insert('$tableName',\$data);
-		\$this->id = \$zend_db->lastInsertId('$tableName','$key');
+		\$this->$key = \$zend_db->lastInsertId('$tableName','$key');
 	}
 
 	//----------------------------------------------------------------
