@@ -220,7 +220,7 @@ $HTML = "<h1>Update $className</h1>
 							\$$field[field] = \$this->{$variableName}->dateStringToArray(\$this->{$variableName}->get$fieldFunctionName());
 							for (\$i=1; \$i<=12; \$i++) {
 								\$selected = (\$i==\$$field[field]['mon']) ? 'selected=\"selected\"' : '';
-								echo \"<option \$selected\">\$i</option>\";
+								echo \"<option \$selected>\$i</option>\";
 							}
 						?>
 					</select>
