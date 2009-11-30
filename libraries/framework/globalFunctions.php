@@ -146,35 +146,25 @@ if (ERROR_REPORTING != 'PHP_DEFAULT') {
 	set_exception_handler('customExceptionHandler');
 }
 
-
 /**
- * Makes sure the user is logged in.
+ * Checks if the user is logged in and is supposed to have acces to the resource
  *
- * If a Role or an array of Roles is passed in, it will check
- * to make sure the user belongs to one of the given roles.
- * If the validation fails, the user will be bounced to the BASE_URL
- *
- * @param string $role Optional role name
- * @param array $roles Optional array of role names
+ * This is implemented by checking against a Zend_Acl object
+ * The Zend_Acl should be created in configuration.inc
+ * @param Zend_Acl_Resource|string $resource
+ * @return boolean
  */
-function verifyUser($roles=null)
+function userIsAllowed($resource)
 {
-	// Make sure they're logged in
-	if (!isset($_SESSION['USER']) || $_SESSION['IP_ADDRESS']!=$_SERVER['REMOTE_ADDR']) {
-		// They're not logged in.  Boot them out to the login page
-		$_SESSION['errorMessages'][] = new Exception('notLoggedIn');
-		header("Location: ".BASE_URL);
-		exit();
-	}
-
-	// Check their roles against the required roles for the page
-	if ($roles) {
-		if (!$_SESSION['USER']->hasRole($roles)) {
-			$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
-			header('Location: '.BASE_URL);
-			exit();
+	global $ZEND_ACL;
+	if (isset($_SESSION['USER'])) {
+		foreach ($_SESSION['USER']->getRoles() as $role) {
+			if ($ZEND_ACL->isAllowed($role,$resource)) {
+				return true;
+			}
 		}
 	}
+	return false;
 }
 
 /**

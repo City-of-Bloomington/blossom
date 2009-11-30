@@ -63,13 +63,18 @@ class {$className}List extends ZendDbResultIterator
 {
 	/**
 	 * Creates a basic select statement for the collection.
+	 *
 	 * Populates the collection if you pass in \$fields
+	 * Setting itemsPerPage turns on pagination mode
+	 * In pagination mode, this will only load the results for one page
 	 *
 	 * @param array \$fields
+	 * @param int \$itemsPerPage Turns on Pagination
+	 * @param int \$currentPage
 	 */
-	public function __construct(\$fields=null)
+	public function __construct(\$fields=null,\$itemsPerPage=null,\$currentPage=null)
 	{
-		parent::__construct();
+		parent::__construct(\$itemsPerPage,\$currentPage);
 		if (is_array(\$fields)) {
 			\$this->find(\$fields);
 		}
@@ -86,7 +91,7 @@ class {$className}List extends ZendDbResultIterator
 	public function find(\$fields=null,\$order='$key',\$limit=null,\$groupBy=null)
 	{
 		\$this->select->from('$tableName');
-		
+
 		// Finding on fields from the $tableName table is handled here
 		if (count(\$fields)) {
 			foreach (\$fields as \$key=>\$value) {

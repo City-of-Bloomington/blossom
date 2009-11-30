@@ -29,14 +29,6 @@ class Database
 													 Zend_Db::AUTO_QUOTE_IDENTIFIERS=>false));
 				self::$connection = Zend_Db::factory(DB_ADAPTER,$parameters);
 				self::$connection->getConnection();
-
-				// Alter oracle sessions to act more like MySQL
-				if (self::getType() == 'oracle') {
-					self::$connection->query('alter session set current_schema=?',DB_USER);
-					self::$connection->query('alter session set nls_date_format=?','YYYY-MM-DD HH24:MI:SS');
-					self::$connection->query('alter session set nls_comp=linguistic');
-					self::$connection->query('alter session set nls_sort=binary_ci');
-				}
 			}
 			catch (Exception $e) {
 				die($e->getMessage());

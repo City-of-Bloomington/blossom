@@ -121,19 +121,18 @@ foreach ($zend_db->listTables() as $tableName) {
 				$getters.= "
 	/**
 	 * Returns the date/time in the desired format
-	 * Format can be specified using either the strftime() or the date() syntax
+	 *
+	 * Format is specified using PHP's date() syntax
+	 * http://www.php.net/manual/en/function.date.php
+	 * If no format is given, the Date object is returned
 	 *
 	 * @param string \$format
+	 * @return string|DateTime
 	 */
 	public function get$fieldFunctionName(\$format=null)
 	{
 		if (\$format && \$this->$field[field]) {
-			if (strpos(\$format,'%')!==false) {
-				return strftime(\$format,\$this->$field[field]);
-			}
-			else {
-				return date(\$format,\$this->$field[field]);
-			}
+			return \$this->$field[field]->format(\$format);
 		}
 		else {
 			return \$this->$field[field];
@@ -230,24 +229,20 @@ foreach ($zend_db->listTables() as $tableName) {
 	/**
 	 * Sets the date
 	 *
-	 * Dates and times should be stored as timestamps internally.
-	 * This accepts dates and times in multiple formats and sets the internal timestamp
-	 * Accepted formats are:
-	 * 		array - in the form of PHP getdate()
-	 *		timestamp
-	 *		string - anything strtotime understands
-	 * @param $field[type] \$$field[type]
+	 * Date arrays should match arrays produced by getdate()
+	 *
+	 * Date string formats should be in something strtotime() understands
+	 * http://www.php.net/manual/en/function.strtotime.php
+	 *
+	 * @param int|string|array \$$field[type]
 	 */
 	public function set$fieldFunctionName(\$$field[type])
 	{
-		if (is_array(\$$field[type])) {
-			\$this->$field[field] = \$this->dateArrayToTimestamp(\$$field[type]);
-		}
-		elseif (ctype_digit(\$$field[type])) {
-			\$this->$field[field] = \$$field[type];
+		if (\$$field[type]) {
+			\$this->$field[field] = new Date(\$$field[type]);
 		}
 		else {
-			\$this->$field[field] = strtotime(\$$field[type]);
+			\$this->$field[field] = null;
 		}
 	}
 ";

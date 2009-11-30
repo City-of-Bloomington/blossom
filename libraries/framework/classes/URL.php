@@ -5,7 +5,7 @@
  * $url = new URL('/path/to/webpage.php?initialParameter=whatever');
  * $url->parameters['somevar'] = $somevar;
  * $url->somevar = $somevar;
- * echo $url->getURL();
+ * echo $url;
  *
  * @copyright 2006-2009 City of Bloomington, Indiana.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
@@ -13,48 +13,33 @@
  */
 class URL
 {
-	private $protocol;
-	private $script;
+	private $scheme;
+	private $host;
+	private $path;
+	private $anchor;
+
 	public $parameters = array();
 
-	/**
-	 * @param string $script
-	 * @param array $parmeters
-	 */
-	public function __construct($script='',$parameters=array())
-	{
-		$this->parameters = $parameters;
-		$this->setScript($script);
-	}
-
-	public function setScript($script)
+	public function __construct($script)
 	{
 		$script = urldecode($script);
 
-		if (preg_match('|://|',$script)) {
-			list($protocol,$script) = explode('://',$script);
-			$this->protocol = "$protocol://";
-		}
-		else {
-			$this->protocol = $_SERVER['SERVER_PORT']==443 ? 'https://' : 'http://';
+		// If scheme wasn't provided add one to the start of the string
+		if (!preg_match('|://|',$script)) {
+			$scheme = $_SERVER['SERVER_PORT']==443 ? 'https://' : 'http://';
+			$script = $scheme.$script;
 		}
 
-		// Parse any parameters already in the script
-		if (preg_match('/\?/',$script)) {
-			list($script,$parameters) = explode('?',$script);
-
-			$parameters = preg_split('/[;&]/',$parameters);
-			foreach ($parameters as $parameter) {
-				if (preg_match('/=/',$parameter)) {
-					list($field,$value) = explode('=',$parameter);
-					if ($value) {
-						$this->parameters[$field] = $value;
-					}
-				}
-			}
+		$url = parse_url($script);
+		$this->scheme = $url['scheme'];
+		$this->host = $url['host'];
+		$this->path = $url['path'];
+		if (isset($url['fragment'])) {
+			$this->anchor = $url['fragment'];
 		}
-
-		$this->script = $script;
+		if (isset($url['query'])) {
+			parse_str($url['query'],$this->parameters);
+		}
 	}
 
 	/**
@@ -62,7 +47,7 @@ class URL
 	 * @return string
 	 */
 	public function getScript() {
-		return $this->script;
+		return $this->scheme.'://'.$this->host.$this->path;
 	}
 
 	/**
@@ -80,20 +65,14 @@ class URL
 	 */
 	public function getURL()
 	{
-		$url = $this->protocol.$this->script;
+		$url = $this->getScript();
+
 		if (count($this->parameters)) {
-			$url.= '?';
-			$parameters = array();
-			foreach ($this->parameters as $key=>$value) {
-				if (is_array($value)) {
-					$parameters[] = $this->smash($value,array($key));
-				}
-				else {
-					$parameters[] = urlencode($key).'='.urlencode($value);
-				}
-			}
-			$parameters = implode(';',$parameters);
-			$url.= $parameters;
+			$url.= '?'.http_build_query($this->parameters,'');
+		}
+
+		if ($this->anchor) {
+			$url.= '#'.$this->anchor;
 		}
 		return $url;
 	}
@@ -102,60 +81,42 @@ class URL
 	 * Returns just the protocol (http://, https://) portion
 	 * @return string
 	 */
-	public function getProtocol() {
-		if (!$this->protocol) {
-			$this->protocol = 'http://';
+	public function getScheme() {
+		if (!$this->scheme) {
+			$this->scheme = 'http://';
 		}
-		return $this->protocol;
+		return $this->scheme;
 	}
 
 	/**
 	 * Sets the protocol for the URL (http, https)
 	 * @param string $protocol
 	 */
-	public function setProtocol($string)
+	public function setScheme($string)
 	{
 		if (!preg_match('|://|',$string)) {
 			$string .= '://';
 		}
-		$this->protocol = $string;
+		$this->scheme = $string;
 	}
-
 
 	/**
-	 * Converts a multi-dimensional array into a URL parameter string
+	 * Cleans out any query parameters that had empty values
 	 */
-	private function smash($array, $keyssofar)
+	public function purgeEmptyParameters()
 	{
-		$output = '';
-		foreach ($array as $key => $value) {
-			if (!is_array($value)) {
-				$t = '';
-				foreach ($keyssofar as $i=>$k) {
-					if ($i) {
-						$t.= '['.urlencode($k).']';
-					}
-					else {
-						$t.=urlencode($k);
-					}
-				}
-
-				$t.='['.urlencode($key).']';
-				$output.= $t.'='.urlencode($value);
-			}
-			else {
-				$t = array();
-				foreach ($keyssofar as $k) {
-					$t[] = $k;
-				}
-
-				$t[] = $key;
-				$output.= $this->smash($value,$t);
-			}
-		}
-		return $output;
+		$this->parameters = $this->array_filter_recursive($this->parameters);
 	}
 
+	private function array_filter_recursive(array $input)
+	{
+		foreach ($input as &$value) {
+			if (is_array($value)) {
+				$value = $this->array_filter_recursive($value);
+			}
+		}
+		return array_filter($input);
+	}
 
 	/**
 	 * @param string $key

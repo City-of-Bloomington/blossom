@@ -11,27 +11,59 @@ abstract class ZendDbResultIterator implements ArrayAccess,SeekableIterator,Coun
 	protected $select;
 	protected $result = array();
 
+	protected $paginator = null;
+	protected $itemsPerPage = null;
+	protected $currentPage = 1;
+
 	private $valid = false;
 	private $cacheEnabled = true;
 	private $cache = array();
 	private $key;
 
+
 	abstract public function find($fields=null,$order='',$limit=null,$groupBy=null);
 	abstract protected function loadResult($key);
 
-	public function __construct()
+	/**
+	 * Creates an empty collection
+	 *
+	 * Setting itemsPerPage turns on pagination mode
+	 * In pagination mode, this will only load the results for one page
+	 */
+	public function __construct($itemsPerPage=null,$currentPage=null)
 	{
 		$this->zend_db = Database::getConnection();
 		$this->select = new Zend_Db_Select($this->zend_db);
+
+		if ($itemsPerPage) {
+			$this->itemsPerPage = (integer)$itemsPerPage;
+
+			if ($currentPage && $currentPage > 1) {
+				$this->currentPage = $currentPage;
+			}
+		}
 	}
 
 	/**
 	 * Runs the query and stores the results
+	 *
+	 * In pagination mode, this will only load the results for one page
 	 */
 	protected function populateList()
 	{
 		$this->result = array();
-		$this->result = $this->zend_db->fetchAll($this->select);
+		if (!$this->itemsPerPage) {
+			$this->result = $this->zend_db->fetchAll($this->select);
+		}
+		else {
+			// Only load the results for one page
+			$this->paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($this->select));
+			$this->paginator->setItemCountPerPage($this->itemsPerPage);
+			$this->paginator->setCurrentPageNumber($this->currentPage);
+			foreach ($this->paginator as $row) {
+				$this->result[] = $row;
+			}
+		}
 	}
 
 	/**
@@ -40,6 +72,14 @@ abstract class ZendDbResultIterator implements ArrayAccess,SeekableIterator,Coun
 	public function getSQL()
 	{
 		return $this->select->__toString();
+	}
+
+	/**
+	 * @return Zend_Paginator
+	 */
+	public function getPaginator()
+	{
+		return $this->paginator;
 	}
 
 	// Array Access section

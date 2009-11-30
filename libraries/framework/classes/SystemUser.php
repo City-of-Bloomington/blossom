@@ -10,7 +10,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-abstract class SystemUser extends ActiveRecord
+abstract class SystemUser
 {
 	abstract public function getId();
 	abstract public function getUsername();

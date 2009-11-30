@@ -47,7 +47,11 @@ foreach ($zend_db->listTables() as $tableName) {
 	<h1>
 		<?php
 			if (userHasRole('Administrator')) {
-				echo \"<a class=\\\"add button\\\" href=\\\"\".BASE_URL.\"/$tableName/add$className.php\\\">Add</a>\";
+				echo \"
+				<button type=\\\"button\\\" class=\\\"add\\\" onclick=\\\"document.location.href='\".BASE_URL.\"/$tableName/add$className.php';\\\">
+					Add
+				</button>
+				\";
 			}
 		?>
 		{$className}s
@@ -58,7 +62,11 @@ foreach ($zend_db->listTables() as $tableName) {
 				if (userHasRole('Administrator')) {
 					\$url = new URL(BASE_URL.'/$tableName/update$className.php');
 					\$url->$key = \${$variableName}->{$getId}();
-					\$editButton = \"<a class=\\\"edit button\\\" href=\\\"\$url\\\">Edit</a>\";
+					\$editButton = \"
+					<button type=\\\"button\\\" class=\\\"edit\\\" onclick=\\\"document.location.href='\$url';\\\">
+						Edit
+					</button>
+					\";
 				}
 				echo \"<li>\$editButton \$$variableName</li>\";
 			}
