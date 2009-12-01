@@ -5,7 +5,7 @@
  * $url = new URL('/path/to/webpage.php?initialParameter=whatever');
  * $url->parameters['somevar'] = $somevar;
  * $url->somevar = $somevar;
- * echo $url;
+ * echo $url->getURL();
  *
  * @copyright 2006-2009 City of Bloomington, Indiana.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
