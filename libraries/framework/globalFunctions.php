@@ -7,21 +7,6 @@
  * @package GlobalFunctions
  */
 /**
- * Load classes on the fly as needed
- * @param string $class
- */
-function autoload($class)
-{
-	if (file_exists(APPLICATION_HOME."/classes/$class.php")) {
-		require_once(APPLICATION_HOME."/classes/$class.php");
-	}
-	elseif (file_exists(FRAMEWORK."/classes/$class.php")) {
-		require_once(FRAMEWORK."/classes/$class.php");
-	}
-}
-
-
-/**
  * Provide nicely formatted error messages when PHP bombs out.
  */
 function customErrorHandler ($errno, $errstr, $errfile, $errline)
@@ -165,54 +150,4 @@ function userIsAllowed($resource)
 		}
 	}
 	return false;
-}
-
-/**
- * Makes sure the user belongs to at least one of a set of roles
- * You can pass in either a single role name to check,
- * or an array of role names to check against.
- * @param string $role
- * @param array $roles
- * @return boolean
- */
-function userHasRole($roles)
-{
-	if (isset($_SESSION['USER'])) {
-		return $_SESSION['USER']->hasRole($roles);
-	}
-	return false;
-}
-
-/**
- * Browsers still use & when creating the url's when posting a form.
- * This will convert those into XHTML-compliant semicolons for using inside the markup
- *
- * @return string
- */
-function getCurrentURL()
-{
-	return strtr($_SERVER['REQUEST_URI'],"&",";");
-}
-
-
-function isValidDate($date) {
-	if (!preg_match("/\d{4}\-\d{1,2}\-\d{{1,2}/",$date)) {
-		return false;
-	}
-
-	$date = explode("-",$date);
-	if (count($date) != 3) {
-		return false;
-	}
-	if (strlen($date[0]) != 4) {
-		return false;
-	}
-	if (1>=$date[1] || $date[1]>=12) {
-		return false;
-	}
-	if (1>=$date[2] || $date[2]>=31) {
-		return false;
-	}
-
-	return true;
 }

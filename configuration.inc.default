@@ -29,7 +29,10 @@ define('FRAMEWORK',APPLICATION_HOME.'/libraries/framework');
  * http://framework.zend.com
  */
 define('ZEND',APPLICATION_HOME.'/libraries/ZendFramework/library');
-ini_set('include_path',ini_get('include_path').':'.ZEND);
+ini_set('include_path','.'.PATH_SEPARATOR.
+						APPLICATION_HOME.'/classes'.PATH_SEPARATOR.
+						FRAMEWORK.'/classes'.PATH_SEPARATOR.
+						ZEND);
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance();
 
@@ -43,7 +46,7 @@ define('BASE_URL','http://localhost');
  * Used when there's an error on the site.  The Framework will
  * print out a nice error message, encouraging users to report any problems
  * See: FRAMEWORK/ITSFunctions.inc
- * 
+ *
  * This is also the default Admin user information that gets added to the database
  */
 define('ADMINISTRATOR_NAME','Site Admin');
@@ -102,7 +105,6 @@ define('LDAP_PASSWORD_ATTRIBUTE','userpassword');
  * Import global functions that we use for many applications we write
  */
 include FRAMEWORK.'/globalFunctions.php';
-spl_autoload_register('autoload');
 
 /**
  * Session Startup
