@@ -7,6 +7,20 @@
  * @package GlobalFunctions
  */
 /**
+ * Load classes on the fly as needed
+ * @param string $class
+ */
+function autoload($class)
+{
+	if (file_exists(APPLICATION_HOME."/classes/$class.php")) {
+		require_once(APPLICATION_HOME."/classes/$class.php");
+	}
+	elseif (file_exists(FRAMEWORK."/classes/$class.php")) {
+		require_once(FRAMEWORK."/classes/$class.php");
+	}
+}
+
+/**
  * Provide nicely formatted error messages when PHP bombs out.
  */
 function customErrorHandler ($errno, $errstr, $errfile, $errline)

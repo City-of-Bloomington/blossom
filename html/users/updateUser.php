@@ -5,8 +5,11 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param REQUEST user_id
  */
-
-verifyUser('Administrator');
+if (!userIsAllowed('Users')) {
+	$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
+	header('Location: '.BASE_URL);
+	exit();
+}
 
 $user = new User($_REQUEST['user_id']);
 

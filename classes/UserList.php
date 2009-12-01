@@ -17,7 +17,7 @@
  */
 class UserList extends ZendDbResultIterator
 {
-	private $columns;
+	private $columns = array('id','person_id','username','password','authenticationMethod');
 
 	/**
 	 * @param array $fields
@@ -25,7 +25,6 @@ class UserList extends ZendDbResultIterator
 	public function __construct($fields=null)
 	{
 		parent::__construct();
-		$this->columns = $this->zend_db->describeTable('users');
 
 		if (is_array($fields)) {
 			$this->find($fields);

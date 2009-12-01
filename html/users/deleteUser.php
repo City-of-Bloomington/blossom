@@ -5,7 +5,11 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param GET user_id
  */
-verifyUser('Administrator');
+if (!userIsAllowed('Users')) {
+	$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
+	header('Location: '.BASE_URL);
+	exit();
+}
 
 $user = new User($_GET['user_id']);
 $user->delete();
