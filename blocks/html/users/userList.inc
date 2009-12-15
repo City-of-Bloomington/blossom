@@ -8,11 +8,11 @@
 ?>
 <div class="interfaceBox">
 	<h1><?php
-			if (userHasRole('Administrator')) {
+			if (userIsAllowed('Users')) {
 				echo "
-				<a class=\"add button\" href=\"".BASE_URL."/users/addUser.php\" title=\"Add user account\">
-					Add
-				</a>
+				<button type=\"button\" class=\"add\" onclick=\"document.location.href='".BASE_URL."/users/addUser.php';\">
+					Add User Account
+				</button>
 				";
 			}
 		?>
@@ -23,20 +23,17 @@
 		foreach ($this->userList as $user) {
 			$editButton = '';
 			$deleteButton = '';
-			if (userHasRole('Administrator')) {
-				$url = new URL(BASE_URL.'/users/updateUser.php');
-				$url->user_id = $user->getId();
+			if (userIsAllowed('Users')) {
 				$editButton = "
-				<a class=\"edit button\" href=\"$url\" title=\"Edit user account\">
-					Edit
-				</a>
+				<button type=\"button\" class=\"edit\" onclick=\"document.location.href='".BASE_URL."/users/updateUser.php?user_id={$user->getId()}';\">
+					Edit User Account
+				</button>
 				";
 
-				$url = BASE_URL.'/users/deleteUser.php?user_id='.$user->getId();
 				$deleteButton = "
-				<a class=\"delete button\" href=\"$url\" title=\"Delete user account\">
-					Delete
-				</a>
+				<button type=\"button\" class=\"delete\" onclick=\"document.location.href='".BASE_URL."/users/deleteUser.php?user_id={$user->getId()}';\">
+					Delete User Account
+				</button>
 				";
 			}
 

@@ -6,7 +6,7 @@
  * @param Person $this->person
  */
 $username = $this->person->getUsername();
-if (!$username && userHasRole('Administrator')) {
+if (!$username && userIsAllowed('Users')) {
 	$url = BASE_URL.'/users/addUser.php?person_id='.$this->person->getId();
 	$username = "
 	<button type=\"button\" onclick=\"document.location.href='$url';\">
