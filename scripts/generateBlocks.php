@@ -38,6 +38,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	$variableName = Inflector::singularize($tableName);
+	$acl_resource = ucfirst($tableName);
 
 	/**
 	 * Generate the list block
@@ -46,7 +47,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	$HTML = "<div class=\"interfaceBox\">
 	<h1>
 		<?php
-			if (userHasRole('Administrator')) {
+			if (userIsAllowed('$acl_resource')) {
 				echo \"
 				<button type=\\\"button\\\" class=\\\"add\\\" onclick=\\\"document.location.href='\".BASE_URL.\"/$tableName/add$className.php';\\\">
 					Add
@@ -59,7 +60,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	<ul><?php
 			foreach (\$this->{$variableName}List as \${$variableName}) {
 				\$editButton = '';
-				if (userHasRole('Administrator')) {
+				if (userIsAllowed('$acl_resource')) {
 					\$url = new URL(BASE_URL.'/$tableName/update$className.php');
 					\$url->$key = \${$variableName}->{$getId}();
 					\$editButton = \"

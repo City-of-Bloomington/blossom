@@ -38,6 +38,7 @@ foreach ($zend_db->listTables() as $tableName) {
 	$tableName = strtolower($tableName);
 	$className = Inflector::classify($tableName);
 	$variableName = Inflector::singularize($tableName);
+	$acl_resource = ucfirst($tableName);
 
 /**
  * Generate home.php
@@ -65,6 +66,11 @@ $contents.= $PHP;
  */
 $PHP = "
 verifyUser('Administrator');
+if (!userIsAllowed('$acl_resource')) {
+	\$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
+	header('Location: '.BASE_URL.'/$tableName');
+	exit();
+}
 
 if (isset(\$_POST['{$variableName}'])) {
 	\${$variableName} = new {$className}();
@@ -96,7 +102,11 @@ $contents.= $PHP;
  * Generate the Update controller
  */
 $PHP = "
-verifyUser('Administrator');
+if (!userIsAllowed('$acl_resource')) {
+	\$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
+	header('Location: '.BASE_URL.'/$tableName');
+	exit();
+}
 
 \${$variableName} = new {$className}(\$_REQUEST['$key']);
 if (isset(\$_POST['$variableName'])) {
