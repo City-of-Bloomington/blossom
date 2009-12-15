@@ -48,9 +48,9 @@ class PersonList extends ZendDbResultIterator
 	}
 
 	/**
-	 * Hydrates all the objects from a database result set
+	 * Loads a single Person object for the row returned from ZendDbResultIterator
 	 *
-	 * @return array An array of Role objects
+	 * @param array $key
 	 */
 	protected function loadResult($key)
 	{
