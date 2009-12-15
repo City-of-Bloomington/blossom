@@ -86,7 +86,6 @@ class User extends SystemUser
 										? $this->authenticationmethod
 										: null;
 
-
 		// Do the database calls
 		if ($this->id) {
 			$this->update($data);
@@ -125,7 +124,6 @@ class User extends SystemUser
 		$zend_db->delete('user_roles',"user_id={$this->id}");
 		$zend_db->delete('users',"id={$this->id}");
 	}
-
 
 	//----------------------------------------------------------------
 	// Generic Getters
@@ -170,27 +168,6 @@ class User extends SystemUser
 			return $this->person;
 		}
 		return null;
-	}
-	/**
-	 * @return string
-	 */
-	public function getFirstname()
-	{
-		return $this->getPerson()->getFirstname();
-	}
-	/**
-	 * @return string
-	 */
-	public function getLastname()
-	{
-		return $this->getPerson()->getLastname();
-	}
-	/**
-	 * @return string
-	 */
-	public function getEmail()
-	{
-		return $this->getPerson()->getEmail();
 	}
 
 	//----------------------------------------------------------------
@@ -253,6 +230,27 @@ class User extends SystemUser
 	// Custom Functions
 	// We recommend adding all your custom code down here at the bottom
 	//----------------------------------------------------------------
+	/**
+	 * @return string
+	 */
+	public function getFirstname()
+	{
+		return $this->getPerson()->getFirstname();
+	}
+	/**
+	 * @return string
+	 */
+	public function getLastname()
+	{
+		return $this->getPerson()->getLastname();
+	}
+	/**
+	 * @return string
+	 */
+	public function getEmail()
+	{
+		return $this->getPerson()->getEmail();
+	}
 	/**
 	 * Returns an array of Role names with the role id as the array index
 	 *
