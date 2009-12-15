@@ -33,7 +33,7 @@ if (isset($_POST['user'])) {
 	else {
 		// Load their information from LDAP
 		// Delete this statement if you're not using LDAP
-		if ($user->getAuthenticationmethod() == 'LDAP') {
+		if ($user->getAuthenticationMethod() == 'LDAP') {
 			try {
 				$ldap = new LDAPEntry($user->getUsername());
 				try {
