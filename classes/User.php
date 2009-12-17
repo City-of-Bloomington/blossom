@@ -10,7 +10,7 @@ class User extends SystemUser
 	private $person_id;
 	private $username;
 	private $password;
-	private $authenticationmethod;
+	private $authenticationMethod;
 
 	private $person;
 	private $roles = array();
@@ -82,8 +82,8 @@ class User extends SystemUser
 		$data['person_id'] = $this->person_id;
 		$data['username'] = $this->username;
 		// Passwords should not be updated by default.  Use the savePassword() function
-		$data['authenticationmethod'] = $this->authenticationmethod
-										? $this->authenticationmethod
+		$data['authenticationMethod'] = $this->authenticationMethod
+										? $this->authenticationMethod
 										: null;
 
 		// Do the database calls
@@ -152,9 +152,9 @@ class User extends SystemUser
 	/**
 	 * @return string
 	 */
-	public function getAuthenticationmethod()
+	public function getAuthenticationMethod()
 	{
-		return $this->authenticationmethod;
+		return $this->authenticationMethod;
 	}
 	/**
 	 * @return Person
@@ -209,10 +209,10 @@ class User extends SystemUser
 	/**
 	 * @param string $authenticationMethod
 	 */
-	public function setAuthenticationmethod($string)
+	public function setAuthenticationMethod($string)
 	{
-		$this->authenticationmethod = $string;
-		if ($this->authenticationmethod != 'local') {
+		$this->authenticationMethod = $string;
+		if ($this->authenticationMethod != 'local') {
 			$this->password = null;
 			$this->saveLocalPassword();
 		}
