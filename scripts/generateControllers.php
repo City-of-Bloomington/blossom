@@ -65,7 +65,6 @@ $contents.= $PHP;
  * Generate the Add controller
  */
 $PHP = "
-verifyUser('Administrator');
 if (!userIsAllowed('$acl_resource')) {
 	\$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
 	header('Location: '.BASE_URL.'/$tableName');
