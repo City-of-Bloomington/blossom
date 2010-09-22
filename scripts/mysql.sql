@@ -1,4 +1,4 @@
--- @copyright 2006-2009 City of Bloomington, Indiana
+-- @copyright 2006-2010 City of Bloomington, Indiana
 -- @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
 -- @author Cliff Ingham <inghamn@bloomington.in.gov>
 create table people (
@@ -6,7 +6,7 @@ create table people (
 	firstname varchar(128) not null,
 	lastname varchar(128) not null,
 	email varchar(255) not null
-) engine=InnoDB;
+);
 insert people values(1,'Administrator','','');
 
 create table users (
@@ -16,7 +16,7 @@ create table users (
 	password varchar(32),
 	authenticationMethod varchar(40) not null default 'LDAP',
 	foreign key (person_id) references people(id)
-) engine=InnoDB;
+);
 insert users values(1,1,'admin',md5('admin'),'local');
 
 create table roles (
@@ -31,5 +31,5 @@ create table user_roles (
 	primary key (user_id,role_id),
 	foreign key(user_id) references users (id),
 	foreign key(role_id) references roles (id)
-) engine=InnoDB;
+);
 insert user_roles values(1,1);
