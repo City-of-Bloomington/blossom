@@ -1,6 +1,6 @@
 <form method="post" action="<?php echo BASE_URL; ?>/login/login.php">
 	<fieldset><legend>Login</legend>
-		<input name="return_url" type="hidden" value="<?php echo View::escape($_SERVER['REQUEST_URI']); ?>" />
+		<input name="return_url" type="hidden" value="<?php echo $this->return_url ?>" />
 		<table>
 			<tr><th><label for="username">Username:</label></th>
 				<td><input name="username" id="username" /></td><td></td>

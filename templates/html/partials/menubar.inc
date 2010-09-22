@@ -5,8 +5,14 @@
 				echo "<li><a href=\"".BASE_URL."/login/logout.php\">Logout</a></li>";
 			}
 			else {
-				echo "<li><a href=\"".BASE_URL."/login\">Login</a></li>";
+				echo "
+				<li><a href=\"".BASE_URL."/login?return_url=$_SERVER[REQUEST_URI]\">
+						Login
+					</a>
+				</li>
+				";
 			}
 		?>
 	</ul>
 </div>
+
