@@ -89,4 +89,24 @@ abstract class SystemUser
 				call_user_func(array($type,'savePassword'),$this->getUsername(),$password);
 		}
 	}
+
+	/**
+	 * Checks if the user is supposed to have acces to the resource
+	 *
+	 * This is implemented by checking against a Zend_Acl object
+	 * The Zend_Acl should be created in configuration.inc
+	 *
+	 * @param Zend_Acl_Resource|string $resource
+	 * @return boolean
+	 */
+	public function IsAllowed($resource)
+	{
+		global $ZEND_ACL;
+		foreach ($this->getRoles() as $role) {
+			if ($ZEND_ACL->isAllowed($role,$resource)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

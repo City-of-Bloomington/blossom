@@ -148,8 +148,10 @@ if (ERROR_REPORTING != 'PHP_DEFAULT') {
 /**
  * Checks if the user is logged in and is supposed to have acces to the resource
  *
+ * The main work of this function is done in SystemUser::isAllowed()
  * This is implemented by checking against a Zend_Acl object
  * The Zend_Acl should be created in configuration.inc
+ *
  * @param Zend_Acl_Resource|string $resource
  * @return boolean
  */
@@ -157,11 +159,7 @@ function userIsAllowed($resource)
 {
 	global $ZEND_ACL;
 	if (isset($_SESSION['USER'])) {
-		foreach ($_SESSION['USER']->getRoles() as $role) {
-			if ($ZEND_ACL->isAllowed($role,$resource)) {
-				return true;
-			}
-		}
+		return $_SESSION['USER']->isAllowed($resource);
 	}
 	return false;
 }
