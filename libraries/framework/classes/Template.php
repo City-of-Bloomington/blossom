@@ -14,6 +14,7 @@ class Template extends View
 	public $outputFormat = 'html';
 	public $blocks = array();
 	private $assets = array();
+	private $helpers = array();
 
 	/**
 	 * @param string $filename
@@ -117,6 +118,27 @@ class Template extends View
 		}
 		if (!in_array($data,$this->assets[$name])) {
 			$this->assets[$name][] = $data;
+		}
+	}
+	
+	/**
+	 * Loads and calls helper functions
+	 */
+	public function __call($functionName, $arguments)
+	{
+		$class = ucfirst($functionName);
+		if (!array_key_exists($class,$this->helpers)) {
+			$helper_class_file = APPLICATION_HOME."/templates/{$this->outputFormat}/helpers/$class.inc";
+			if (is_file($helper_class_file)) {
+				require_once $helper_class_file;
+				$this->helpers[$class] = new $class();
+			}
+		}
+		if (isset($this->helpers[$class]) && method_exists($this->helpers[$class],$functionName)) {
+			return call_user_func_array(array($this->helpers[$class],$functionName),$arguments);
+		}
+		else {
+			throw new BadMethodCallException("Template::$functionName");
 		}
 	}
 }
