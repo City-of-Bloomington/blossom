@@ -25,7 +25,7 @@ class URL
 		$script = urldecode($script);
 
 		// If scheme wasn't provided add one to the start of the string
-		if (!preg_match('|://|',$script)) {
+		if (!strpos(substr($script,0,20),'://')) {
 			$scheme = $_SERVER['SERVER_PORT']==443 ? 'https://' : 'http://';
 			$script = $scheme.$script;
 		}
