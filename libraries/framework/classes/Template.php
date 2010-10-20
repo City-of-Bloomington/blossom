@@ -13,6 +13,7 @@ class Template extends View
 	private $filename;
 	public $outputFormat = 'html';
 	public $blocks = array();
+	private $assets = array();
 
 	/**
 	 * @param string $filename
@@ -87,7 +88,7 @@ class Template extends View
 			// Render any blocks for the given panel
 			if (isset($this->blocks[$panel]) && is_array($this->blocks[$panel])) {
 				foreach ($this->blocks[$panel] as $block) {
-					echo $block->render($this->outputFormat);
+					echo $block->render($this->outputFormat,$this);
 				}
 			}
 
@@ -96,10 +97,26 @@ class Template extends View
 			// Render only the blocks for the main content area
 			foreach ($this->blocks as $block) {
 				if (!is_array($block)) {
-					echo $block->render($this->outputFormat);
+					echo $block->render($this->outputFormat,$this);
 				}
 			}
 		}
 		return ob_get_clean();
+	}
+
+	/**
+	 * Adds data to an asset, making sure to not duplicate existing data
+	 *
+	 * @param string $name The name of the asset
+	 * @param mixed $data
+	 */
+	public function addToAsset($name,$data)
+	{
+		if (!isset($this->assets[$name]) || !is_array($this->assets[$name])) {
+			$this->assets[$name] = array();
+		}
+		if (!in_array($data,$this->assets[$name])) {
+			$this->assets[$name][] = $data;
+		}
 	}
 }

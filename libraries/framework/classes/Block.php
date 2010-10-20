@@ -1,6 +1,6 @@
 <?php
 /**
- * Represents a block of main content in a template
+ * Represents a block of content in a template
  *
  * Blocks are partial view scripts.
  * They are contained in APPLICATION/blocks
@@ -9,13 +9,14 @@
  * APPLICATION_HOME/blocks/xml/...
  * APPLICATION_HOME/blocks/json/..
  *
- * @copyright 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2010 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 class Block extends View
 {
 	private $file;
+	private $template;
 
 	/**
 	 * Establishes the block script to use for rendering
@@ -39,12 +40,17 @@ class Block extends View
 	/**
 	 * Includes the block script and returns the output as a string
 	 *
+	 * We allow for passing the Template that this block is being rendered in.
+	 * This allows the blocks to update information in the template on the fly.
+	 * This is most commonly used in adding script urls to the Template
+	 *
 	 * @param string $outputFormat
 	 * @return string
 	 */
-	public function render($outputFormat='html')
+	public function render($outputFormat='html',Template $template=null)
 	{
 		$block = "/blocks/$outputFormat/{$this->file}";
+		$this->template = $template;
 
 		if (file_exists(APPLICATION_HOME.$block)) {
 			ob_start();
