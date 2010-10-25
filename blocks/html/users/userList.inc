@@ -9,7 +9,7 @@
 <div class="interfaceBox">
 	<h1><?php
 			if (userIsAllowed('Users')) {
-				echo $this->template->linkButton(
+				echo $this->linkButton(
 					'Add User Account',BASE_URL.'/users/addUser.php','add'
 				);
 			}
@@ -31,13 +31,13 @@
 				$editButton = '';
 				$deleteButton = '';
 				if (userIsAllowed('Users')) {
-					$editButton = $this->template->linkButton(
+					$editButton = $this->linkButton(
 						'Edit User Account',
 						BASE_URL.'/users/updateUser.php?user_id='.$user->getId(),
 						'edit'
 					);
 
-					$deleteButton = $this->template->linkButton(
+					$deleteButton = $this->linkButton(
 						'Delete User Account',
 						BASE_URL.'/users/deleteUser.php?user_id='.$user->getId(),
 						'delete'

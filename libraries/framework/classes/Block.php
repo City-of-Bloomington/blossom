@@ -65,4 +65,17 @@ class Block extends View
 
 		throw new Exception('unknownBlock');
 	}
+
+	/**
+	 * Passes helper function calls off to the Template
+	 */
+	public function __call($functionName,$arguments)
+	{
+		if ($this->template) {
+			return $this->template->__call($functionName,$arguments);
+		}
+		else {
+			throw new BadMethodCallException("Block::$functionName");
+		}
+	}
 }

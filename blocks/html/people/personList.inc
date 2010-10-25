@@ -9,7 +9,7 @@
 <div class="interfaceBox">
 	<h1><?php
 			if (userIsAllowed('Users')) {
-				echo $this->template->linkButton(
+				echo $this->linkButton(
 					'Add a Person',BASE_URL.'/people/addPerson.php','add'
 				);
 			}
@@ -30,7 +30,7 @@
 				$editButton = '';
 
 				if (userIsAllowed('Users')) {
-					$editButton = $this->template->linkButton(
+					$editButton = $this->linkButton(
 						'Edit',
 						BASE_URL.'/people/updatePerson.php?person_id='.$person->getId(),
 						'edit'

@@ -7,9 +7,10 @@
 			</tr>
 			<tr><th><label for="password">Password:</label></th>
 				<td><input type="password" name="password" id="password" /></td>
-				<td><button type="submit" class="login">Login</button></td>
 			</tr>
 		</table>
-
+		<?php
+			echo $this->formButton('Login','submit','login');
+		?>
 	</fieldset>
 </form>

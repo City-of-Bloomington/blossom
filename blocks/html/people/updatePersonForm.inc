@@ -32,8 +32,8 @@
 		</table>
 
 		<?php
-			echo $this->template->formButton('Submit','submit','submit');
-			echo $this->template->formButton(
+			echo $this->formButton('Submit','submit','submit');
+			echo $this->formButton(
 				'Cancel','button','cancel',null,"document.location.href='".BASE_URL."/people';"
 			);
 		?>
