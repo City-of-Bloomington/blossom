@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2007-2009 City of Bloomington, Indiana
+ * @copyright 2007-2010 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param UserList $this->userList
@@ -9,49 +9,57 @@
 <div class="interfaceBox">
 	<h1><?php
 			if (userIsAllowed('Users')) {
-				echo "
-				<button type=\"button\" class=\"add\" onclick=\"document.location.href='".BASE_URL."/users/addUser.php';\">
-					Add User Account
-				</button>
-				";
+				echo $this->template->linkButton(
+					'Add User Account',BASE_URL.'/users/addUser.php','add'
+				);
 			}
 		?>
 		User Accounts
 	</h1>
 	<table>
-	<?php
-		foreach ($this->userList as $user) {
-			$editButton = '';
-			$deleteButton = '';
-			if (userIsAllowed('Users')) {
-				$editButton = "
-				<button type=\"button\" class=\"edit\" onclick=\"document.location.href='".BASE_URL."/users/updateUser.php?user_id={$user->getId()}';\">
-					Edit User Account
-				</button>
-				";
+		<thead>
+			<tr><th></th>
+				<th>Username</th>
+				<th>Name</th>
+				<th>Authentication</th>
+				<th>Roles</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+			foreach ($this->userList as $user) {
+				$editButton = '';
+				$deleteButton = '';
+				if (userIsAllowed('Users')) {
+					$editButton = $this->template->linkButton(
+						'Edit User Account',
+						BASE_URL.'/users/updateUser.php?user_id='.$user->getId(),
+						'edit'
+					);
 
-				$deleteButton = "
-				<button type=\"button\" class=\"delete\" onclick=\"document.location.href='".BASE_URL."/users/deleteUser.php?user_id={$user->getId()}';\">
-					Delete User Account
-				</button>
+					$deleteButton = $this->template->linkButton(
+						'Delete User Account',
+						BASE_URL.'/users/deleteUser.php?user_id='.$user->getId(),
+						'delete'
+					);
+				}
+
+				echo "
+				<tr><td>$editButton</td>
+					<td>{$user->getUsername()}</td>
+					<td>{$user->getFirstname()} {$user->getLastname()}</td>
+					<td>{$user->getAuthenticationMethod()}</td>
+					<td>
+				";
+						foreach ($user->getRoles() as $role) {
+							echo "$role ";
+						}
+				echo "
+					</td>
+				</tr>
 				";
 			}
-
-			echo "
-			<tr><td>$editButton</td>
-				<td>{$user->getUsername()}</td>
-				<td>{$user->getFirstname()} {$user->getLastname()}</td>
-				<td>{$user->getAuthenticationMethod()}</td>
-				<td>
-			";
-					foreach ($user->getRoles() as $role) {
-						echo "$role ";
-					}
-			echo "
-				</td>
-			</tr>
-			";
-		}
-	?>
+		?>
+		</tbody>
 	</table>
 </div>

@@ -48,11 +48,9 @@ foreach ($zend_db->listTables() as $tableName) {
 	<h1>
 		<?php
 			if (userIsAllowed('$acl_resource')) {
-				echo \"
-				<button type=\\\"button\\\" class=\\\"add\\\" onclick=\\\"document.location.href='\".BASE_URL.\"/$tableName/add$className.php';\\\">
-					Add
-				</button>
-				\";
+				echo \$this->template->linkButton(
+					'Add',BASE_URL.'/$tableName/add$className.php','add'
+				);
 			}
 		?>
 		{$className}s
@@ -63,11 +61,12 @@ foreach ($zend_db->listTables() as $tableName) {
 				if (userIsAllowed('$acl_resource')) {
 					\$url = new URL(BASE_URL.'/$tableName/update$className.php');
 					\$url->$key = \${$variableName}->{$getId}();
-					\$editButton = \"
-					<button type=\\\"button\\\" class=\\\"edit\\\" onclick=\\\"document.location.href='\$url';\\\">
-						Edit
-					</button>
-					\";
+					
+					\$editButton = \$this->template->linkButton(
+						'Edit',
+						BASE_URL.'/$tableName/update$className.php?$key='.\${$variableName}->{$getId}(),
+						'edit'
+					);
 				}
 				echo \"<li>\$editButton \$$variableName</li>\";
 			}
@@ -192,11 +191,12 @@ $HTML = "<h1>Add $className</h1>
 		}
 	$HTML.= "
 		</table>
-
-		<button type=\"submit\" class=\"submit\">Submit</button>
-		<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">
-			Cancel
-		</button>
+		<?php
+			echo \$this->template->formButton('Submit','submit','submit');
+			echo \$this->template->formButton(
+				'Cancel','button','cancel',null,\"document.location.href='\".BASE_URL.\"/{$variableName}s';\"
+			);
+		?>
 	</fieldset>
 </form>";
 
@@ -312,11 +312,12 @@ $HTML = "<h1>Update $className</h1>
 		}
 	$HTML.= "
 		</table>
-
-		<button type=\"submit\" class=\"submit\">Submit</button>
-		<button type=\"button\" class=\"cancel\" onclick=\"document.location.href='<?php echo BASE_URL; ?>/{$variableName}s';\">
-			Cancel
-		</button>
+		<?php
+			echo \$this->template->formButton('Submit','submit','submit');
+			echo \$this->template->formButton(
+				'Cancel','button','cancel',null,\"document.location.href='\".BASE_URL.\"/{$variableName}s';\"
+			);
+		?>
 	</fieldset>
 </form>";
 $contents = "<?php\n";

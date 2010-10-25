@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009 City of Bloomington, Indiana
+ * @copyright 2009-2010 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -27,9 +27,11 @@
 
 		</table>
 
-		<button type="submit" class="submit">Submit</button>
-		<button type="button" class="cancel" onclick="document.location.href='<?php echo BASE_URL; ?>/people';">
-			Cancel
-		</button>
+		<?php
+			echo $this->template->formButton('Submit','submit','submit');
+			echo $this->template->formButton(
+				'Cancel','button','cancel',null,"document.location.href='".BASE_URL."/people';"
+			);
+		?>
 	</fieldset>
 </form>
