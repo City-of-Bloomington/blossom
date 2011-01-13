@@ -15,30 +15,8 @@ class LDAP implements ExternalAuthentication
 	{
 		$connection = ldap_connect(LDAP_SERVER) or die("Couldn't connect to LDAP");
 		ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-		ldap_bind($connection);
-
-		$result = ldap_search($connection,LDAP_DN,LDAP_USERNAME_ATTRIBUTE."=$username");
-		if (ldap_count_entries($connection,$result)) {
-			$entries = ldap_get_entries($connection, $result);
-
-			if (preg_match("/^\{crypt\}(.+)/i",$entries[0][LDAP_PASSWORD_ATTRIBUTE][0],$matches)) {
-				$ldapPassword = $matches[1];
-				$salt = substr($ldapPassword,0,2);
-
-				$encryptedPassword = crypt($password,$salt);
-				if ($encryptedPassword === $ldapPassword) {
-					return true;
-				}
-				else {
-					throw new Exception('wrongPassword');
-				}
-			}
-			else {
-				throw new Exception("passwordIsCorrupted");
-			}
-		}
-		else {
-			throw new Exception("unknownUser");
+		if (ldap_bind($connection,LDAP_USERNAME_ATTRIBUTE."=$username,".LDAP_DN,"$password")) {
+			return true;
 		}
 	}
 

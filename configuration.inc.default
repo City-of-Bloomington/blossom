@@ -96,7 +96,7 @@ define('LDAP_DN','ou=people,o='.LDAP_DOMAIN);
 define('LDAP_USERNAME_ATTRIBUTE','uid');
 define('LDAP_ADMIN_USER','username');
 define('LDAP_ADMIN_PASS','password');
-define('LDAP_SERVER','ldap.somewhere.com');
+define('LDAP_SERVER','ldaps://ldap.somewhere.com:636'); // Example for SSL
 define('LDAP_PASSWORD_ATTRIBUTE','userpassword');
 
 /**
