@@ -39,8 +39,8 @@ class LDAP implements ExternalAuthentication
 
 		$dn = LDAP_USERNAME_ATTRIBUTE."=$username,ou=people,o=".LDAP_DOMAIN;
 		if ($this->getPassword()) {
-			$salt = substr(md5(time()),0,2);
-			$encryptedPassword = "{CRYPT}".crypt($password,$salt);
+			$salt = substr(md5(time()),0,4);
+			$encryptedPassword = '{SHA}'.base64_encode(sha1($salt.$password,true));
 
 			$password = array(LDAP_PASSWORD_ATTRIBUTE=>$encryptedPassword);
 
