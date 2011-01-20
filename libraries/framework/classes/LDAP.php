@@ -21,10 +21,10 @@ class LDAP implements ExternalAuthentication
 	}
 
 	/**
-	 * Saves a user's password to the LDAP server
+	 * Encrypts and saves a user's password to LDAP
 	 *
 	 * @param string $username
-	 * @param string $password
+	 * @param string $password Unencryped password string
 	 */
 	public static function savePassword($username,$password)
 	{
@@ -38,9 +38,10 @@ class LDAP implements ExternalAuthentication
 		$entries = ldap_get_entries($connection, $result);
 
 		$dn = LDAP_USERNAME_ATTRIBUTE."=$username,ou=people,o=".LDAP_DOMAIN;
-		if ($this->getPassword()) {
+		if ($password) {
+			// We're going to use SSHA, instead of just plain SHA1
 			$salt = substr(md5(time()),0,4);
-			$encryptedPassword = '{SHA}'.base64_encode(sha1($salt.$password,true));
+			$encryptedPassword = '{SSHA}'.base64_encode(pack('H*',sha1($password.$salt)).$salt);
 
 			$password = array(LDAP_PASSWORD_ATTRIBUTE=>$encryptedPassword);
 
