@@ -10,9 +10,10 @@
 <form method="post" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
 	<fieldset><legend>Login Info</legend>
 		<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
+		<input name="person_id" type="hidden" value="<?php echo $this->user->getPerson_id(); ?>" />
 		<table>
-			<tr><td><label for="user-authenticationMethod">Authentication</label></td>
-				<td><select name="user[authenticationMethod]" id="user-authenticationMethod">
+			<tr><td><label for="authenticationMethod">Authentication</label></td>
+				<td><select name="authenticationMethod" id="authenticationMethod">
 						<option <?php if ($this->user->getAuthenticationMethod()=='LDAP') echo "selected=\"selected\""; ?>>
 							LDAP
 						</option>
@@ -22,15 +23,15 @@
 					</select>
 				</td>
 			</tr>
-			<tr><td><label for="user-username">Username</label></td>
-				<td><input name="user[username]" id="user-username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
+			<tr><td><label for="username">Username</label></td>
+				<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
 				</td>
 			</tr>
-			<tr><td><label for="user-password">Password</label></td>
-				<td><input name="user[password]" id="user-password" /></td>
+			<tr><td><label for="password">Password</label></td>
+				<td><input name="password" id="password" /></td>
 			</tr>
-			<tr><td><label for="user-roles">Roles</label></td>
-				<td><select name="user[roles][]" id="user-roles" size="5" multiple="multiple">
+			<tr><td><label for="roles">Roles</label></td>
+				<td><select name="roles[]" id="roles" size="5" multiple="multiple">
 					<?php
 						$roles = new RoleList();
 						$roles->find();

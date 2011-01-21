@@ -11,12 +11,28 @@ if (!userIsAllowed('Users')) {
 	exit();
 }
 
-$person = new Person($_REQUEST['person_id']);
+if (isset($_REQUEST['person_id']) && $_REQUEST['person_id']) {
+	try {
+		$person = new Person($_REQUEST['person_id']);
+	}
+	catch (Exception $e) {
+		$_SESSION['errorMessages'][] = $e;
+		header('Location: '.BASE_URL.'/people');
+		exit();
+	}
+}
+else {
+	$person = new Person();
+}
 
-if (isset($_POST['person'])) {
-	foreach ($_POST['person'] as $field=>$value) {
-		$set = 'set'.ucfirst($field);
-		$person->$set($value);
+
+if (isset($_POST['firstname'])) {
+	$fields = array('firstname','lastname','email');
+	foreach ($fields as $field) {
+		if (isset($_POST[$field])) {
+			$set = 'set'.ucfirst($field);
+			$person->$set($_POST[$field]);
+		}
 	}
 
 	try {

@@ -8,7 +8,7 @@
 $username = $this->person->getUsername();
 if (!$username && userIsAllowed('Users')) {
 	$username = $this->template->linkButton(
-		'Create Account',BASE_URL.'/users/addUser.php?person_id='.$this->person->getId(),'add'
+		'Create Account',BASE_URL.'/users/updateUser.php?person_id='.$this->person->getId(),'add'
 	);
 }
 

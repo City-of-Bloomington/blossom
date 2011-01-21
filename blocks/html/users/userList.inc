@@ -10,7 +10,7 @@
 	<h1><?php
 			if (userIsAllowed('Users')) {
 				echo $this->linkButton(
-					'Add User Account',BASE_URL.'/users/addUser.php','add'
+					'Add User Account',BASE_URL.'/users/updateUser.php','add'
 				);
 			}
 		?>
