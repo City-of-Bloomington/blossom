@@ -13,7 +13,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Block extends View
+class Block extends Renderer
 {
 	private $file;
 	private $template;

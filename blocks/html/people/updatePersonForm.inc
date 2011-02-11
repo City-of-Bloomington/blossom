@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009-2010 City of Bloomington, Indiana
+ * @copyright 2009-2011 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
@@ -8,9 +8,9 @@
 $fields = array('firstname','lastname','email');
 foreach ($fields as $field) {
 	$get = 'get'.ucfirst($field);
-	$$field = View::escape($this->person->$get());
+	$$field = $this->escape($this->person->$get());
 }
-$title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
+$title = $this->person->getId() ? $this->escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
 echo "<h1>$title</h1>";
 ?>
 <form method="post" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">

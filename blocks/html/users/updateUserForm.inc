@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2011 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param User $this->user
@@ -24,7 +24,7 @@
 				</td>
 			</tr>
 			<tr><td><label for="username">Username</label></td>
-				<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
+				<td><input name="username" id="username" value="<?php echo $this->escape($this->user->getUsername()); ?>" />
 				</td>
 			</tr>
 			<tr><td><label for="password">Password</label></td>

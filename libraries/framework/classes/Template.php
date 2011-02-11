@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Template extends View
+class Template extends Renderer
 {
 	private $filename;
 	public $outputFormat = 'html';
@@ -120,7 +120,7 @@ class Template extends View
 			$this->assets[$name][] = $data;
 		}
 	}
-	
+
 	/**
 	 * Loads and calls helper functions
 	 */

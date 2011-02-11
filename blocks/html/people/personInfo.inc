@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009-2010 City of Bloomington, Indiana
+ * @copyright 2009-2011 City of Bloomington, Indiana
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
@@ -12,7 +12,7 @@ if (!$username && userIsAllowed('Users')) {
 	);
 }
 
-$name = View::escape($this->person->getFullname());
+$name = $this->escape($this->person->getFullname());
 echo "
 <h1>$name</h1>
 <table>
