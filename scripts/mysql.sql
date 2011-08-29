@@ -11,11 +11,9 @@ insert people values(1,'Administrator','','');
 
 create table users (
 	id int unsigned not null primary key auto_increment,
-	person_id int unsigned not null unique,
 	username varchar(30) not null unique,
 	password varchar(32),
-	authenticationMethod varchar(40) not null default 'LDAP',
-	foreign key (person_id) references people(id)
+	authenticationMethod varchar(40) not null default 'LDAP'
 );
 insert users values(1,1,'admin',md5('admin'),'local');
 
