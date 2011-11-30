@@ -41,19 +41,21 @@ if (isset($_POST['username'])) {
 	}
 	// Load any missing information from LDAP
 	// Delete this statement if you're not using LDAP
-	if ($user->getAuthenticationMethod() == 'LDAP') {
+	if ($user->getAuthenticationMethod() != 'local') {
 		try {
-			$ldap = new LDAPEntry($user->getUsername());
+			$externalIdentity = $user->getAuthenticationMethod();
+			$identity = new $externalIdentity($user->getUsername());
+
 			$person = $user->getPerson_id() ? $user->getPerson() : new Person();
 
 			if (!$person->getFirstname()) {
-				$person->setFirstname($ldap->getFirstname());
+				$person->setFirstname($identity->getFirstname());
 			}
 			if (!$person->getLastname()) {
-				$person->setLastname($ldap->getLastname());
+				$person->setLastname($identity->getLastname());
 			}
 			if (!$person->getEmail()) {
-				$person->setEmail($ldap->getEmail());
+				$person->setEmail($identity->getEmail());
 			}
 
 			$person->save();

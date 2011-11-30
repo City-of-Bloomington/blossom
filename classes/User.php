@@ -17,6 +17,21 @@ class User extends SystemUser
 	private $newPassword; // the User's new password, unencrypted
 
 	/**
+	 * Should provide the list of methods supported
+	 *
+	 * There should always be at least one method, called "local"
+	 * Additional methods must match classes that implement External Identities
+	 * See: ExternalIdentity.php
+	 *
+	 * @return array
+	 */
+	public static function getAuthenticationMethods()
+	{
+		$zend_db = Database::getConnection();
+		return $zend_db->fetchCol('select * from authenticationMethods');
+	}
+
+	/**
 	 * @param int|string $id
 	 */
 	public function __construct($id = null)

@@ -74,8 +74,10 @@ abstract class SystemUser
 	}
 
 	/**
-	 * Determines which authentication method is being used, and sends the password to the
-	 * appropriate method
+	 * Used to save passwords to the database
+	 *
+	 * Only local passwords should be saved.  External Identities should have
+	 * their own methods for users to change their passwords
 	 */
 	public function savePassword()
 	{
@@ -83,10 +85,6 @@ abstract class SystemUser
 			case "local":
 				$this->saveLocalPassword();
 			break;
-
-			default:
-				$type = $this->getAuthenticationMethod();
-				call_user_func(array($type,'savePassword'),$this->getUsername(),$password);
 		}
 	}
 
