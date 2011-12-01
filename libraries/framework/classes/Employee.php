@@ -23,9 +23,11 @@ class Employee implements ExternalIdentity
 	 */
 	public static function authenticate($username,$password)
 	{
-		$connection = ldap_connect(LDAP_SERVER) or die("Couldn't connect to LDAP");
+		$bindUser = sprintf(str_replace('{username}','%s',DIRECTORY_USER_BINDING),$username);
+
+		$connection = ldap_connect(DIRECTORY_SERVER) or die("Couldn't connect to ADS");
 		ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-		if (ldap_bind($connection,LDAP_USERNAME_ATTRIBUTE."=$username,".LDAP_DN,"$password")) {
+		if (ldap_bind($connection,$bindUser,$password)) {
 			return true;
 		}
 	}
@@ -40,8 +42,11 @@ class Employee implements ExternalIdentity
 	{
 		$this->openConnection();
 
-		$result = ldap_search(self::$connection,LDAP_DN,
-								LDAP_USERNAME_ATTRIBUTE."=$username");
+		$result = ldap_search(
+			self::$connection,
+			DIRECTORY_BASE_DN,
+			DIRECTORY_USERNAME_ATTRIBUTE."=$username"
+		);
 		if (ldap_count_entries(self::$connection,$result)) {
 			$entries = ldap_get_entries(self::$connection, $result);
 			$this->entry = $entries[0];
@@ -86,12 +91,10 @@ class Employee implements ExternalIdentity
 	private function openConnection()
 	{
 		if (!self::$connection) {
-			if (self::$connection = ldap_connect(LDAP_SERVER)) {
+			if (self::$connection = ldap_connect(DIRECTORY_SERVER)) {
 				ldap_set_option(self::$connection,LDAP_OPT_PROTOCOL_VERSION,3);
-				if (LDAP_ADMIN_USER) {
-					if (!ldap_bind(self::$connection,
-								   LDAP_USERNAME_ATTRIBUTE."=".LDAP_ADMIN_USER.",o=".LDAP_DOMAIN,
-								   LDAP_ADMIN_PASS)) {
+				if (defined(DIRECTORY_ADMIN_BINDING) && DIRECTORY_ADMIN_BINDING) {
+					if (!ldap_bind(self::$connection,DIRECTORY_ADMIN_BINDING,DIRECTORY_ADMIN_PASS)) {
 						throw new Exception(ldap_error(self::$connection));
 					}
 				}
