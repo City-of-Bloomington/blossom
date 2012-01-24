@@ -93,7 +93,7 @@ class Employee implements ExternalIdentity
 		if (!self::$connection) {
 			if (self::$connection = ldap_connect(DIRECTORY_SERVER)) {
 				ldap_set_option(self::$connection,LDAP_OPT_PROTOCOL_VERSION,3);
-				if (defined(DIRECTORY_ADMIN_BINDING) && DIRECTORY_ADMIN_BINDING) {
+				if (defined('DIRECTORY_ADMIN_BINDING') && DIRECTORY_ADMIN_BINDING) {
 					if (!ldap_bind(self::$connection,DIRECTORY_ADMIN_BINDING,DIRECTORY_ADMIN_PASS)) {
 						throw new Exception(ldap_error(self::$connection));
 					}
