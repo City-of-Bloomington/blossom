@@ -57,7 +57,7 @@ abstract class SystemUser
 
 			default:
 				$type = $this->getAuthenticationMethod();
-				return call_user_func(array($type,'authenticate'),$this->getUsername(),$password);
+				return $type::authenticate($this->getUsername(),$password);
 		}
 	}
 
