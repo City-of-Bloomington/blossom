@@ -6,21 +6,25 @@
  * @param Person $this->person
  */
 $username = $this->person->getUsername();
-if (!$username && userIsAllowed('Users')) {
-	$username = $this->template->linkButton(
-		'Create Account',BASE_URL.'/users/updateUser.php?person_id='.$this->person->getId(),'add'
-	);
+if (!$username && userIsAllowed('users')) {
+	$username = "
+	<a class=\"add button\" href=\"".BASE_URL."/users/update?user_id={$this->person->getId()}\">
+		Create Account
+	</a>
+	";
 }
 
-$name = $this->escape($this->person->getFullname());
-echo "
-<h1>$name</h1>
-<table>
-	<tr><th>Username</th>
-		<td>$username</td>
-	</tr>
-	<tr><th>Email</th>
-		<td>{$this->person->getEmail()}</td>
-	</tr>
-</table>
-";
+$name = View::escape($this->person->getFullname());
+echo <<<EOT
+<div class="personInfo">
+	<h2>$name</h2>
+	<table>
+		<tr><th>Email</th>
+			<td>{$this->person->getEmail()}</td>
+		</tr>
+		<tr><th>Username</th>
+			<td>$username</td>
+		</tr>
+	</table>
+</div>
+EOT;

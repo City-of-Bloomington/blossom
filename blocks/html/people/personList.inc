@@ -1,21 +1,19 @@
 <?php
 /**
- * @copyright 2009-2011 City of Bloomington, Indiana
+ * @copyright 2009-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param PersonList $this->personList
  */
 ?>
 <div class="interfaceBox">
-	<h1><?php
-			if (userIsAllowed('Users')) {
-				echo $this->linkButton(
-					'Add a Person',BASE_URL.'/people/updatePerson.php','add'
-				);
+	<h2>People
+		<?php
+			if (userIsAllowed('people')) {
+				echo "<a class=\"add button\" href=\"".BASE_URL."/people/update\">Add a Person</a>";
 			}
 		?>
-		People
-	</h1>
+	</h2>
 	<table>
 		<thead>
 			<tr><th></th>
@@ -28,16 +26,16 @@
 		<?php
 			foreach ($this->personList as $person) {
 				$editButton = '';
-
-				if (userIsAllowed('Users')) {
-					$editButton = $this->linkButton(
-						'Edit',
-						BASE_URL.'/people/updatePerson.php?person_id='.$person->getId(),
-						'edit'
-					);
+				if (userIsAllowed('people')) {
+					$editButton = "
+					<a class=\"edit button\"
+						href=\"".BASE_URL."/people/update?person_id={$person->getId()}\">
+						Edit
+					</a>
+					";
 				}
 
-				$name = $this->escape($person->getFullname());
+				$name = View::escape($person->getFullname());
 				echo "
 				<tr><td>$editButton</td>
 					<td>{$person->getUsername()}</td>

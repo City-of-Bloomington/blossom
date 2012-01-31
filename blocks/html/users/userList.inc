@@ -1,28 +1,27 @@
 <?php
 /**
- * @copyright 2007-2010 City of Bloomington, Indiana
+ * @copyright 2007-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param UserList $this->userList
  */
 ?>
 <div class="interfaceBox">
-	<h1><?php
-			if (userIsAllowed('Users')) {
-				echo $this->linkButton(
-					'Add User Account',BASE_URL.'/users/updateUser.php','add'
-				);
+	<h2>User Accounts
+		<?php
+			if (userIsAllowed('users')) {
+				echo "<a class=\"add button\" href=\"".BASE_URL."/users/update\">Add Account</a>";
 			}
 		?>
-		User Accounts
-	</h1>
+	</h2>
 	<table>
 		<thead>
 			<tr><th></th>
 				<th>Username</th>
 				<th>Name</th>
 				<th>Authentication</th>
-				<th>Roles</th>
+				<th>Role</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -30,32 +29,29 @@
 			foreach ($this->userList as $user) {
 				$editButton = '';
 				$deleteButton = '';
-				if (userIsAllowed('Users')) {
-					$editButton = $this->linkButton(
-						'Edit User Account',
-						BASE_URL.'/users/updateUser.php?user_id='.$user->getId(),
-						'edit'
-					);
-
-					$deleteButton = $this->linkButton(
-						'Delete User Account',
-						BASE_URL.'/users/deleteUser.php?user_id='.$user->getId(),
-						'delete'
-					);
+				if (userIsAllowed('users')) {
+					$editButton = "
+					<a class=\"edit button\"
+						href=\"".BASE_URL."/users/update?user_id={$user->getId()}\">
+						Edit Account
+					</a>
+					";
+					$deleteButton = "
+					<a class=\"delete button\"
+						href=\"".BASE_URL."/users/delete?user_id={$user->getId()}\">
+						Delete Account
+					</a>
+					";
 				}
 
+				$name = View::escape($user->getFullname());
 				echo "
 				<tr><td>$editButton</td>
 					<td>{$user->getUsername()}</td>
-					<td>{$user->getFirstname()} {$user->getLastname()}</td>
+					<td>$name</td>
 					<td>{$user->getAuthenticationMethod()}</td>
-					<td>
-				";
-						foreach ($user->getRoles() as $role) {
-							echo "$role ";
-						}
-				echo "
-					</td>
+					<td>{$user->getRole()}</td>
+					<td>$deleteButton</td>
 				</tr>
 				";
 			}

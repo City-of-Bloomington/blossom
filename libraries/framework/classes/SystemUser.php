@@ -6,7 +6,7 @@
  * a city employee will have the same username and password on all applications.
  * Applications should use these public functions for their own users.
  *
- * @copyright 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -15,12 +15,10 @@ abstract class SystemUser
 	abstract public function getId();
 	abstract public function getUsername();
 	abstract public function getAuthenticationMethod();
-	abstract public function getRoles();
-
-	abstract public function hasRole($roles);
+	abstract public function getRole();
 
 	abstract public function setAuthenticationMethod($method);
-	abstract public function setRoles($roles);
+	abstract public function setRole($role);
 	abstract public function setUsername($username);
 
 	/**
@@ -100,11 +98,7 @@ abstract class SystemUser
 	public function IsAllowed($resource)
 	{
 		global $ZEND_ACL;
-		foreach ($this->getRoles() as $role) {
-			if ($ZEND_ACL->isAllowed($role,$resource)) {
-				return true;
-			}
-		}
-		return false;
+		$role = $this->getRole() ? $this->getRole() : 'Anonymous';
+		return $ZEND_ACL->isAllowed($role, $resource);
 	}
 }

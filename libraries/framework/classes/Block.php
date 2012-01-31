@@ -13,7 +13,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Block extends Renderer
+class Block extends View
 {
 	private $file;
 	private $template;
@@ -64,18 +64,5 @@ class Block extends Renderer
 		}
 
 		throw new Exception('unknownBlock');
-	}
-
-	/**
-	 * Passes helper function calls off to the Template
-	 */
-	public function __call($functionName,$arguments)
-	{
-		if ($this->template) {
-			return $this->template->__call($functionName,$arguments);
-		}
-		else {
-			throw new BadMethodCallException("Block::$functionName");
-		}
 	}
 }

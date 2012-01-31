@@ -5,54 +5,54 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param User $this->user
  */
+$title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create User Account";
 ?>
-<h1>Edit <?php echo $this->user->getUsername(); ?></h1>
-<form method="post" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
-	<fieldset><legend>Login Info</legend>
-		<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
-		<input name="person_id" type="hidden" value="<?php echo $this->user->getPerson_id(); ?>" />
-		<table>
-			<tr><td><label for="authenticationMethod">Authentication</label></td>
-				<td><select name="authenticationMethod" id="authenticationMethod">
-					<?php
-						foreach (User::getAuthenticationMethods() as $method) {
-							$selected = $this->user->getAuthenticationMethod()==$method
-								? 'selected="selected"'
-								: '';
-							echo "<option $selected>$method</option>";
-						}
-					?>
-					</select>
-				</td>
-			</tr>
-			<tr><td><label for="username">Username</label></td>
-				<td><input name="username" id="username" value="<?php echo $this->escape($this->user->getUsername()); ?>" />
-				</td>
-			</tr>
-			<tr><td><label for="password">Password</label></td>
-				<td><input name="password" id="password" /></td>
-			</tr>
-			<tr><td><label for="roles">Roles</label></td>
-				<td><select name="roles[]" id="roles" size="5" multiple="multiple">
-					<?php
-						$roles = new RoleList();
-						$roles->find();
-						foreach ($roles as $role) {
-							$selected = in_array($role,$this->user->getRoles())
-										? 'selected="selected"'
-										: '';
-							echo "<option $selected>$role</option>";
-						}
-					?>
-					</select>
-				</td>
-			</tr>
-		</table>
-		<?php
-			echo $this->formButton('Submit','submit','submit');
-			echo $this->formButton(
-				'Cancel','button','cancel',null,"document.location.href='".BASE_URL."/users';"
-			);
-		?>
-	</fieldset>
-</form>
+<div class="updateUserForm">
+	<h2><?php echo $title; ?></h2>
+	<form method="post" action="<?php echo BASE_URL; ?>/users/update">
+		<fieldset><legend>User Account</legend>
+			<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
+			<table>
+				<tr><td><label for="authenticationMethod">Authentication</label></td>
+					<td><select name="authenticationMethod" id="authenticationMethod">
+						<?php
+							foreach (Person::getAuthenticationMethods() as $method) {
+								$selected = $this->user->getAuthenticationMethod()==$method
+									? 'selected="selected"'
+									: '';
+								echo "<option $selected>$method</option>";
+							}
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr><td><label for="username">Username</label></td>
+					<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
+					</td>
+				</tr>
+				<tr><td><label for="password">Password</label></td>
+					<td><input name="password" id="password" /></td>
+				</tr>
+				<tr><td><label for="role">Role</label></td>
+					<td><select name="role" id="role"><option></option>
+						<?php
+							global $ZEND_ACL;
+							foreach (array_reverse($ZEND_ACL->getRoles()) as $role) {
+								$selected = $this->user->getRole()==$role
+									? 'selected="selected"'
+									: '';
+								echo "<option $selected>$role</option>";
+							}
+						?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<button type="submit" class="submit">Submit</button>
+			<button type="button" class="cancel"
+				onclick="document.location.href='<?php echo BASE_URL; ?>/users';">
+				Cancel
+			</button>
+		</fieldset>
+	</form>
+</div>

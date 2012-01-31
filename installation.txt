@@ -104,24 +104,28 @@ Installation
 ready to be extended.  It has authentication and user management
 already built.
 
-	The best way is to have PHP auto_prepend the configuration.inc.
+	We rely on Apache's mod_rewrite to route all traffic to /public/index.php
 If this is the only web application on your apache server, you can just point
-your apache's web directory to the html directory inside the application and
-edit the auto_prepend in your php.ini file.
+your apache's web directory to the public directory inside the application and
+add the Rewrite rules.
 
 	For us, we're running multiple applications, and have a seperate entry in
 our Apache config for each one.  This does essentially the same thing.
 
 Add to httpd.conf:
 
-Alias /application_name "/path/to/application_name/html"
-<Directory "/path/to/application_name/html">
+Alias /application_name "/path/to/application_name/public"
+<Directory "/path/to/application_name/public">
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all
 
-        php_value auto_prepend_file /path/to/application_name/configuration.inc
+    RewriteEngine On
+    RewriteBase /application_name
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule .? /application_name/index.php [NC,L]
 </Directory>
 
 
@@ -130,8 +134,6 @@ Directory commands.  However the html can be moved into your web directory.
 To make sure the configuration file gets loaded, create an htaccess file in
 this application's html directory with the php_value line from above.
 
-	If you cannot edit your httpd.conf or use htaccess files, you will need to
-add an include() command to the top of every last PHP script in the html directory.
 
 ---------------------------------------------------------------------
 Configuration

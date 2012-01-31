@@ -4,13 +4,15 @@
  *
  * The template collects all the blocks from the controller
  *
- * @copyright 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Template extends Renderer
+class Template extends View
 {
+	private $path;
 	private $filename;
+
 	public $outputFormat = 'html';
 	public $blocks = array();
 	private $assets = array();
@@ -23,11 +25,12 @@ class Template extends Renderer
 	 */
 	public function __construct($filename='default',$outputFormat='html',array $vars=null)
 	{
+		$this->path = APPLICATION_HOME.'/templates';
 		$this->filename = $filename;
 		$this->outputFormat = preg_replace('/[^a-zA-Z]/','',$outputFormat);
 
 		// Make sure the output format exists
-		if (!is_file(APPLICATION_HOME."/templates/{$this->outputFormat}/{$this->filename}.inc")) {
+		if (!is_file("{$this->path}/{$this->outputFormat}/{$this->filename}.inc")) {
 			$this->filename = 'default';
 			$this->outputFormat = 'html';
 		}
@@ -50,7 +53,7 @@ class Template extends Renderer
 	public function render()
 	{
 		ob_start();
-		include APPLICATION_HOME."/templates/{$this->outputFormat}/{$this->filename}.inc";
+		include "{$this->path}/{$this->outputFormat}/{$this->filename}.inc";
 		return ob_get_clean();
 	}
 
@@ -118,27 +121,6 @@ class Template extends Renderer
 		}
 		if (!in_array($data,$this->assets[$name])) {
 			$this->assets[$name][] = $data;
-		}
-	}
-
-	/**
-	 * Loads and calls helper functions
-	 */
-	public function __call($functionName, $arguments)
-	{
-		$class = ucfirst($functionName);
-		if (!array_key_exists($class,$this->helpers)) {
-			$helper_class_file = APPLICATION_HOME."/templates/{$this->outputFormat}/helpers/$class.inc";
-			if (is_file($helper_class_file)) {
-				require_once $helper_class_file;
-				$this->helpers[$class] = new $class();
-			}
-		}
-		if (isset($this->helpers[$class]) && method_exists($this->helpers[$class],$functionName)) {
-			return call_user_func_array(array($this->helpers[$class],$functionName),$arguments);
-		}
-		else {
-			throw new BadMethodCallException("Template::$functionName");
 		}
 	}
 }

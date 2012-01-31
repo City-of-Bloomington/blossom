@@ -1,15 +1,6 @@
 <?php
 /**
- * Replace this copyright statement with your own.  All the generated code
- * will include this copyright statement
- */
-define('COPYRIGHT',"/**
- * @copyright 2007-2009 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
- */");
-/**
- * Used to keep sessions on the same webserver seperate;
+ * Displayed in the banner
  */
 define('APPLICATION_NAME','application_name');
 
@@ -22,7 +13,9 @@ define('APPLICATION_HOME','/var/www/sites/application_name');
  * The URL to get to this site
  * Do NOT use a trailing slash
  */
-define('BASE_URL','http://localhost');
+define('BASE_URL','http://localhost/application_name');
+define('BASE_URI','/application_name');
+
 
 /**
  * Where on the filesystem the framework is installed.
@@ -35,9 +28,6 @@ define('FRAMEWORK',APPLICATION_HOME.'/libraries/framework');
  * http://framework.zend.com
  */
 define('ZEND',APPLICATION_HOME.'/libraries/ZendFramework/library');
-ini_set('include_path','.'.PATH_SEPARATOR.ZEND);
-require_once 'Zend/Loader/Autoloader.php';
-Zend_Loader_Autoloader::getInstance();
 
 
 /**
@@ -67,6 +57,7 @@ define('ADMINISTRATOR_EMAIL','admin@servername.com');
 define('ERROR_REPORTING','PHP_DEFAULT');
 //define('ERROR_REPORTING','CUSTOM');
 //$ERROR_REPORTING = array('PRETTY_PRINT','SKIDDER');
+
 /**
  * Skidder is a web service for error notifications.  Error reporting supports
  * posting errors to a Skidder server.  You must register for an application_id
@@ -96,8 +87,8 @@ define('DB_PASS','password');
 define('DIRECTORY_SERVER','ldaps://example.org:636');
 define('DIRECTORY_BASE_DN','OU=Department,DC=example,DC=org');
 define('DIRECTORY_USERNAME_ATTRIBUTE', 'CN');
-define('DIRECTORY_USER_BINDING','{username}@bloomington.in.gov');
-define('DIRECTORY_ADMIN_BINDING', 'admin@bloomington.in.gov');
+define('DIRECTORY_USER_BINDING','{username}@example.org');
+define('DIRECTORY_ADMIN_BINDING', 'admin@example.org');
 define('DIRECTORY_ADMIN_PASS','password');
 // Example for LDAP style authentication
 //define('DIRECTORY_SERVER','ldaps://example.org:636');
@@ -108,8 +99,28 @@ define('DIRECTORY_ADMIN_PASS','password');
 //define('DIRECTORY_ADMIN_PASS','password');
 
 /**
- * Import global functions that we use for many applications we write
+ * CAS authentication http://www.jasig.org/cas
+ *
+ * https://wiki.jasig.org/display/CASC/phpCAS
+ *
+ * phpCAS is a PHP library for handling the calls to the CAS service
+ * It is the official library, part of the Jasig CAS project
  */
+//define('CAS','/var/www/libraries/phpCAS');
+//define('CAS_SERVER','cas.somewhere.org');
+//define('CAS_URI','cas');
+
+//-------------------------------------------------------------------
+// Bootstrap code
+// No editing is usually needed after this point
+//-------------------------------------------------------------------
+/**
+ * Enable autoloading for the PHP libraries
+ */
+ini_set('include_path','.'.PATH_SEPARATOR.ZEND);
+require_once 'Zend/Loader/Autoloader.php';
+Zend_Loader_Autoloader::getInstance();
+
 include FRAMEWORK.'/globalFunctions.php';
 spl_autoload_register('autoload');
 
@@ -125,9 +136,10 @@ if (!defined('STDIN')) {
 
 /**
  * Load the Zend_Acl
- * Access control is going to handled using the Zend_Acl
- * We only need to load it, if someone is logged in
  */
-if (isset($_SESSION['USER'])) {
-	include APPLICATION_HOME.'/access_control.inc';
-}
+include APPLICATION_HOME.'/access_control.inc';
+
+/**
+ * Grab a timestamp for calculating process time
+ */
+$startTime = microtime(1);
