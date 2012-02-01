@@ -4,9 +4,12 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class IndexController extends Controller
+abstract class Controller
 {
-	public function index()
+	protected $template;
+
+	public function __construct(Template $template)
 	{
+		$this->template = $template;
 	}
 }

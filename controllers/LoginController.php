@@ -4,12 +4,13 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class LoginController
+class LoginController extends Controller
 {
 	private $return_url;
 
-	public function __construct()
+	public function __construct(Template $template)
 	{
+		parent::__construct($template);
 		$this->return_url = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
 	}
 
@@ -45,9 +46,7 @@ class LoginController
 			$_SESSION['errorMessages'][] = $e;
 		}
 
-		$template = new Template();
-		$template->blocks[] = new Block('loginForm.inc',array('return_url'=>$this->return_url));
-		return $template;
+		$this->template->blocks[] = new Block('loginForm.inc',array('return_url'=>$this->return_url));
 	}
 
 	/**
@@ -71,9 +70,7 @@ class LoginController
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
-		$template = new Template();
-		$template->blocks[] = new Block('loginForm.inc',array('return_url'=>$this->return_url));
-		return $template;
+		$this->template->blocks[] = new Block('loginForm.inc',array('return_url'=>$this->return_url));
 	}
 
 	public function logout()

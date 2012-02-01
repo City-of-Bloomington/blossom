@@ -4,16 +4,14 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class PeopleController
+class PeopleController extends Controller
 {
 	public function index()
 	{
 		$people = new PersonList();
 		$people->find();
 
-		$template = new Template();
-		$template->blocks[] = new Block('people/personList.inc',array('personList'=>$people));
-		return $template;
+		$this->template->blocks[] = new Block('people/personList.inc',array('personList'=>$people));
 	}
 
 	public function view()
@@ -25,9 +23,7 @@ class PeopleController
 			$_SESSION['errorMessages'][] = $e;
 		}
 
-		$template = new Template();
-		$template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
-		return $template;
+		$this->template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
 	}
 
 	public function update()
@@ -46,8 +42,6 @@ class PeopleController
 			}
 		}
 
-		$template = new Template();
-		$template->blocks[] = new Block('people/updatePersonForm.inc',array('person'=>$person));
-		return $template;
+		$this->template->blocks[] = new Block('people/updatePersonForm.inc',array('person'=>$person));
 	}
 }

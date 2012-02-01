@@ -13,10 +13,9 @@
  */
 function autoload($class)
 {
-	if (false !== strpos($class, 'Controller')) {
-		if (file_exists(APPLICATION_HOME."/controllers/$class.php")) {
-			include APPLICATION_HOME."/controllers/$class.php";
-		}
+	if (false !== strpos($class, 'Controller')
+		&& file_exists(APPLICATION_HOME."/controllers/$class.php")) {
+		include APPLICATION_HOME."/controllers/$class.php";
 	}
 	elseif (file_exists(APPLICATION_HOME."/models/$class.php")) {
 		include APPLICATION_HOME."/models/$class.php";

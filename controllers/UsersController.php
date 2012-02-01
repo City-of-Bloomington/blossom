@@ -4,15 +4,13 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class UsersController
+class UsersController extends Controller
 {
 	public function index()
 	{
 		$users = new PersonList(array('user_account'=>true));
 
-		$template = new Template();
-		$template->blocks[] = new Block('users/userList.inc',array('userList'=>$users));
-		return $template;
+		$this->template->blocks[] = new Block('users/userList.inc',array('userList'=>$users));
 	}
 
 	public function update()
@@ -31,12 +29,10 @@ class UsersController
 			}
 		}
 
-		$template = new Template();
 		if ($person->getId()) {
-			$template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
+			$this->template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
 		}
-		$template->blocks[] = new Block('users/updateUserForm.inc',array('user'=>$person));
-		return $template;
+		$this->template->blocks[] = new Block('users/updateUserForm.inc',array('user'=>$person));
 	}
 
 	public function delete()

@@ -16,7 +16,6 @@ class Template extends View
 	public $outputFormat = 'html';
 	public $blocks = array();
 	private $assets = array();
-	private $helpers = array();
 
 	/**
 	 * @param string $filename
