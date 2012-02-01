@@ -6,11 +6,11 @@
  */
 include '../configuration.inc';
 $person = new Person();
-$person->setFirstname('Cliff');
-$person->setLastname('Ingham');
-$person->setEmail('inghamn@bloomington.in.gov');
+$person->setFirstname('Administrator');
+$person->setLastname('Person');
+$person->setEmail('admin@example.org');
 
-$person->setUsername('inghamn');
+$person->setUsername('admin');
 //$person->setPassword();
 $person->setAuthenticationMethod('Employee');
 $person->setRole('Administrator');
