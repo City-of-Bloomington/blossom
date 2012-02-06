@@ -66,7 +66,8 @@ function customErrorHandler ($errno, $errstr, $errfile, $errline)
 				 "From: apache@$_SERVER[SERVER_NAME]");
 		}
 		if (in_array('SKIDDER',$ERROR_REPORTING)) {
-			$message = "Error on line $errline of file $errfile:\n$errstr\n";
+			$script = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'];
+			$message = "$script\nError on line $errline of file $errfile:\n$errstr\n";
 			$message.= print_r(debug_backtrace(),true);
 
 			$skidder = curl_init(SKIDDER_URL);
@@ -76,7 +77,7 @@ function customErrorHandler ($errno, $errstr, $errfile, $errline)
 			curl_setopt($skidder,
 						CURLOPT_POSTFIELDS,
 						array('application_id'=>SKIDDER_APPLICATION_ID,
-							  'script'=>$_SERVER['REQUEST_URI'],
+							  'script'=>$_SERVER['SCRIPT_NAME'],
 							  'type'=>$errstr,
 							  'message'=>$message));
 			curl_exec($skidder);
@@ -157,13 +158,14 @@ if (ERROR_REPORTING != 'PHP_DEFAULT') {
  * This is implemented by checking against a Zend_Acl object
  * The Zend_Acl should be created in configuration.inc
  *
- * @param Zend_Acl_Resource|string $resource
+ * @param string $resource
+ * @param string $action
  * @return boolean
  */
-function userIsAllowed($resource)
+function userIsAllowed($resource, $action=null)
 {
 	global $ZEND_ACL;
 	if (isset($_SESSION['USER'])) {
-		return $_SESSION['USER']->isAllowed($resource);
+		return $_SESSION['USER']->isAllowed($resource, $action);
 	}
 }

@@ -92,13 +92,14 @@ abstract class SystemUser
 	 * This is implemented by checking against a Zend_Acl object
 	 * The Zend_Acl should be created in configuration.inc
 	 *
-	 * @param Zend_Acl_Resource|string $resource
+	 * @param string $resource
+	 * @param string $action
 	 * @return boolean
 	 */
-	public function IsAllowed($resource)
+	public function IsAllowed($resource, $action=null)
 	{
 		global $ZEND_ACL;
 		$role = $this->getRole() ? $this->getRole() : 'Anonymous';
-		return $ZEND_ACL->isAllowed($role, $resource);
+		return $ZEND_ACL->isAllowed($role, $resource, $action);
 	}
 }
