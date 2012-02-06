@@ -9,7 +9,7 @@
  * APPLICATION_HOME/blocks/xml/...
  * APPLICATION_HOME/blocks/json/..
  *
- * @copyright 2006-2010 City of Bloomington, Indiana
+ * @copyright 2006-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -64,5 +64,13 @@ class Block extends View
 		}
 
 		throw new Exception('unknownBlock');
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFile()
+	{
+		return $this->file;
 	}
 }

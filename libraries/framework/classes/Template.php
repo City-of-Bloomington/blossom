@@ -42,6 +42,33 @@ class Template extends View
 	}
 
 	/**
+	 * @param string $filename
+	 */
+	public function setFilename($filename)
+	{
+		if (is_file("{$this->path}/{$this->outputFormat}/$filename.inc")) {
+			$this->filename = $filename;
+		}
+		else {
+			throw new Exception('unknownTemplate');
+		}
+	}
+
+	/**
+	 * @param string $format
+	 */
+	public function setOutputFormat($format)
+	{
+		$format = preg_replace('/[^a-zA-Z]/','',$format);
+		if (is_file("{$this->path}/$format/{$this->filename}.inc")) {
+			$this->outputFormat = $format;
+		}
+		else {
+			throw new Exception('unknownOutputFormat');
+		}
+	}
+
+	/**
 	 * Returns all the rendered content of the template
 	 *
 	 * Template files must include a call to $this->includeBlocks(),
@@ -84,17 +111,36 @@ class Template extends View
 	 * @param string $panel
 	 * @return string
 	 */
-	private function includeBlocks($panel=null)
+	private function includeBlocks($target=null)
 	{
 		ob_start();
-		if ($panel) {
+		if ($target) {
 			// Render any blocks for the given panel
-			if (isset($this->blocks[$panel]) && is_array($this->blocks[$panel])) {
-				foreach ($this->blocks[$panel] as $block) {
+			if (isset($this->blocks[$target]) && is_array($this->blocks[$target])) {
+				foreach ($this->blocks[$target] as $block) {
 					echo $block->render($this->outputFormat,$this);
 				}
 			}
-
+			else {
+				// Go through the template looking for what they asked for
+				foreach ($this->blocks as $key=>$value) {
+					// If we find a block that matches, render that block
+					if ($value instanceof Block) {
+						if ($value->getFile() == $target) {
+							echo $block->render($this->outputFormat,$this);								continue;
+						}
+					}
+					// If we find a panel that matches, render the blocks in that panel
+					else {
+						foreach ($value as $block) {
+							if ($block->getFile() == $target) {
+								echo $block->render($this->outputFormat,$this);
+								continue;
+							}
+						}
+					}
+				}
+			}
 		}
 		else {
 			// Render only the blocks for the main content area
