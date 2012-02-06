@@ -8,6 +8,8 @@ abstract class Controller
 {
 	protected $template;
 
+	abstract public function index();
+
 	public function __construct(Template $template)
 	{
 		$this->template = $template;
