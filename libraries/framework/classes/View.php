@@ -54,12 +54,13 @@ abstract class View
 	{
 		if (is_array($input)) {
 			foreach ($input as $key=>$value) {
-				$input[$key] = View::escape($value,$quotes);
+				$input[$key] = self::escape($value,$quotes);
 			}
 		}
 		else {
 			$input = htmlspecialchars(trim($input),$quotes);
 		}
+
 		return $input;
 	}
 }
