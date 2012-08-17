@@ -31,7 +31,7 @@ class PeopleController extends Controller
 		$person = isset($_REQUEST['person_id']) ? new Person($_REQUEST['person_id']) : new Person();
 
 		if (isset($_POST['firstname'])) {
-			$person->set($_POST);
+			$person->handleUpdate($_POST);
 			try {
 				$person->save();
 				header('Location: '.BASE_URL.'/people');

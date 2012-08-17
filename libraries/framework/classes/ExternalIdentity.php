@@ -25,15 +25,12 @@ interface ExternalIdentity
 	 * @return string
 	 */
 	public function getFirstname();
-
-	/**
-	 * @return string
-	 */
 	public function getLastname();
-
-	/**
-	 * @return string
-	 */
 	public function getEmail();
+	public function getPhone();
+	public function getAddress();
+	public function getCity();
+	public function getState();
+	public function getZip();
 
 }

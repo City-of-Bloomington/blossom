@@ -19,7 +19,7 @@ class UsersController extends Controller
 
 		if (isset($_POST['username'])) {
 			try {
-				$person->set($_POST);
+				$person->handleUpdateUserAccount($_POST);
 				$person->save();
 				header('Location: '.BASE_URL.'/users');
 				exit();

@@ -54,38 +54,6 @@ class Employee implements ExternalIdentity
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getUsername()
-	{
-		return $this->entry['uid'];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getFirstname()
-	{
-		return $this->entry['givenname'][0];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getLastname()
-	{
-		return $this->entry['sn'][0];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getEmail()
-	{
-		return $this->entry['mail'][0];
-	}
-
-	/**
 	 * Creates the connection to the LDAP server
 	 */
 	private function openConnection()
@@ -109,4 +77,17 @@ class Employee implements ExternalIdentity
 			}
 		}
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getUsername()	{ return $this->entry['uid'][0]; }
+	public function getFirstname()	{ return $this->entry['givenname'][0]; }
+	public function getLastname()	{ return $this->entry['sn'][0]; }
+	public function getEmail()		{ return $this->entry['mail'][0]; }
+	public function getPhone()		{ return $this->entry['telephonenumber'][0]; }
+	public function getAddress()	{ return $this->entry['postaladdress'][0]; }
+	public function getCity()		{ return $this->entry['l'][0]; }
+	public function getState()		{ return $this->entry['st'][0]; }
+	public function getZip()		{ return $this->entry['postalcode'][0]; }
 }

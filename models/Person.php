@@ -1,17 +1,12 @@
 <?php
 /**
- * @copyright 2012 City of Bloomington, Indiana
+ * @copyright 2009-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Person extends SystemUser
+class Person extends ActiveRecord
 {
-	private $data;
-
-	public static function getAuthenticationMethods()
-	{
-		return array('local','Employee');
-	}
+	protected $tablename = 'people';
 
 	/**
 	 * Populates the object with data
@@ -33,7 +28,7 @@ class Person extends SystemUser
 			}
 			else {
 				$zend_db = Database::getConnection();
-				if (ctype_digit($id)) {
+				if (ActiveRecord::isId($id)) {
 					$sql = 'select * from people where id=?';
 				}
 				elseif (false !== strpos($id,'@')) {
@@ -42,7 +37,7 @@ class Person extends SystemUser
 				else {
 					$sql = 'select * from people where username=?';
 				}
-				$result = $zend_db->fetchRow($sql,array($id));
+				$result = $zend_db->fetchRow($sql, array($id));
 			}
 
 			if ($result) {
@@ -55,6 +50,7 @@ class Person extends SystemUser
 		else {
 			// This is where the code goes to generate a new, empty instance.
 			// Set any default values for properties that need it here
+			$this->setAuthenticationMethod('local');
 		}
 	}
 
@@ -70,256 +66,80 @@ class Person extends SystemUser
 		}
 
 		if ($this->getUsername() && !$this->getAuthenticationMethod()) {
-			throw new Exception('people/missingAuthenticationMethod');
+			$this->setAuthenticationMethod('local');
 		}
 	}
 
-	/**
-	 * Saves this record back to the database
-	 */
 	public function save()
 	{
-		$this->validate();
-		$zend_db = Database::getConnection();
-
-		if ($this->getId()) {
-			$zend_db->update('people',$this->data,"id={$this->getId()}");
-		}
-		else {
-			$zend_db->insert('people',$this->data);
-			$this->data['id'] = $zend_db->lastInsertId('people','id');
-		}
-	}
-
-	//----------------------------------------------------------------
-	// Generic Getters
-	//----------------------------------------------------------------
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		if (isset($this->data['id'])) {
-			return $this->data['id'];
-		}
+		parent::save();
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getFirstname()
-	{
-		if (isset($this->data['firstname'])) {
-			return $this->data['firstname'];
-		}
-	}
-
-	/**
-	 * @param string $string
-	 */
-	public function setFirstname($string)
-	{
-		$this->data['firstname'] = trim($string);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getLastname()
-	{
-		if (isset($this->data['lastname'])) {
-			return $this->data['lastname'];
-		}
-	}
-
-	/**
-	 * @param string $string
-	 */
-	public function setLastname($string)
-	{
-		$this->data['lastname'] = trim($string);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getEmail()
-	{
-		if (isset($this->data['email'])) {
-			return $this->data['email'];
-		}
-	}
-
-	/**
-	 * @param string $string
-	 */
-	public function setEmail($string)
-	{
-		$this->data['email'] = trim($string);
-	}
-
-	//----------------------------------------------------------------
-	// User Implementation
-	//----------------------------------------------------------------
-	/**
-	 * @return string
-	 */
-	public function getUsername()
-	{
-		if (isset($this->data['username'])) {
-			return $this->data['username'];
-		}
-	}
-
-	/**
-	 * @param string $string
-	 */
-	public function setUsername($string)
-	{
-		$this->data['username'] = trim($string);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getRole()
-	{
-		if (isset($this->data['role'])) {
-			return $this->data['role'];
-		}
-	}
-
-	/**
-	 * Sets a person's role
-	 *
-	 * Roles must be defined in access_control.inc
-	 *
-	 * @param string $string
-	 */
-	public function setRole($string)
-	{
-		global $ZEND_ACL;
-
-		$roles = $ZEND_ACL->getRoles();
-		$string = trim($string);
-		if (in_array($string, $roles)) {
-			$this->data['role'] = $string;
-		}
-		else {
-			throw new Exception('people/unknownRole');
-		}
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getAuthenticationMethod()
-	{
-		if (isset($this->data['authenticationMethod'])) {
-			return $this->data['authenticationMethod'];
-		}
-	}
-
-	/**
-	 * @param string $string
-	 */
-	public function setAuthenticationMethod($string=null)
-	{
-		$this->data['authenticationMethod'] = trim($string);
-	}
-
-	/**
-	 * Callback function from the SystemUser class
-	 *
-	 * The SystemUser class will determine where the authentication
-	 * should occur.  If the user should be authenticated locally,
-	 * this function will be called.
-	 *
-	 * @param string $password
-	 * @return boolean
-	 */
-	protected function authenticateDatabase($password)
-	{
-		if ($this->getUsername()) {
-			$sha1 = sha1(trim($password));
-
-			$zend_db = Database::getConnection();
-			$id = $zend_db->fetchOne(
-				'select id from people where username=? and password=?',
-				array($this->getUsername(),$sha1)
-			);
-			return $id ? true : false;
-		}
-	}
-
-	/**
-	 * Encrypts the user-provided password
-	 *
-	 * @param string $string
-	 */
-	public function setPassword($string=null)
-	{
-		$this->data['password'] = sha1(trim($string));
-	}
-
-	/**
-	 * Callback function from the SystemUser class
-	 * The SystemUser will determine where the password should be stored.
-	 * If the password is stored locally, it will call this function
-	 * Passwords should already be encrypted
-	 */
-	protected function saveLocalPassword()
-	{
-		if ($this->getId()) {
-			$zend_db = Database::getConnection();
-			$zend_db->update(
-				'people',
-				array('password'=>$this->data['password']),
-				"id={$this->getId()}"
-			);
-		}
-	}
-
-	/**
-	 * Clears all the user account fields
+	 * Removes all the user account related fields from this Person
 	 */
 	public function deleteUserAccount()
 	{
-		$this->data['username'] = null;
-		$this->data['password'] = null;
-		$this->data['authenticationMethod'] = null;
-		$this->data['role'] = null;
+		$userAccountFields = array(
+			'username', 'password', 'authenticationMethod', 'role'
+		);
+		foreach ($userAccountFields as $f) {
+			$this->data[$f] = null;
+		}
 	}
 
 
 	//----------------------------------------------------------------
-	// Custom Functions
-	// We recommend adding all your custom code down here at the bottom
+	// Generic Getters & Setters
 	//----------------------------------------------------------------
-	/**
-	 * @return string
-	 */
-	public function getFullname()
+	public function getId()            { return parent::get('id');           }
+	public function getFirstname()     { return parent::get('firstname');    }
+	public function getLastname()      { return parent::get('lastname');     }
+	public function getEmail()         { return parent::get('email');        }
+
+	public function setFirstname   ($s) { parent::set('firstname',    $s); }
+	public function setLastname    ($s) { parent::set('lastname',     $s); }
+	public function setEmail       ($s) { parent::set('email',        $s); }
+
+	public function getUsername()             { return parent::get('username'); }
+	public function getPassword()             { return parent::get('password'); } # Encrypted
+	public function getRole()                 { return parent::get('role');     }
+	public function getAuthenticationMethod() { return parent::get('authenticationMethod'); }
+
+	public function setUsername            ($s) { parent::set('username',             $s); }
+	public function setRole                ($s) { parent::set('role',                 $s); }
+	public function setAuthenticationMethod($s) { parent::set('authenticationMethod', $s); }
+
+	public function setPassword($s)
 	{
-		return "{$this->getFirstname()} {$this->getLastname()}";
+		$s = trim($s);
+		if ($s) { $this->data['password'] = sha1($s); }
+		else    { $this->data['password'] = null;     }
 	}
 
 	/**
-	 * @return string
+	 * @param array $post
 	 */
-	public function getURL()
+	public function handleUpdate($post)
 	{
-		if ($this->getId()) {
-			return BASE_URL.'/people/view?person_id='.$this->getId();
+		$fields = array( 'firstname', 'middlename', 'lastname', 'email' );
+		foreach ($fields as $field) {
+			if (isset($post[$field])) {
+				$set = 'set'.ucfirst($field);
+				$this->$set($post[$field]);
+			}
 		}
 	}
 
 	/**
 	 * @param array $post
 	 */
-	public function set($post)
+	public function handleUpdateUserAccount($post)
 	{
-		$fields = array('firstname','lastname','email','username','authenticationMethod','role');
+		$fields = array(
+			'firstname','lastname','email',
+			'username','authenticationMethod','role'
+		);
 		foreach ($fields as $f) {
 			if (isset($post[$f])) {
 				$set = 'set'.ucfirst($f);
@@ -334,6 +154,92 @@ class Person extends SystemUser
 		if ($this->getUsername() && $method && $method != 'local') {
 			$identity = new $method($this->getUsername());
 			$this->populateFromExternalIdentity($identity);
+		}
+	}
+
+	//----------------------------------------------------------------
+	// User Authentication
+	//----------------------------------------------------------------
+	/**
+	 * Should provide the list of methods supported
+	 *
+	 * There should always be at least one method, called "local"
+	 * Additional methods must match classes that implement External Identities
+	 * See: ExternalIdentity.php
+	 *
+	 * @return array
+	 */
+	public static function getAuthenticationMethods()
+	{
+		global $DIRECTORY_CONFIG;
+		return array_merge(array('local'), array_keys($DIRECTORY_CONFIG));
+	}
+
+	/**
+	 * Determines which authentication scheme to use for the user and calls the appropriate method
+	 *
+	 * Local users will get authenticated against the database
+	 * Other authenticationMethods will need to write a class implementing ExternalIdentity
+	 * See: /libraries/framework/classes/ExternalIdentity.php
+	 *
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function authenticate($password)
+	{
+		if ($this->getUsername()) {
+			switch($this->getAuthenticationMethod()) {
+				case "local":
+					return $this->getPassword()==sha1($password);
+				break;
+
+				default:
+					$method = $this->getAuthenticationMethod();
+					return $method::authenticate($this->getUsername(),$password);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the user is supposed to have acces to the resource
+	 *
+	 * This is implemented by checking against a Zend_Acl object
+	 * The Zend_Acl should be created in configuration.inc
+	 *
+	 * @param string $resource
+	 * @param string $action
+	 * @return boolean
+	 */
+	public function IsAllowed($resource, $action=null)
+	{
+		global $ZEND_ACL;
+		$role = $this->getRole() ? $this->getRole() : 'Anonymous';
+		return $ZEND_ACL->isAllowed($role, $resource, $action);
+	}
+
+	//----------------------------------------------------------------
+	// Custom Functions
+	//----------------------------------------------------------------
+	/**
+	 * @return string
+	 */
+	public function getFullname()
+	{
+		if ($this->getFirstname() || $this->getLastname()) {
+			return "{$this->getFirstname()} {$this->getLastname()}";
+		}
+		else {
+			return $this->getOrganization();
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getURL()
+	{
+		if ($this->getId()) {
+			return BASE_URL."/people/view?person_id={$this->getId()}";
 		}
 	}
 
