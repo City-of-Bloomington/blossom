@@ -51,6 +51,9 @@ class Employee implements ExternalIdentity
 			$entries = ldap_get_entries(self::$connection, $result);
 			$this->entry = $entries[0];
 		}
+		else {
+			throw new Exception('ldap/unknownUser');
+		}
 	}
 
 	/**
