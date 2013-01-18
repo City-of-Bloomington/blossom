@@ -67,7 +67,7 @@ abstract class ActiveRecord
 	 *
 	 * Format is specified using PHP's date() syntax
 	 * http://www.php.net/manual/en/function.date.php
-	 * If no format is given, the MongoDate object is returned
+	 * If no format is given, the database's raw data is returned
 	 *
 	 * @param string $field
 	 * @param string $format
@@ -91,12 +91,10 @@ abstract class ActiveRecord
 	/**
 	 * Sets a date
 	 *
-	 * Dates should be in something strtotime() understands
+	 * Dates should be in DATE_FORMAT, set in configuration.inc
+	 * If we cannot parse the string using DATE_FORMAT, we will
+	 * fall back to trying something strtotime() understands
 	 * http://www.php.net/manual/en/function.strtotime.php
-	 *
-	 * If we cannot parse the date using strtotime formats,
-	 * we'll try to parse it according to the DATE_FORMAT.
-	 * DATE_FORMAT must be set in configuration.inc
 	 *
 	 * @param string $dateField
 	 * @param string $date
@@ -105,12 +103,12 @@ abstract class ActiveRecord
 	{
 		$date = trim($date);
 		if ($date) {
-			try {
-				$d = new DateTime($date);
-			}
-			catch (Exception $e) {
-				$d = DateTime::createFromFormat(DATE_FORMAT, $date);
-				if (!$d) {
+			$d = DateTime::createFromFormat(DATE_FORMAT, $date);
+			if (!$d) {
+				try {
+					$d = new DateTime($date);
+				}
+				catch (Exception $e) {
 					throw new Exception('unknownDateFormat');
 				}
 			}
@@ -124,8 +122,8 @@ abstract class ActiveRecord
 	/**
 	 * Loads and returns an object for a foreign key _id field
 	 *
-	 * Will cache the object in a private variable to avoid multiple database lookups.
-	 * Make sure to declare a private variable matching the class
+	 * Will cache the object in a protected variable to avoid multiple database
+	 * lookups. Make sure to declare a protected variable matching the class
 	 *
 	 * @param string $class
 	 * @param string $field
