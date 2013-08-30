@@ -10,8 +10,9 @@ abstract class Controller
 
 	abstract public function index();
 
-	public function __construct(Template $template)
+	public function __construct(Template &$template)
 	{
 		$this->template = $template;
+		$this->template->controller = get_class($this);
 	}
 }
