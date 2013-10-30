@@ -4,6 +4,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
+namespace \Blossom\Classes;
+
 abstract class View
 {
 	protected $vars = array();

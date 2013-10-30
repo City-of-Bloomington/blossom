@@ -2,10 +2,12 @@
 /**
  * Singleton for the Database connection
  *
- * @copyright 2006-2009 City of Bloomington, Indiana
+ * @copyright 2006-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
+namespace \Blossom\Classes;
+
 class Database
 {
 	private static $connection;

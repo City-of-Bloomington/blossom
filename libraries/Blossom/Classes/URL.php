@@ -11,7 +11,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class URL
+namespace \Blossom\Classes;
+
+class Url
 {
 	private $scheme;
 	private $host;

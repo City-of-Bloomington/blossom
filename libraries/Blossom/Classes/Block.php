@@ -9,10 +9,12 @@
  * APPLICATION_HOME/blocks/xml/...
  * APPLICATION_HOME/blocks/json/..
  *
- * @copyright 2006-2012 City of Bloomington, Indiana
+ * @copyright 2006-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
+namespace \Blossom\Classes;
+
 class Block extends View
 {
 	private $file;
@@ -30,7 +32,7 @@ class Block extends View
 	public function __construct($file,array $vars=null)
 	{
 		parent::__construct();
-		
+
 		$this->file = $file;
 		if (count($vars)) {
 			foreach ($vars as $name=>$value) {
