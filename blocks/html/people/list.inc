@@ -1,16 +1,18 @@
 <?php
 /**
- * @copyright 2009-2012 City of Bloomington, Indiana
+ * @copyright 2009-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
- * @param PersonList $this->personList
+ * @param Zend\Db\ResultSet $people
  */
+use Application\Models\Person;
+use Blossom\Classes\View;
 ?>
 <div class="interfaceBox">
 	<h2>People
 		<?php
-			if (userIsAllowed('people')) {
-				echo "<a class=\"add button\" href=\"".BASE_URL."/people/update\">Add a Person</a>";
+			if (Person::isAllowed('people')) {
+				echo "<a class=\"add button\" href=\"".BASE_URI."/people/update\">Add a Person</a>";
 			}
 		?>
 	</h2>
@@ -24,12 +26,12 @@
 		</thead>
 		<tbody>
 		<?php
-			foreach ($this->personList as $person) {
+			foreach ($this->people as $person) {
 				$editButton = '';
-				if (userIsAllowed('people')) {
+				if (Person::isAllowed('people')) {
 					$editButton = "
 					<a class=\"edit button\"
-						href=\"".BASE_URL."/people/update?person_id={$person->getId()}\">
+						href=\"".BASE_URI."/people/update?person_id={$person->getId()}\">
 						Edit
 					</a>
 					";

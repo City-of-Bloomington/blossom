@@ -4,7 +4,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Blossom\Classes;
+namespace Blossom\Classes;
+use Zend\Db\Sql\Sql;
 
 abstract class ActiveRecord
 {
@@ -16,18 +17,31 @@ abstract class ActiveRecord
 	abstract public function validate();
 
 	/**
+	 * Callback from TableGateway
+	 */
+	public function exchangeArray($data)
+	{
+		$this->data = $data;
+	}
+
+	/**
 	 * Writes the database back to the database
 	 */
 	protected function save()
 	{
 		$this->validate();
 		$zend_db = Database::getConnection();
+		$sql = new Sql($zend_db, $this->tablename);
 		if ($this->getId()) {
-			$zend_db->update($this->tablename, $this->data, "id={$this->getId()}");
+			$update = $sql->update()
+				->set($this->data)
+				->where(array('id'=>$this->getId()));
+			$sql->prepareStatementForSqlObject($update)->execute();
 		}
 		else {
-			$zend_db->insert($this->tablename, $this->data);
-			$this->data['id'] = $zend_db->lastInsertId($this->tablename, 'id');
+			$insert = $sql->insert()->values($this->data);
+			$sql->prepareStatementForSqlObject($insert)->execute();
+			$this->data['id'] = $zend_db->getDriver()->getLastGeneratedValue();
 		}
 	}
 
@@ -37,8 +51,9 @@ abstract class ActiveRecord
 	protected function delete()
 	{
 		if ($this->getId()) {
-			$zend_db = Database::getConnection();
-			$zend_db->delete($this->tablename, 'id='.$this->getId());
+			$sql = new Sql(Database::getConnection(), $this->tablename);
+			$delete = $sql->delete()->where(['id'=>$this->getId()]);
+			$sql->prepareStatementForSqlObject($delete)->execute();
 		}
 	}
 
@@ -111,7 +126,7 @@ abstract class ActiveRecord
 					$d = new DateTime($date);
 				}
 				catch (Exception $e) {
-					throw new Exception('unknownDateFormat');
+					throw new \Exception('unknownDateFormat');
 				}
 			}
 			$this->data[$dateField] = $d->format(self::MYSQL_DATE_FORMAT);

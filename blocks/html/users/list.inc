@@ -3,14 +3,16 @@
  * @copyright 2007-2012 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
- * @param UserList $this->userList
+ * @param Zend\Db\Sql\Select $users
  */
+use Application\Models\Person;
+use Blossom\Classes\View;
 ?>
 <div class="interfaceBox">
 	<h2>User Accounts
 		<?php
-			if (userIsAllowed('users')) {
-				echo "<a class=\"add button\" href=\"".BASE_URL."/users/update\">Add Account</a>";
+			if (Person::isAllowed('users')) {
+				echo "<a class=\"add button\" href=\"".BASE_URI."/users/update\">Add Account</a>";
 			}
 		?>
 	</h2>
@@ -26,19 +28,19 @@
 		</thead>
 		<tbody>
 		<?php
-			foreach ($this->userList as $user) {
+			foreach ($this->users as $user) {
 				$editButton = '';
 				$deleteButton = '';
-				if (userIsAllowed('users')) {
+				if (Person::isAllowed('users')) {
 					$editButton = "
 					<a class=\"edit button\"
-						href=\"".BASE_URL."/users/update?user_id={$user->getId()}\">
+						href=\"".BASE_URI."/users/update?user_id={$user->getId()}\">
 						Edit Account
 					</a>
 					";
 					$deleteButton = "
 					<a class=\"delete button\"
-						href=\"".BASE_URL."/users/delete?user_id={$user->getId()}\">
+						href=\"".BASE_URI."/users/delete?user_id={$user->getId()}\">
 						Delete Account
 					</a>
 					";

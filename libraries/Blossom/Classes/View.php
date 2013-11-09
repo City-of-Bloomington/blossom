@@ -4,24 +4,25 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Blossom\Classes;
+namespace Blossom\Classes;
+use Zend\I18n\Translator\Translator;
 
 abstract class View
 {
 	protected $vars = array();
-	private static $zend_translate;
+	private static $translator;
 
 	abstract public function render();
 
 	public function __construct()
 	{
-		if (!self::$zend_translate) {
-			self::$zend_translate = new Zend_Translate(array(
-				'adapter' => 'gettext',
-				'content' => APPLICATION_HOME.'/language',
-				'locale'  => LOCALE,
-				'scan'    => Zend_Translate::LOCALE_FILENAME
-			));
+		if (!self::$translator) {
+			self::$translator = new Translator();
+			self::$translator->addTranslationFilePattern(
+				'gettext',
+				APPLICATION_HOME.'/language',
+				'%s.mo'
+			);
 		}
 	}
 
@@ -93,6 +94,6 @@ abstract class View
 	 */
 	public function translate($msgid)
 	{
-		return self::$zend_translate->_($msgid);
+		return self::$zend_translate->translate($msgid);
 	}
 }

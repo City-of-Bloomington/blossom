@@ -4,15 +4,28 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Application\Controllers;
+namespace Application\Controllers;
+use Application\Models\Person;
+use Application\Models\PeopleTable;
+use Blossom\Classes\Controller;
+use Blossom\Classes\Block;
+use Blossom\Classes\Database;
+use Zend\Paginator\Paginator;
+use Zend\Paginator\Adapter\DbSelect;
 
 class UsersController extends Controller
 {
 	public function index()
 	{
-		$users = new PersonList(array('user_account'=>true));
+		$people = new PeopleTable();
+		$users = $people->find(['user_account'=>true], true);
 
-		$this->template->blocks[] = new Block('users/userList.inc',array('userList'=>$users));
+		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
+		$users->setCurrentPageNumber($page);
+		$users->setItemCountPerPage(20);
+
+		$this->template->blocks[] = new Block('users/list.inc',array('users'=>$users));
+		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$users]);
 	}
 
 	public function update()
@@ -26,15 +39,15 @@ class UsersController extends Controller
 				header('Location: '.BASE_URL.'/users');
 				exit();
 			}
-			catch (Exception $e) {
+			catch (\Exception $e) {
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
 
 		if ($person->getId()) {
-			$this->template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
+			$this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
 		}
-		$this->template->blocks[] = new Block('users/updateUserForm.inc',array('user'=>$person));
+		$this->template->blocks[] = new Block('users/updateForm.inc',array('user'=>$person));
 	}
 
 	public function delete()
@@ -44,7 +57,7 @@ class UsersController extends Controller
 			$person->deleteUserAccount();
 			$person->save();
 		}
-		catch (Exception $e) {
+		catch (\Exception $e) {
 			$_SESSION['errorMessages'][] = $e;
 		}
 		header('Location: '.BASE_URL.'/users');

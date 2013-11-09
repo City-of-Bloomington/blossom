@@ -1,15 +1,18 @@
 <?php
 /**
- * @copyright 2006-2011 City of Bloomington, Indiana
+ * @copyright 2006-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param User $this->user
  */
+use Application\Models\Person;
+use Blossom\Classes\View;
+
 $title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create User Account";
 ?>
 <div class="updateUserForm">
 	<h2><?php echo $title; ?></h2>
-	<form method="post" action="<?php echo BASE_URL; ?>/users/update">
+	<form method="post" action="<?php echo BASE_URI; ?>/users/update">
 		<fieldset><legend>User Account</legend>
 			<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
 			<table>
@@ -49,10 +52,9 @@ $title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create Us
 				</tr>
 			</table>
 			<button type="submit" class="submit">Submit</button>
-			<button type="button" class="cancel"
-				onclick="document.location.href='<?php echo BASE_URL; ?>/users';">
+			<a class="cancel" href="<?php echo BASE_URI; ?>/users">
 				Cancel
-			</button>
+			</a>
 		</fieldset>
 	</form>
 </div>

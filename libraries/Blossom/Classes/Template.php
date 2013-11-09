@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Blossom\Classes;
+namespace Blossom\Classes;
 
 class Template extends View
 {
@@ -55,7 +55,7 @@ class Template extends View
 			$this->filename = $filename;
 		}
 		else {
-			throw new Exception('unknownTemplate');
+			throw new \Exception('unknownTemplate');
 		}
 	}
 
@@ -69,7 +69,7 @@ class Template extends View
 			$this->outputFormat = $format;
 		}
 		else {
-			throw new Exception('unknownOutputFormat');
+			throw new \Exception('unknownOutputFormat');
 		}
 	}
 

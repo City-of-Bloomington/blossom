@@ -4,7 +4,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Application\Models;
+namespace Application\Models;
+use Blossom\Classes\ActiveRecord;
+use Blossom\Classes\Database;
 
 class Person extends ActiveRecord
 {
@@ -26,7 +28,7 @@ class Person extends ActiveRecord
 	{
 		if ($id) {
 			if (is_array($id)) {
-				$result = $id;
+				$this->exchangeArray($id);
 			}
 			else {
 				$zend_db = Database::getConnection();
@@ -39,14 +41,13 @@ class Person extends ActiveRecord
 				else {
 					$sql = 'select * from people where username=?';
 				}
-				$result = $zend_db->fetchRow($sql, array($id));
-			}
-
-			if ($result) {
-				$this->data = $result;
-			}
-			else {
-				throw new Exception('people/unknownPerson');
+				$result = $zend_db->createStatement($sql)->execute([$id]);
+				if ($result) {
+					$this->exchangeArray($result->current());
+				}
+				else {
+					throw new Exception('people/unknownPerson');
+				}
 			}
 		}
 		else {
@@ -64,7 +65,7 @@ class Person extends ActiveRecord
 	{
 		// Check for required fields here.  Throw an exception if anything is missing.
 		if (!$this->getFirstname() || !$this->getEmail()) {
-			throw new Exception('missingRequiredFields');
+			throw new \Exception('missingRequiredFields');
 		}
 
 		if ($this->getUsername() && !$this->getAuthenticationMethod()) {
@@ -212,11 +213,13 @@ class Person extends ActiveRecord
 	 * @param string $action
 	 * @return boolean
 	 */
-	public function IsAllowed($resource, $action=null)
+	public static function isAllowed($resource, $action=null)
 	{
 		global $ZEND_ACL;
-		$role = $this->getRole() ? $this->getRole() : 'Anonymous';
-		return $ZEND_ACL->isAllowed($role, $resource, $action);
+		if (isset($_SESSION['USER'])) {
+			$role = $_SESSION['USER']->getRole() ? $_SESSION['USER']->getRole() : 'Anonymous';
+			return $ZEND_ACL->isAllowed($role, $resource, $action);
+		}
 	}
 
 	//----------------------------------------------------------------
@@ -227,12 +230,7 @@ class Person extends ActiveRecord
 	 */
 	public function getFullname()
 	{
-		if ($this->getFirstname() || $this->getLastname()) {
-			return "{$this->getFirstname()} {$this->getLastname()}";
-		}
-		else {
-			return $this->getOrganization();
-		}
+		return "{$this->getFirstname()} {$this->getLastname()}";
 	}
 
 	/**

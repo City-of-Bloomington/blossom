@@ -4,25 +4,34 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Application\Controllers;
+namespace Application\Controllers;
+use Application\Models\Person;
+use Application\Models\PeopleTable;
+use Blossom\Classes\Controller;
+use Blossom\Classes\Block;
 
 class PeopleController extends Controller
 {
 	public function index()
 	{
-		$people = new PersonList();
-		$people->find();
+		$table = new PeopleTable();
+		$people = $table->find(null, true);
 
-		$this->template->blocks[] = new Block('people/personList.inc',array('personList'=>$people));
+		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
+		$people->setCurrentPageNumber($page);
+		$people->setItemCountPerPage(20);
+
+		$this->template->blocks[] = new Block('people/list.inc',    ['people'   =>$people]);
+		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$people]);
 	}
 
 	public function view()
 	{
 		try {
 			$person = new Person($_REQUEST['person_id']);
-			$this->template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person));
+			$this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
 		}
-		catch (Exception $e) {
+		catch (\Exception $e) {
 			$_SESSION['errorMessages'][] = $e;
 		}
 
@@ -34,7 +43,7 @@ class PeopleController extends Controller
 			try {
 				$person = new Person($_REQUEST['person_id']);
 			}
-			catch (Exception $e) {
+			catch (\Exception $e) {
 				$_SESSION['errorMessages'][] = $e;
 				header("Location: $errorURL");
 				exit();
@@ -51,11 +60,11 @@ class PeopleController extends Controller
 				header('Location: '.BASE_URL.'/people');
 				exit();
 			}
-			catch (Exception $e) {
+			catch (\Exception $e) {
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
 
-		$this->template->blocks[] = new Block('people/updatePersonForm.inc',array('person'=>$person));
+		$this->template->blocks[] = new Block('people/updateForm.inc',array('person'=>$person));
 	}
 }

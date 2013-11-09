@@ -75,3 +75,7 @@ header nav a { font-weight:bold; color:black; margin-right:1em; }
 	padding-left:20px;
 	background:url('images/emblem-important.png') left center no-repeat;
 }
+
+.pageNavigation ul { list-style-type:none; }
+.pageNavigation li { display:inline; margin-right:1em; }
+.pageNavigation .current { border:2px solid green; }

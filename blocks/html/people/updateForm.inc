@@ -1,10 +1,12 @@
 <?php
 /**
- * @copyright 2009-2011 City of Bloomington, Indiana
+ * @copyright 2009-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
  */
+use Blossom\Classes\View;
+
 $fields = array('firstname','lastname','email');
 foreach ($fields as $field) {
 	$get = 'get'.ucfirst($field);
@@ -14,7 +16,7 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 ?>
 <div class="updatePersonForm">
 	<h2><?php echo $title; ?></h2>
-	<form method="post" action="<?php echo BASE_URL; ?>/people/update">
+	<form method="post" action="<?php echo BASE_URI; ?>/people/update">
 		<fieldset><legend>Person Info</legend>
 			<input name="person_id" type="hidden" value="<?php echo $this->person->getId(); ?>" />
 
@@ -32,10 +34,9 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 				</tr>
 			</table>
 			<button type="submit" class="submit">Submit</button>
-			<button type="button" class="cancel"
-				onclick="document.location.href='<?php echo BASE_URL; ?>/people';">
+			<a class="cancel" href="<?php echo BASE_URI; ?>/people">
 				Cancel
-			</button>
+			</a>
 		</fieldset>
 	</form>
 </div>

@@ -13,7 +13,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Blossom\Classes;
+namespace Blossom\Classes;
 
 class Block extends View
 {
@@ -61,13 +61,13 @@ class Block extends View
 			include APPLICATION_HOME.$block;
 			return ob_get_clean();
 		}
-		elseif (file_exists(FRAMEWORK.$block)) {
+		elseif (file_exists(BLOSSOM.$block)) {
 			ob_start();
-			include FRAMEWORK.$block;
+			include BLOSSOM.$block;
 			return ob_get_clean();
 		}
 
-		throw new Exception('unknownBlock/'.$this->file);
+		throw new \Exception('unknownBlock/'.$this->file);
 	}
 
 	/**

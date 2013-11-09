@@ -6,7 +6,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace \Blossom\Classes;
+namespace Blossom\Classes;
+use Zend\Db\Adapter\Adapter;
 
 class Database
 {
@@ -23,14 +24,13 @@ class Database
 		}
 		if (!self::$connection) {
 			try {
-				$parameters = array('host'    =>DB_HOST,
+				$parameters = array('driver'  =>DB_ADAPTER,
+									'hostname'=>DB_HOST,
 									'username'=>DB_USER,
 									'password'=>DB_PASS,
-									'dbname'  =>DB_NAME,
-									'charset' =>'utf8',
-									'options' =>array(Zend_Db::AUTO_QUOTE_IDENTIFIERS=>false));
-				self::$connection = Zend_Db::factory(DB_ADAPTER,$parameters);
-				self::$connection->getConnection();
+									'database'  =>DB_NAME,
+									'charset' =>'utf8');
+				self::$connection = new Adapter($parameters);
 			}
 			catch (Exception $e) {
 				die($e->getMessage());
