@@ -1,11 +1,12 @@
 <?php
 /**
- * @copyright 2012 City of Bloomington, Indiana
+ * @copyright 2012-2013 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 include '../configuration.inc';
 use Blossom\Classes\Template;
+use Blossom\Classes\Block;
 
 // Check for routes
 if (preg_match('|'.BASE_URI.'(/([a-zA-Z0-9]+))?(/([a-zA-Z0-9]+))?|',$_SERVER['REQUEST_URI'],$matches)) {
@@ -28,7 +29,7 @@ if (isset($resource) && isset($action) && $ZEND_ACL->hasResource($resource)) {
 	}
 	else {
 		header('HTTP/1.1 403 Forbidden', true, 403);
-		$_SESSION['errorMessages'][] = new Exception('noAccessAllowed');
+		$_SESSION['errorMessages'][] = new \Exception('noAccessAllowed');
 	}
 }
 else {
