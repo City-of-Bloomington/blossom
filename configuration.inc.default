@@ -139,6 +139,11 @@ if (!defined('STDIN')) {
 	session_start();
 }
 
+if (ERROR_REPORTING != 'PHP_DEFAULT') {
+	set_error_handler    ('Blossom\Classes\Error::customErrorHandler');
+	set_exception_handler('Blossom\Classes\Error::customExceptionHandler');
+}
+
 /**
  * Load the Zend_Acl
  */
