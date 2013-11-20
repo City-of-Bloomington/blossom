@@ -14,6 +14,13 @@ abstract class View
 
 	abstract public function render();
 
+	/**
+	 * Instantiates the Zend Translator
+	 *
+	 * See: ZendFramework documentation for full information
+	 * http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
+	 * @see http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
+	 */
 	public function __construct()
 	{
 		if (!self::$translator) {
@@ -28,6 +35,7 @@ abstract class View
 
 	/**
 	 * Magic Method for setting object properties
+	 *
 	 * @param string $key
 	 * @param mixed $value
 	 */
@@ -36,6 +44,7 @@ abstract class View
 	}
 	/**
 	 * Magic method for getting object properties
+	 *
 	 * @param string $key
 	 * @return mixed
 	 */
@@ -86,14 +95,28 @@ abstract class View
 	 * For entries in the PO that are plurals, you must pass msgid as an array
 	 * $this->translate(array('msgid', 'msgid_plural', $num))
 	 *
-	 * Zend_Translate will use the correct plural version based on the number
-	 * you provide.
+	 * See: ZendFramework documentation for full information
+	 * http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
 	 *
+	 * @see http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
 	 * @param mixed $msgid String or Array
 	 * @return string
 	 */
 	public function translate($msgid)
 	{
-		return self::$zend_translate->translate($msgid);
+		if (is_array($msgid)) {
+			return self::$translator->translatePlural($msgid[0], $msgid[1], $msgid[2]);
+		}
+		else {
+			return self::$translator->translate($msgid);
+		}
+	}
+
+	/**
+	 * Alias of $this->translate()
+	 */
+	public function _($msgid)
+	{
+		return $this->translate($msgid);
 	}
 }

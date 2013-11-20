@@ -17,25 +17,25 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 <div class="updatePersonForm">
 	<h2><?php echo $title; ?></h2>
 	<form method="post" action="<?php echo BASE_URI; ?>/people/update">
-		<fieldset><legend>Person Info</legend>
+		<fieldset><legend><?php echo $this->_('labels.info_person'); ?></legend>
 			<input name="person_id" type="hidden" value="<?php echo $this->person->getId(); ?>" />
 
 			<table>
-				<tr><td><label for="firstname" class="required">Firstname</label></td>
+				<tr><td><label for="firstname" class="required"><?php echo $this->_('labels.firstname'); ?></label></td>
 					<td><input name="firstname" id="firstname" value="<?php echo $firstname; ?>" /></td>
 				</tr>
 
-				<tr><td><label for="lastname" class="required">Lastname</label></td>
+				<tr><td><label for="lastname" class="required"><?php echo $this->_('labels.lastname'); ?></label></td>
 					<td><input name="lastname" id="lastname" value="<?php echo $lastname; ?>" /></td>
 				</tr>
 
-				<tr><td><label for="email">Email</label></td>
+				<tr><td><label for="email"><?php echo $this->_('labels.email'); ?></label></td>
 					<td><input name="email" id="email" value="<?php echo $email; ?>" /></td>
 				</tr>
 			</table>
-			<button type="submit" class="submit">Submit</button>
+			<button type="submit" class="submit"><?php echo $this->_('labels.submit'); ?></button>
 			<a class="cancel" href="<?php echo BASE_URI; ?>/people">
-				Cancel
+				<?php echo $this->_('labels.cancel'); ?>
 			</a>
 		</fieldset>
 	</form>

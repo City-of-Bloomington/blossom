@@ -10,11 +10,11 @@ use Blossom\Classes\View;
 
 $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
-	$username = "
-	<a class=\"add button\" href=\"".BASE_URI."/users/update?user_id={$this->person->getId()}\">
-		Create Account
-	</a>
-	";
+	$username = sprintf(
+		'<a class="add button" href="%s">%s</a>',
+		BASE_URI.'/users/update?user_id='.$this->person->getId(),
+		$this->translate('labels.create_account')
+	);
 }
 
 $name = View::escape($this->person->getFullname());

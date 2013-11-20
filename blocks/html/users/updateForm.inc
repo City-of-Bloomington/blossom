@@ -8,15 +8,13 @@
 use Application\Models\Person;
 use Blossom\Classes\View;
 
-$title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create User Account";
 ?>
 <div class="updateUserForm">
-	<h2><?php echo $title; ?></h2>
 	<form method="post" action="<?php echo BASE_URI; ?>/users/update">
-		<fieldset><legend>User Account</legend>
+		<fieldset><legend><?php echo $this->_(['labels.user','labels.users',2]); ?></legend>
 			<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
 			<table>
-				<tr><td><label for="authenticationMethod">Authentication</label></td>
+				<tr><td><label for="authenticationMethod"><?php echo $this->_('labels.authenticationMethod'); ?></label></td>
 					<td><select name="authenticationMethod" id="authenticationMethod">
 						<?php
 							foreach (Person::getAuthenticationMethods() as $method) {
@@ -29,14 +27,14 @@ $title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create Us
 						</select>
 					</td>
 				</tr>
-				<tr><td><label for="username">Username</label></td>
+				<tr><td><label for="username"><?php echo $this->_('labels.username'); ?></label></td>
 					<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
 					</td>
 				</tr>
-				<tr><td><label for="password">Password</label></td>
+				<tr><td><label for="password"><?php echo $this->_('labels.password'); ?></label></td>
 					<td><input name="password" id="password" /></td>
 				</tr>
-				<tr><td><label for="role">Role</label></td>
+				<tr><td><label for="role"><?php echo $this->_('labels.role'); ?></label></td>
 					<td><select name="role" id="role"><option></option>
 						<?php
 							global $ZEND_ACL;
@@ -51,9 +49,9 @@ $title = $this->user->getId() ? "Edit {$this->user->getUsername()}" : "Create Us
 					</td>
 				</tr>
 			</table>
-			<button type="submit" class="submit">Submit</button>
+			<button type="submit" class="submit"><?php echo $this->_('labels.submit'); ?></button>
 			<a class="cancel" href="<?php echo BASE_URI; ?>/users">
-				Cancel
+				<?php echo $this->_('labels.cancel'); ?>
 			</a>
 		</fieldset>
 	</form>
