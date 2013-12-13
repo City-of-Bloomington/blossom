@@ -1,2 +1,5 @@
 configuration.inc
 data/sessions/*
+build
+dist
+
