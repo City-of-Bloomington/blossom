@@ -91,11 +91,11 @@ abstract class ActiveRecord
 	 * @param DateTimeZone $timezone
 	 * @return string
 	 */
-	protected function getDateData($dateField, $format=null, DateTimeZone $timezone=null)
+	protected function getDateData($dateField, $format=null, \DateTimeZone $timezone=null)
 	{
 		if (isset($this->data[$dateField])) {
 			if ($format) {
-				$date = new DateTime($this->data[$dateField]);
+				$date = new \DateTime($this->data[$dateField]);
 				if ($timezone) { $date->setTimezone($timezone); }
 				return $date->format($format);
 			}
@@ -120,10 +120,10 @@ abstract class ActiveRecord
 	{
 		$date = trim($date);
 		if ($date) {
-			$d = DateTime::createFromFormat(DATE_FORMAT, $date);
+			$d = \DateTime::createFromFormat(DATE_FORMAT, $date);
 			if (!$d) {
 				try {
-					$d = new DateTime($date);
+					$d = new \DateTime($date);
 				}
 				catch (Exception $e) {
 					throw new \Exception('unknownDateFormat');
