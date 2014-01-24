@@ -160,9 +160,9 @@ abstract class ActiveRecord
 	 * Loads the object record for the foreign key and caches
 	 * the object in a private variable
 	 *
-	 * @param string $class
-	 * @param string $field
-	 * @param string $id
+	 * @param string $class Fully namespaced classname
+	 * @param string $field Name of field to set
+	 * @param string $id The value to set
 	 */
 	protected function setForeignKeyField($class, $field, $id)
 	{
@@ -184,9 +184,9 @@ abstract class ActiveRecord
 	 * Caches the object in a private variable and sets
 	 * the ID value in the data
 	 *
-	 * @param string $class
-	 * @param string $field
-	 * @param Object $object
+	 * @param string $class Fully namespaced classname
+	 * @param string $field Name of field to set
+	 * @param Object $object Value to set
 	 */
 	protected function setForeignKeyObject($class, $field, $object)
 	{
