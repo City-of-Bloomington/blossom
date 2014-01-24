@@ -121,7 +121,7 @@ require_once ZEND.'/Loader/AutoloaderFactory.php';
 $config = [
 	'Zend\Loader\StandardAutoloader' => [
 		'namespaces' => [
-			'Application' => APPLICATION_HOME.'/libraries/Application',
+			'Application' => APPLICATION_HOME,
 			'Blossom'     => BLOSSOM,
 			'Zend'        => ZEND
 		]
