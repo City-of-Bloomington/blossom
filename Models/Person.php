@@ -216,10 +216,11 @@ class Person extends ActiveRecord
 	public static function isAllowed($resource, $action=null)
 	{
 		global $ZEND_ACL;
-		if (isset($_SESSION['USER'])) {
-			$role = $_SESSION['USER']->getRole() ? $_SESSION['USER']->getRole() : 'Anonymous';
-			return $ZEND_ACL->isAllowed($role, $resource, $action);
+		$role = 'Anonymous';
+		if (isset($_SESSION['USER']) && $_SESSION['USER']->getRole()) {
+			$role = $_SESSION['USER']->getRole();
 		}
+		return $ZEND_ACL->isAllowed($role, $resource, $action);
 	}
 
 	//----------------------------------------------------------------
