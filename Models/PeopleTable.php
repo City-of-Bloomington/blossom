@@ -5,51 +5,15 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Application\Models;
-use Blossom\Classes\ActiveRecord;
-use Blossom\Classes\Database;
+
+use Blossom\Classes\TableGateway;
 use Zend\Db\Sql\Select;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Paginator\Adapter\DbSelect;
-use Zend\Paginator\Paginator;
 
-class PeopleTable
+class PeopleTable extends TableGateway
 {
-	private $resultSetPrototype;
-	private $tableGateway;
+	public function __construct() { parent::__construct('people', __namespace__.'\Person'); }
 
-	public function __construct()
-	{
-		$this->resultSetPrototype = new ResultSet();
-		$this->resultSetPrototype->setArrayObjectPrototype(new Person());
-		$this->tableGateway = new TableGateway(
-			'people',
-			Database::getConnection(),
-			null,
-			$this->resultSetPrototype
-		);
-	}
-
-	public function getPerson($id=null)
-	{
-		if (ActiveRecord::isId($id)) {
-			$field = 'id';
-		}
-		elseif (false !== strpos($id,'@')) {
-			$field = 'email';
-		}
-		else {
-			$field = 'username';
-		}
-		$result = $this->tableGateway->select([$field=>$id]);
-		$row = $result->current();
-		if (!$row) {
-			throw new \Exception('people/unknownPerson.inc');
-		}
-		return $row;
-	}
-
-	public function find($fields=null, $paginated=false, $order='lastname', $limit=null)
+	public function find($fields=null, $order='lastname', $paginated=false; $limit=null)
 	{
 		$select = new Select('people');
 		if (count($fields)) {
@@ -65,20 +29,10 @@ class PeopleTable
 					break;
 
 					default:
-						$select->where("$key=?",$value);
+						$select->where([$key=>$value]);
 				}
 			}
 		}
-		if ($order) { $select->order($order); }
-		if ($limit) { $select->limit($limit); }
-
-		if ($paginated) {
-			$adapter = new DbSelect($select, $this->tableGateway->getAdapter(), $this->resultSetPrototype);
-			$paginator = new Paginator($adapter);
-			return $paginator;
-		}
-		else {
-			return $this->tableGateway->selectWith($select);
-		}
+		return parent::performSelect($select, $order, $paginated, $limit);
 	}
 }
