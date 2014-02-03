@@ -53,14 +53,10 @@ class Url
 
 		$url = parse_url($script);
 		$this->scheme = $url['scheme'];
-		$this->host = $url['host'];
-		$this->path = $url['path'];
-		if (isset($url['fragment'])) {
-			$this->anchor = $url['fragment'];
-		}
-		if (isset($url['query'])) {
-			parse_str($url['query'],$this->parameters);
-		}
+		if (isset($url['host']))     { $this->host = $url['host'];       }
+		if (isset($url['path']))     { $this->path = $url['path'];       }
+		if (isset($url['fragment'])) { $this->anchor = $url['fragment']; }
+		if (isset($url['query'])) { parse_str($url['query'],$this->parameters); }
 	}
 
 	/**
