@@ -100,7 +100,7 @@ class Url
 	 */
 	public function getScheme() {
 		if (!$this->scheme) {
-			$this->scheme = 'http://';
+			$this->scheme = 'http';
 		}
 		return $this->scheme;
 	}
@@ -111,9 +111,7 @@ class Url
 	 */
 	public function setScheme($string)
 	{
-		if (!preg_match('|://|',$string)) {
-			$string .= '://';
-		}
+		$string = preg_replace('|://|', '', $string);
 		$this->scheme = $string;
 	}
 
