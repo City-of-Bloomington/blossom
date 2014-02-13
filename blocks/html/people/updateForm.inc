@@ -33,10 +33,10 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 					<td><input name="email" id="email" value="<?php echo $email; ?>" /></td>
 				</tr>
 			</table>
-			<button type="submit" class="submit"><?php echo $this->_('labels.submit'); ?></button>
-			<a class="cancel" href="<?php echo BASE_URI; ?>/people">
-				<?php echo $this->_('labels.cancel'); ?>
-			</a>
+			<?php
+				$h = $this->template->getHelper('saveAndCancelButtons');
+				echo $h->saveAndCancelButtons(BASE_URI.'/people');
+			?>
 		</fieldset>
 	</form>
 </div>

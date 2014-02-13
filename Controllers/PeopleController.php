@@ -15,7 +15,7 @@ class PeopleController extends Controller
 	public function index()
 	{
 		$table = new PeopleTable();
-		$people = $table->find(null, true);
+		$people = $table->find(null, null, true);
 
 		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
 		$people->setCurrentPageNumber($page);

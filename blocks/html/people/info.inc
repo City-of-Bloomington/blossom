@@ -10,10 +10,11 @@ use Blossom\Classes\View;
 
 $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
-	$username = sprintf(
-		'<a class="add button" href="%s">%s</a>',
+	$h = $this->template->getHelper('buttonLink');
+	$username = $h->buttonLink(
 		BASE_URI.'/users/update?user_id='.$this->person->getId(),
-		$this->translate('labels.create_account')
+		$this->translate('labels.create_account'),
+		'add'
 	);
 }
 

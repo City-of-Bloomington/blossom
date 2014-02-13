@@ -12,9 +12,9 @@ use Blossom\Classes\View;
 	<h2><?php
 			echo $this->_(['labels.user','labels.users',2]);
 
-			$button = '<a class="%s button" href="%s">%s</a>';
+			$helper = $this->template->getHelper('buttonLink');
 			if (Person::isAllowed('users')) {
-				echo sprintf($button,'add',BASE_URI.'/users/update',$this->_('labels.create_account'));
+				echo $helper->buttonLink(BASE_URI.'/users/update', $this->_('labels.create_account'), 'add');
 			}
 		?>
 	</h2>
@@ -34,15 +34,15 @@ use Blossom\Classes\View;
 				$editButton = '';
 				$deleteButton = '';
 				if (Person::isAllowed('users')) {
-					$editButton = sprintf($button,
-						'edit',
+					$editButton = $helper->buttonLink(
 						BASE_URI.'/users/update?user_id='.$user->getId(),
-						$this->_('labels.edit_account')
+						$this->_('labels.edit_account'),
+						'edit'
 					);
-					$deleteButton = sprintf($button,
-						'delete',
+					$deleteButton = $helper->buttonLink(
 						BASE_URI.'/users/delete?user_id='.$user->getId(),
-						$this->_('labels.delete_account')
+						$this->_('labels.delete_account'),
+						'delete'
 					);
 				}
 

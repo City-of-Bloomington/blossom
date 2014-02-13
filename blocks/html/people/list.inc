@@ -12,11 +12,13 @@ use Blossom\Classes\View;
 	<h2><?php
 			echo $this->translate(['labels.person','labels.people',2]);
 
+			$helper = $this->template->getHelper('buttonLink');
+
 			if (Person::isAllowed('people')) {
-				echo sprintf(
-					'<a class="add button" href="%s">%s</a>',
+				echo $helper->buttonLink(
 					BASE_URI.'/people/update',
-					$this->translate('labels.add_person')
+					$this->translate('labels.add_person'),
+					'add'
 				);
 			}
 		?>
@@ -34,10 +36,10 @@ use Blossom\Classes\View;
 			foreach ($this->people as $person) {
 				$editButton = '';
 				if (Person::isAllowed('people')) {
-					$editButton = sprintf(
-						'<a class="edit button" href="%s">%s</a>',
+					$editButton = $helper->buttonLink(
 						BASE_URI.'/people/update?person_id='.$person->getId(),
-						$this->translate('labels.edit')
+						$this->translate('labels.edit'),
+						'edit'
 					);
 				}
 
