@@ -18,7 +18,7 @@ class UsersController extends Controller
 	public function index()
 	{
 		$people = new PeopleTable();
-		$users = $people->find(['user_account'=>true], true);
+		$users = $people->find(['user_account'=>true], null, true);
 
 		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
 		$users->setCurrentPageNumber($page);
