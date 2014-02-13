@@ -13,7 +13,7 @@ class PeopleTable extends TableGateway
 {
 	public function __construct() { parent::__construct('people', __namespace__.'\Person'); }
 
-	public function find($fields=null, $order='lastname', $paginated=false; $limit=null)
+	public function find($fields=null, $order='lastname', $paginated=false, $limit=null)
 	{
 		$select = new Select('people');
 		if (count($fields)) {
