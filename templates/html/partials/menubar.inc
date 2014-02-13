@@ -1,15 +1,12 @@
 <nav>
-	<a href="<?php echo BASE_URL; ?>">Home</a>
 	<?php
+		$a = '<a href="%s">%s</a>';
+		echo sprintf($a, BASE_URI, $this->translate('labels.home'));
 		if (isset($_SESSION['USER'])) {
-			echo '<a href="'.BASE_URL.'/login/logout.php">Logout</a>';
+			echo sprintf($a, BASE_URI.'/login/logout', $this->translate('labels.logout'));
 		}
 		else {
-			echo "
-			<a href=\"".BASE_URL."/login?return_url=$_SERVER[REQUEST_URI]\">
-				Login
-			</a>
-			";
+			echo sprintf($a, BASE_URI."/login?return_url=$_SERVER[REQUEST_URI]", $this->translate('labels.login'));
 		}
 	?>
 </nav>

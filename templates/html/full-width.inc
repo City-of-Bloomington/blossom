@@ -12,7 +12,7 @@
 	<div id="panel-container">
 		<div id="content-panel">
 			<?php
-				include FRAMEWORK.'/errorMessages.php';
+				include BLOSSOM.'/errorMessages.php';
 
 				echo $this->includeBlocks();
 			?>

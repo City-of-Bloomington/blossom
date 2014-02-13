@@ -2,38 +2,26 @@
 /**
  * Displayed in the banner
  */
-define('APPLICATION_NAME','application_name');
+define('APPLICATION_NAME','application');
 
 /**
  * Where on the filesystem this application is installed
  */
-define('APPLICATION_HOME','/var/www/sites/application_name');
+define('APPLICATION_HOME','/srv/sites/application');
+define('BLOSSOM', APPLICATION_HOME.'/libraries/Blossom');
+define('ZEND',    APPLICATION_HOME.'/libraries/zf2/library/Zend');
 
 /**
  * The URL to get to this site
  * Do NOT use a trailing slash
  */
-define('BASE_URL','http://localhost/application_name');
-define('BASE_URI','/application_name');
-
-
-/**
- * Where on the filesystem the framework is installed.
- */
-define('FRAMEWORK',APPLICATION_HOME.'/libraries/framework');
-
-/**
- * This needs to point to the library directory inside your
- * installation of the ZendFramework
- * http://framework.zend.com
- */
-define('ZEND',APPLICATION_HOME.'/libraries/ZendFramework/library');
-
+define('BASE_URL','http://localhost/application');
+define('BASE_URI','/application');
 
 /**
  * Used when there's an error on the site.  The Framework will
  * print out a nice error message, encouraging users to report any problems
- * See: FRAMEWORK/ITSFunctions.inc
+ * See: BLOSSOM/ITSFunctions.inc
  *
  * This is also the default Admin user information that gets added to the database
  */
@@ -46,7 +34,7 @@ define('ADMINISTRATOR_EMAIL','admin@servername.com');
  *
  * If you do not define error handling to PHP_DEFAULT
  * the custom error handlers kick in.  All of the custom error display
- * frunctions are in FRAMEWORK/globalFunctions.inc.  The custom error
+ * frunctions are in BLOSSOM/Classes/Error.php.  The custom error
  * function decide what to do based on $ERROR_REPORING array values
  *
  * PRETTY_PRINT - Display a message in the browser
@@ -118,7 +106,7 @@ $DIRECTORY_CONFIG = array(
  * phpCAS is a PHP library for handling the calls to the CAS service
  * It is the official library, part of the Jasig CAS project
  */
-//define('CAS','/var/www/libraries/phpCAS');
+//define('CAS',APPLICATION_HOME.'/libraries/phpCAS');
 //define('CAS_SERVER','cas.somewhere.org');
 //define('CAS_URI','cas');
 
@@ -129,12 +117,17 @@ $DIRECTORY_CONFIG = array(
 /**
  * Enable autoloading for the PHP libraries
  */
-ini_set('include_path','.'.PATH_SEPARATOR.ZEND);
-require_once 'Zend/Loader/Autoloader.php';
-Zend_Loader_Autoloader::getInstance();
-
-include FRAMEWORK.'/globalFunctions.php';
-spl_autoload_register('autoload');
+require_once ZEND.'/Loader/AutoloaderFactory.php';
+$config = [
+	'Zend\Loader\StandardAutoloader' => [
+		'namespaces' => [
+			'Application' => APPLICATION_HOME,
+			'Blossom'     => BLOSSOM,
+			'Zend'        => ZEND
+		]
+	]
+];
+Zend\Loader\AutoloaderFactory::factory($config);
 
 /**
  * Session Startup
@@ -144,6 +137,11 @@ spl_autoload_register('autoload');
 if (!defined('STDIN')) {
 	ini_set('session.save_path',APPLICATION_HOME.'/data/sessions');
 	session_start();
+}
+
+if (ERROR_REPORTING != 'PHP_DEFAULT') {
+	set_error_handler    ('Blossom\Classes\Error::customErrorHandler');
+	set_exception_handler('Blossom\Classes\Error::customExceptionHandler');
 }
 
 /**

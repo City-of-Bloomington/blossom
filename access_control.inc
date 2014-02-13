@@ -4,19 +4,23 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-$ZEND_ACL = new Zend_Acl();
-$ZEND_ACL->addRole(new Zend_Acl_Role('Anonymous'))
-		 ->addRole(new Zend_Acl_Role('Public'), 'Anonymous')
-		 ->addRole(new Zend_Acl_Role('Staff'), 'Public')
-		 ->addRole(new Zend_Acl_Role('Administrator'), 'Staff');
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole as Role;
+use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+
+$ZEND_ACL = new Acl();
+$ZEND_ACL->addRole(new Role('Anonymous'))
+		 ->addRole(new Role('Public'), 'Anonymous')
+		 ->addRole(new Role('Staff'), 'Public')
+		 ->addRole(new Role('Administrator'), 'Staff');
 
 /**
  * Declare all the resources
  */
-$ZEND_ACL->add(new Zend_Acl_Resource('index'));
-$ZEND_ACL->add(new Zend_Acl_Resource('people'));
-$ZEND_ACL->add(new Zend_Acl_Resource('users'));
-$ZEND_ACL->add(new Zend_Acl_Resource('login'));
+$ZEND_ACL->addResource(new Resource('index'));
+$ZEND_ACL->addResource(new Resource('people'));
+$ZEND_ACL->addResource(new Resource('users'));
+$ZEND_ACL->addResource(new Resource('login'));
 
 /**
  * Assign permissions to the resources
