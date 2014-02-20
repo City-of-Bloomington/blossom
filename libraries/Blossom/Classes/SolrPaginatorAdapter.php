@@ -6,11 +6,11 @@
  */
 namespace Blossom\Classes;
 
-class SolrPaginatorAdapter implements Zend_Paginator_Adapter_Interface
+class SolrPaginatorAdapter implements \Zend\Paginator\Adapter\AdapterInterface
 {
 	private $solrObject;
 
-	public function __construct(Apache_Solr_Response $solrObject)
+	public function __construct(\Apache_Solr_Response $solrObject)
 	{
 		$this->solrObject = $solrObject;
 	}
