@@ -42,7 +42,7 @@ class Person extends ActiveRecord
 					$sql = 'select * from people where username=?';
 				}
 				$result = $zend_db->createStatement($sql)->execute([$id]);
-				if ($result) {
+				if (count($result)) {
 					$this->exchangeArray($result->current());
 				}
 				else {
@@ -226,22 +226,15 @@ class Person extends ActiveRecord
 	//----------------------------------------------------------------
 	// Custom Functions
 	//----------------------------------------------------------------
+	public function getUrl() { return BASE_URL.'/people/view?person_id='.$this->getId(); }
+	public function getUri() { return BASE_URI.'/people/view?person_id='.$this->getId(); }
+
 	/**
 	 * @return string
 	 */
 	public function getFullname()
 	{
 		return "{$this->getFirstname()} {$this->getLastname()}";
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getURL()
-	{
-		if ($this->getId()) {
-			return BASE_URL."/people/view?person_id={$this->getId()}";
-		}
 	}
 
 	/**
