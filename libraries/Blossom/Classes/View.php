@@ -83,7 +83,7 @@ abstract class View
 			}
 		}
 		else {
-			$input = htmlspecialchars(trim($input),$quotes);
+			$input = htmlspecialchars(trim($input), $quotes, 'UTF-8');
 		}
 
 		return $input;
