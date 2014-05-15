@@ -25,4 +25,11 @@ class UrlTest extends PHPUnit_Framework_TestCase
 		$url->setScheme('webcal://');
 		$this->assertEquals('webcal://www.somewhere.com', "$url");
 	}
+
+	public function testUrlWithoutScheme()
+	{
+		$url = new Url('bloomington.in.gov/test');
+		$this->assertEquals('http', $url->getScheme());
+		$this->assertEquals('http://bloomington.in.gov/test', "$url");
+	}
 }

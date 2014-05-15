@@ -11,7 +11,7 @@ define('APPLICATION_NAME','application');
 /**
  * Where on the filesystem this application is installed
  */
-define('APPLICATION_HOME','/srv/sites/application');
+define('APPLICATION_HOME', realpath(__DIR__.'/../../../'));
 define('BLOSSOM', APPLICATION_HOME.'/libraries/Blossom');
 define('ZEND',    APPLICATION_HOME.'/libraries/zf2/library/Zend');
 
