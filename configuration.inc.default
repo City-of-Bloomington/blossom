@@ -1,32 +1,24 @@
 <?php
 /**
- * Displayed in the banner
- */
-define('APPLICATION_NAME','application');
-
-/**
  * Where on the filesystem this application is installed
  */
-define('APPLICATION_HOME','/srv/sites/application');
+define('APPLICATION_HOME', __DIR__);
 define('BLOSSOM', APPLICATION_HOME.'/libraries/Blossom');
 define('ZEND',    APPLICATION_HOME.'/libraries/zf2/library/Zend');
 
 /**
- * The URL to get to this site
- * Do NOT use a trailing slash
- */
-define('BASE_URL','http://localhost/application');
-define('BASE_URI','/application');
-
-/**
- * Used when there's an error on the site.  The Framework will
- * print out a nice error message, encouraging users to report any problems
- * See: BLOSSOM/ITSFunctions.inc
+ * Multi-Site support
  *
- * This is also the default Admin user information that gets added to the database
+ * To allow multiple sites to use this same install base,
+ * define the SITE_HOME variable in the Apache config for each
+ * site you want to host.
+ *
+ * SITE_HOME is the directory where all site-specific data and
+ * configuration are stored.  For backup purposes, backing up this
+ * directory would be sufficient for an easy full restore.
  */
-define('ADMINISTRATOR_NAME','Site Admin');
-define('ADMINISTRATOR_EMAIL','admin@servername.com');
+define('SITE_HOME', !empty($_SERVER['SITE_HOME']) ? $_SERVER['SITE_HOME'] : __DIR__.'/data');
+include SITE_HOME.'/site_config.inc';
 
 /**
  * Set how we want to handle errors
@@ -53,62 +45,6 @@ define('ERROR_REPORTING','PHP_DEFAULT');
  */
 //define('SKIDDER_URL','http://localhost/skidder/home.php');
 //define('SKIDDER_APPLICATION_ID',);
-
-/**
- * Database Setup
- * Refer to the PDO documentation for DSN sytnax for your database type
- * http://www.php.net/manual/en/pdo.drivers.php
- */
-define('DB_ADAPTER','Pdo_Mysql');
-define('DB_HOST','localhost');
-define('DB_NAME',APPLICATION_NAME);
-define('DB_USER',APPLICATION_NAME);
-define('DB_PASS','password');
-
-/**
- * Directory Configuration
- *
- * This supports doing user authentication from multiple external
- * directories, such as LDAP or ADS. This is required since city staff
- * are in a seperate LDAP directory from public user accounts.
- * Classes that implement ExternalIdentity should have an entry here.
- *
- * See: ExternalIdentity
- */
-// Example for ADS style authentication
-$DIRECTORY_CONFIG = array(
-//	'Employee'=>array(
-//		'DIRECTORY_SERVER'=>'ldaps://example.org:636',
-//		'DIRECTORY_BASE_DN'=>'OU=Department,DC=example,DC=org',
-//		'DIRECTORY_USERNAME_ATTRIBUTE'=>'CN',
-//		'DIRECTORY_USER_BINDING'=>'{username}@example.org',
-//		'DIRECTORY_ADMIN_BINDING'=>'admin@example.org',
-//		'DIRECTORY_ADMIN_PASS'=>'password'
-//	)
-);
-// Example for LDAP style authentication
-//$DIRECTORY_CONFIG = array(
-//	'Employee'=>array(
-//		'DIRECTORY_SERVER'=>'ldaps://example.org:636');
-//		'DIRECTORY_BASE_DN'=>'ou=people,o=ldap.domain.somewhere');
-//		'DIRECTORY_USERNAME_ATTRIBUTE'=>'uid');
-//		'DIRECTORY_USER_BINDING'=>'uid={username},'.DIRECTORY_BASE_DN);
-//		'DIRECTORY_ADMIN_BINDING'=>'uid=admin,'.DIRECTORY_BASE_DN);
-//		'DIRECTORY_ADMIN_PASS'=>'password');
-//	)
-//);
-
-/**
- * CAS authentication http://www.jasig.org/cas
- *
- * https://wiki.jasig.org/display/CASC/phpCAS
- *
- * phpCAS is a PHP library for handling the calls to the CAS service
- * It is the official library, part of the Jasig CAS project
- */
-//define('CAS',APPLICATION_HOME.'/libraries/phpCAS');
-//define('CAS_SERVER','cas.somewhere.org');
-//define('CAS_URI','cas');
 
 //-------------------------------------------------------------------
 // Bootstrap code

@@ -4,6 +4,6 @@
 		<a href="<?php echo BASE_URL; ?>">City of Bloomington, Mark Kruzan, Mayor</a>
 	</div>
 	<?php
-		include __DIR__.'/menubar.inc';
+		$this->_include('partials/menubar.inc');
 	?>
 </header>

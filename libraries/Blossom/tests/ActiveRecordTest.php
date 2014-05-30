@@ -4,9 +4,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-require_once './configuration.inc';
-
-define('DATE_FORMAT', 'n/j/Y H:i:s');
+$_SERVER['SITE_HOME'] = __DIR__;
+require_once realpath(__DIR__.'/../../../configuration.inc');
 
 class ActiveRecordTest extends PHPUnit_Framework_TestCase
 {

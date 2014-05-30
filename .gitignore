@@ -1,5 +1,8 @@
 configuration.inc
 data/sessions/*
+data/templates/*
+data/blocks/*
+data/site_config.inc
 tests/configuration.inc
 build
 dist

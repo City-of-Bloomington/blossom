@@ -4,7 +4,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-include './configuration.inc';
+$_SERVER['SITE_HOME'] = __DIR__;
+require_once realpath(__DIR__.'/../../../configuration.inc');
 
 use Blossom\Classes\Url;
 

@@ -3,15 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <?php
 	$this->layout = 'two-column';
-	include __DIR__.'/partials/header.inc';
+	$this->_include('partials/header.inc');
 ?>
 <body>
 	<?php
-		include __DIR__.'/partials/banner.inc';
+		$this->_include('partials/banner.inc');
 	?>
 	<div id="panel-container">
 		<?php
-			include __DIR__.'/partials/panel-one.inc';
+			$this->_include('partials/panel-one.inc');
 		?>
 		<div id="content-panel">
 			<?php
@@ -21,10 +21,10 @@
 		</div>
 	</div>
 	<?php
-		include __DIR__.'/partials/footer.inc';
+		$this->_include('partials/footer.inc');
 	?>
 </body>
 </html>
 <?php
-	include __DIR__.'/partials/garbageCollection.inc';
+	$this->_include('partials/garbageCollection.inc');
 ?>

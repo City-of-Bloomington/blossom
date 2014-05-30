@@ -2,7 +2,7 @@
 <?php
 	global $USER_ROLE;
 	if ($USER_ROLE == 'Administrator') {
-		include __DIR__.'/panel-widgets/Admin.inc';
+		$this->_include('partials/panel-widgets/Admin.inc');
 	}
 ?>
 </div>
