@@ -29,7 +29,7 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 					<td><input name="lastname" id="lastname" value="<?php echo $lastname; ?>" /></td>
 				</tr>
 
-				<tr><td><label for="email"><?php echo $this->_('labels.email'); ?></label></td>
+				<tr><td><label for="email"><?php echo $this->_(['labels.email', 'labels.emails', 1]); ?></label></td>
 					<td><input name="email" id="email" value="<?php echo $email; ?>" /></td>
 				</tr>
 			</table>
