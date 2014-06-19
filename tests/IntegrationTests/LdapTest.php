@@ -7,7 +7,7 @@
 use Blossom\Classes\Employee;
 
 $_SERVER['SITE_HOME'] = __DIR__;
-include '../../configuration.inc';
+require_once '../../configuration.inc';
 
 class LdapTest extends PHPUnit_Framework_TestCase
 {

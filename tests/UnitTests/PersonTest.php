@@ -7,7 +7,7 @@
 use Application\Models\Person;
 
 $_SERVER['SITE_HOME'] = __DIR__;
-include '../../configuration.inc';
+require_once '../../configuration.inc';
 
 class PersonTest extends PHPUnit_Framework_TestCase
 {
@@ -18,7 +18,7 @@ class PersonTest extends PHPUnit_Framework_TestCase
 		$person->setLastname('Last');
 		$this->assertEquals('First Last', $person->getFullname());
 	}
-	
+
 	public function testAuthenticationMethodDefaultsToLocal()
 	{
 		$person = new Person();
