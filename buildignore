@@ -5,10 +5,10 @@
 .git/
 .git*
 configuration.inc
+site_config.inc
 /data/sessions/*
 /data/templates/
 /data/blocks/
-/data/site_config.inc
 /scripts/backup.cnf
 /libraries/zf2/bin/
 /libraries/zf2/demos/

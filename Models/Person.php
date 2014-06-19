@@ -46,7 +46,7 @@ class Person extends ActiveRecord
 					$this->exchangeArray($result->current());
 				}
 				else {
-					throw new Exception('people/unknownPerson');
+					throw new \Exception('people/unknownPerson');
 				}
 			}
 		}
