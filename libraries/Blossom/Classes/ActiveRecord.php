@@ -142,7 +142,7 @@ abstract class ActiveRecord
 	 * Will cache the object in a protected variable to avoid multiple database
 	 * lookups. Make sure to declare a protected variable matching the class
 	 *
-	 * @param string $class
+	 * @param string $class Fully namespaced classname
 	 * @param string $field
 	 */
 	protected function getForeignKeyObject($class, $field)
@@ -194,6 +194,9 @@ abstract class ActiveRecord
 			$var = preg_replace('/_id$/', '', $field);
 			$this->data[$field] = $object->getId();
 			$this->$var = $object;
+		}
+		else {
+			throw new \Exception('Object does not match the given class');
 		}
 	}
 
