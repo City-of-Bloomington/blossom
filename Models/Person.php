@@ -7,6 +7,7 @@
 namespace Application\Models;
 use Blossom\Classes\ActiveRecord;
 use Blossom\Classes\Database;
+use Blossom\Classes\ExternalIdentity;
 
 class Person extends ActiveRecord
 {
@@ -155,7 +156,8 @@ class Person extends ActiveRecord
 
 		$method = $this->getAuthenticationMethod();
 		if ($this->getUsername() && $method && $method != 'local') {
-			$identity = new $method($this->getUsername());
+			$class = "Blossom\\Classes\\$method";
+			$identity = new $class($this->getUsername());
 			$this->populateFromExternalIdentity($identity);
 		}
 	}
@@ -198,7 +200,8 @@ class Person extends ActiveRecord
 
 				default:
 					$method = $this->getAuthenticationMethod();
-					return $method::authenticate($this->getUsername(),$password);
+					$class = "Blossom\\Classes\\$method";
+					return $class::authenticate($this->getUsername(),$password);
 			}
 		}
 	}

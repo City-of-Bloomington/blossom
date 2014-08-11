@@ -71,7 +71,7 @@ Zend\Loader\AutoloaderFactory::factory($config);
  * We only want sessions when PHP code is executed from the webserver
  */
 if (!defined('STDIN')) {
-	ini_set('session.save_path',APPLICATION_HOME.'/data/sessions');
+	ini_set('session.save_path', SITE_HOME.'/sessions');
 	session_start();
 }
 
