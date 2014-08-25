@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: uReport 1.9\n"
 "Report-Msgid-Bugs-To: dev@bloomington.in.gov\n"
 "POT-Creation-Date: 2013-09-20 16:33-0400\n"
-"PO-Revision-Date: 2013-11-20 13:19-0500\n"
+"PO-Revision-Date: 2014-08-11 13:43-0500\n"
 "Last-Translator: Cliff Ingham <inghamn@bloomington.in.gov>\n"
 "Language-Team: City of Bloomington <dev@bloomington.in.gov>\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,9 @@ msgstr "Login"
 
 msgid "labels.logout"
 msgstr "Logout"
+
+msgid "messages.signed_in_as"
+msgstr "Signed in as %s"
 
 msgid "labels.help"
 msgstr "Help"
