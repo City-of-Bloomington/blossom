@@ -12,6 +12,17 @@ use Blossom\Classes\Block;
 
 class PeopleController extends Controller
 {
+    private function loadPerson($id)
+    {
+        try {
+            return new Person($id);
+        }
+        catch (\Exception $e) {
+            $_SESSION['errorMessages'][] = $e;
+            header('Location: '.BASE_URL.'/people');
+            exit();
+        }
+    }
 	public function index()
 	{
 		$table = new PeopleTable();
@@ -27,37 +38,27 @@ class PeopleController extends Controller
 
 	public function view()
 	{
-		try {
-			$person = new Person($_REQUEST['person_id']);
-			$this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
-		}
-		catch (\Exception $e) {
-			$_SESSION['errorMessages'][] = $e;
-		}
-
+        $person = $this->loadPerson($_REQUEST['person_id']);
+        $this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
 	}
 
 	public function update()
 	{
-		if (isset($_REQUEST['person_id']) && $_REQUEST['person_id']) {
-			try {
-				$person = new Person($_REQUEST['person_id']);
-			}
-			catch (\Exception $e) {
-				$_SESSION['errorMessages'][] = $e;
-				header('Location: '.BASE_URL.'/people');
-				exit();
-			}
-		}
-		else {
-			$person = new Person();
-		}
+        $person = !empty($_REQUEST['person_id'])
+            ? $this->loadPerson($_REQUEST['person_id'])
+            : new Person();
+
+        $return_url = !empty($_REQUEST['return_url'])
+            ? $_REQUEST['return_url']
+            : null;
 
 		if (isset($_POST['firstname'])) {
 			$person->handleUpdate($_POST);
 			try {
 				$person->save();
-				header('Location: '.BASE_URL.'/people');
+
+				if (!$return_url) { $return_url = BASE_URL."/people/view?person_id={$person->getId()}";
+				header("Location: $return_url");
 				exit();
 			}
 			catch (\Exception $e) {
@@ -65,6 +66,6 @@ class PeopleController extends Controller
 			}
 		}
 
-		$this->template->blocks[] = new Block('people/updateForm.inc',array('person'=>$person));
+		$this->template->blocks[] = new Block('people/updateForm.inc', ['person'=>$person, 'return_url'=>$return_url]);
 	}
 }
