@@ -125,4 +125,19 @@ abstract class View
 	{
 		return $this->translate($msgid);
 	}
+	
+    /**
+     * Converts the PHP date format string syntax into something for humans
+     *
+     * @param string $format
+     * @return string
+     */
+    public static function translateDateString($format)
+    {
+        return str_replace(
+            ['n' , 'j',  'Y'],
+            ['mm', 'dd', 'yyyy'],
+            $format
+        );
+    }
 }
