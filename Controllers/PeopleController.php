@@ -57,7 +57,7 @@ class PeopleController extends Controller
 			try {
 				$person->save();
 
-				if (!$return_url) { $return_url = BASE_URL."/people/view?person_id={$person->getId()}";
+				if (!$return_url) { $return_url = BASE_URL."/people/view?person_id={$person->getId()}"; }
 				header("Location: $return_url");
 				exit();
 			}
