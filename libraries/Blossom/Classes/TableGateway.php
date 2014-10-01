@@ -59,7 +59,14 @@ abstract class TableGateway
 		$select = new Select($this->tableGateway->getTable());
 		if (count($fields)) {
 			foreach ($fields as $key=>$value) {
-				$select->where([$key=>$value]);
+                if (isset($this->columns)) {
+                    if (in_array($key, $this->columns)) {
+                        $select->where([$key=>$value]);
+                    }
+                }
+                else {
+                    $select->where([$key=>$value]);
+                }
 			}
 		}
 		return $this->performSelect($select, $order, $paginated, $limit);
