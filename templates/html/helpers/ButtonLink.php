@@ -8,17 +8,10 @@
  */
 namespace Application\Templates\Helpers;
 
-use Blossom\Classes\Template;
+use Blossom\Classes\Helper;
 
-class ButtonLink
+class ButtonLink extends Helper
 {
-	private $template;
-
-	public function __construct(Template $template)
-	{
-		$this->template = $template;
-	}
-
 	public function buttonLink($url, $label, $type)
 	{
 		$a = '<a  href="%s" class="%s button">%s</a>';

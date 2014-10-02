@@ -6,17 +6,10 @@
  */
 namespace Application\Templates\Helpers;
 
-use Blossom\Classes\Template;
+use Blossom\Classes\Helper;
 
-class SaveAndCancelButtons
+class SaveAndCancelButtons extends Helper
 {
-	private $template;
-
-	public function __construct(Template $template)
-	{
-		$this->template = $template;
-	}
-
 	public function saveAndCancelButtons($cancelURL)
 	{
 		return "
