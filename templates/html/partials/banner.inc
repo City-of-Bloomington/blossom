@@ -1,5 +1,6 @@
 <?php
 use Blossom\Classes\View;
+use Blossom\Classes\Url;
 ?>
 <header>
 	<ul id="utilityBar">
@@ -13,7 +14,7 @@ use Blossom\Classes\View;
 				echo sprintf('<li>'.sprintf($this->translate('messages.signed_in_as'), $name).'</li>');
 			}
 			else {
-				$return_url = View::escape($_SERVER['REQUEST_URI']);
+				$return_url = Url::current_url();
 				echo sprintf($li, BASE_URI.'/login?return_url='.$return_url, $this->translate('labels.login'));
 			}
 		?>
