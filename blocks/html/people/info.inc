@@ -16,7 +16,7 @@ $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
 	$username = $h->buttonLink(
 		BASE_URI."/users/update?user_id={$this->person->getId()};return_url=$return_url",
-		$this->translate('labels.create_account'),
+		$this->translate('user_add'),
 		'add'
 	);
 }
@@ -25,7 +25,7 @@ $editButton = '';
 if (Person::isAllowed('people', 'edit')) {
     $editButton = $h->buttonLink(
         BASE_URI."/people/update?person_id={$this->person->getId()};return_url=$return_url",
-        $this->translate('labels.edit'),
+        $this->translate('person_edit'),
         'edit'
     );
 }

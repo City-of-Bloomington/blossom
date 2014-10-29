@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2007-2013 City of Bloomington, Indiana
+ * @copyright 2007-2014 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Zend\Db\Sql\Select $users
@@ -10,21 +10,21 @@ use Blossom\Classes\View;
 ?>
 <div class="interfaceBox">
 	<h2><?php
-			echo $this->_(['labels.user','labels.users',2]);
+			echo $this->_(['user','users',2]);
 
 			$helper = $this->template->getHelper('buttonLink');
 			if (Person::isAllowed('users')) {
-				echo $helper->buttonLink(BASE_URI.'/users/update', $this->_('labels.create_account'), 'add');
+				echo $helper->buttonLink(BASE_URI.'/users/update', $this->_('user_add'), 'add');
 			}
 		?>
 	</h2>
 	<table>
 		<thead>
 			<tr><th></th>
-				<th><?php echo $this->_('labels.username'); ?></th>
-				<th><?php echo $this->_('labels.name'); ?></th>
-				<th><?php echo $this->_('labels.authenticationMethod'); ?></th>
-				<th><?php echo $this->_('labels.role'); ?></th>
+				<th><?php echo $this->_('username'); ?></th>
+				<th><?php echo $this->_('name'); ?></th>
+				<th><?php echo $this->_('authenticationMethod'); ?></th>
+				<th><?php echo $this->_('role'); ?></th>
 				<th></th>
 			</tr>
 		</thead>
@@ -36,12 +36,12 @@ use Blossom\Classes\View;
 				if (Person::isAllowed('users')) {
 					$editButton = $helper->buttonLink(
 						BASE_URI.'/users/update?user_id='.$user->getId(),
-						$this->_('labels.edit_account'),
+						$this->_('user_edit'),
 						'edit'
 					);
 					$deleteButton = $helper->buttonLink(
 						BASE_URI.'/users/delete?user_id='.$user->getId(),
-						$this->_('labels.delete_account'),
+						$this->_('user_delete'),
 						'delete'
 					);
 				}
