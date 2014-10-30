@@ -9,7 +9,7 @@ use Application\Models\Person;
 use Blossom\Classes\View;
 use Blossom\Classes\Url;
 ?>
-<div class="interfaceBox">
+<section>
 	<h2><?php
 			echo $this->translate(['person','people',2]);
 
@@ -57,4 +57,4 @@ use Blossom\Classes\Url;
 		?>
 		</tbody>
 	</table>
-</div>
+</section>

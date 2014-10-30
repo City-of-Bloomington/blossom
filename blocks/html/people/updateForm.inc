@@ -21,16 +21,20 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 			<input name="person_id" type="hidden" value="<?php echo $this->person->getId(); ?>" />
 
 			<table>
-				<tr><td><label for="firstname" class="required"><?php echo $this->_('firstname'); ?></label></td>
-					<td><input name="firstname" id="firstname" value="<?php echo $firstname; ?>" /></td>
+				<tr><td><label for="firstname"><?php echo $this->_('firstname'); ?></label></td>
+					<td><input name="firstname" id="firstname" value="<?php echo $firstname; ?>"
+                            required="required" inputmode="latin-name" />
+                    </td>
 				</tr>
 
-				<tr><td><label for="lastname" class="required"><?php echo $this->_('lastname'); ?></label></td>
-					<td><input name="lastname" id="lastname" value="<?php echo $lastname; ?>" /></td>
+				<tr><td><label for="lastname"><?php echo $this->_('lastname'); ?></label></td>
+					<td><input name="lastname" id="lastname" value="<?php echo $lastname; ?>"
+                            required="required" inputmode="latin-name" />
+                    </td>
 				</tr>
 
 				<tr><td><label for="email"><?php echo $this->_(['email', 'emails', 1]); ?></label></td>
-					<td><input name="email" id="email" value="<?php echo $email; ?>" /></td>
+					<td><input name="email" id="email" type="email" value="<?php echo $email; ?>" /></td>
 				</tr>
 			</table>
 			<?php

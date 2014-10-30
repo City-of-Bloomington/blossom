@@ -1,4 +1,4 @@
-<div id="footer">
+<footer>
 	<p>
 		<?php
 			global $startTime;
@@ -9,7 +9,7 @@
 			echo "<!-- Process Time: $processTime -->";
 		?>
 	</p>
-</div>
+</footer>
 <?php
 	if (isset($this->assets['scripts'])) {
 		foreach ($this->assets['scripts'] as $url) {
