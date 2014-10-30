@@ -25,14 +25,15 @@ $editButton = '';
 if (Person::isAllowed('people', 'edit')) {
     $editButton = $h->buttonLink(
         BASE_URI."/people/update?person_id={$this->person->getId()};return_url=$return_url",
-        $this->translate('person_edit'),
+        $this->translate('edit'),
         'edit'
     );
 }
 $name = View::escape($this->person->getFullname());
-echo <<<EOT
-<div class="personInfo">
-	<h2>$name $editButton</h2>
+echo "
+<section>
+	<h1>$name</h1>
+	<div>$editButton</div>
 	<table>
 		<tr><th>Email</th>
 			<td>{$this->person->getEmail()}</td>
@@ -41,5 +42,5 @@ echo <<<EOT
 			<td>$username</td>
 		</tr>
 	</table>
-</div>
-EOT;
+</section>
+";

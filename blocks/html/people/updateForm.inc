@@ -14,8 +14,8 @@ foreach ($fields as $field) {
 }
 $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
 ?>
-<div class="updatePersonForm">
-	<h2><?php echo $title; ?></h2>
+<section>
+	<h1><?php echo $title; ?></h1>
 	<form method="post" action="<?php echo BASE_URI; ?>/people/update">
 		<fieldset><legend><?php echo $this->_('person_info'); ?></legend>
 			<input name="person_id" type="hidden" value="<?php echo $this->person->getId(); ?>" />
@@ -43,4 +43,4 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 			?>
 		</fieldset>
 	</form>
-</div>
+</section>

@@ -8,14 +8,16 @@
 use Application\Models\Person;
 use Blossom\Classes\View;
 
+$title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
 ?>
-<div class="updateUserForm">
+<section>
+    <h1><?php echo $title; ?></h1>
 	<form method="post" action="<?php echo BASE_URI; ?>/users/update">
-		<fieldset><legend><?php echo $this->_(['user','users',2]); ?></legend>
+		<fieldset><legend><?php echo $this->_('user_info'); ?></legend>
 			<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
 			<table>
 				<tr><td><label for="authenticationMethod"><?php echo $this->_('authenticationMethod'); ?></label></td>
-					<td><select name="authenticationMethod" id="authenticationMethod">
+					<td><select name="authenticationMethod" id="authenticationMethod" required="required">
 						<?php
 							foreach (Person::getAuthenticationMethods() as $method) {
 								$selected = $this->user->getAuthenticationMethod()==$method
@@ -28,11 +30,12 @@ use Blossom\Classes\View;
 					</td>
 				</tr>
 				<tr><td><label for="username"><?php echo $this->_('username'); ?></label></td>
-					<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>" />
+					<td><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>"
+                            required="required" />
 					</td>
 				</tr>
 				<tr><td><label for="password"><?php echo $this->_('password'); ?></label></td>
-					<td><input name="password" id="password" /></td>
+					<td><input name="password" id="password" type="password" /></td>
 				</tr>
 				<tr><td><label for="role"><?php echo $this->_('role'); ?></label></td>
 					<td><select name="role" id="role"><option></option>
@@ -55,4 +58,4 @@ use Blossom\Classes\View;
 			?>
 		</fieldset>
 	</form>
-</div>
+</section>

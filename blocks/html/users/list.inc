@@ -8,16 +8,16 @@
 use Application\Models\Person;
 use Blossom\Classes\View;
 ?>
-<div class="interfaceBox">
-	<h2><?php
-			echo $this->_(['user','users',2]);
-
-			$helper = $this->template->getHelper('buttonLink');
-			if (Person::isAllowed('users')) {
-				echo $helper->buttonLink(BASE_URI.'/users/update', $this->_('user_add'), 'add');
-			}
-		?>
-	</h2>
+<section>
+	<h1><?php echo $this->_(['user','users',2]); ?></h1>
+	<div>
+	<?php
+        $helper = $this->template->getHelper('buttonLink');
+        if (Person::isAllowed('users')) {
+            echo $helper->buttonLink(BASE_URI.'/users/update', $this->_('user_add'), 'add');
+        }
+	?>
+	</div>
 	<table>
 		<thead>
 			<tr><th></th>
@@ -60,4 +60,4 @@ use Blossom\Classes\View;
 		?>
 		</tbody>
 	</table>
-</div>
+</section>
