@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2012 City of Bloomington, Indiana
+ * @copyright 2012-2014 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -29,13 +29,12 @@ $ZEND_ACL->allow(null,'login');
 
 // Permissions for unauthenticated browsing
 $ZEND_ACL->allow(null,
-				array('index'),
-				array('index'));
+				['index'],
+				['index']);
 
 // Allow Staff to do stuff
-$ZEND_ACL->allow('Staff',
-				array('people'),
-				array('index','view'));
+$ZEND_ACL->allow('Staff', ['people'], ['index','view']);
+
 
 // Administrator is allowed access to everything
 $ZEND_ACL->allow('Administrator');
