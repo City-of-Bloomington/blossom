@@ -1,6 +1,8 @@
 #!/bin/bash
-BUILD=./build
-DIST=./dist
+RELEASE_NAME=Blossom
+DIR=`pwd`
+BUILD=$DIR/build
+DIST=$DIR/dist
 
 if [ ! -d $BUILD ]
 	then mkdir $BUILD
@@ -10,6 +12,9 @@ if [ ! -d $DIST ]
 	then mkdir $DIST
 fi
 
-rsync -rlv --exclude-from=./buildignore --delete ./ ./build/
+# The PHP code does not need to actually build anything.
+# Just copy all the files into the build
+rsync -rlv --exclude-from=$DIR/buildignore --delete $DIR/ $BUILD/
 
-tar czvf $DIST/Blossom.tar.gz --transform=s/build/Blossom/ $BUILD
+# Create a distribution tarball of the build
+tar czvf $DIST/$RELEASE_NAME.tar.gz --transform=s/build/$RELEASE_NAME/ build
