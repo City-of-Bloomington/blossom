@@ -19,6 +19,17 @@ class ViewTest extends PHPUnit_Framework_TestCase
 		$view->one = 'another test';
 		$this->assertEquals('another test', $view->one);
 	}
+
+	public function testEscaping()
+	{
+        $input    = "one <>&' two";
+        $expected = "one &lt;&gt;&amp;&#039; two";
+
+        $escaped   = View::escape($input);
+        $unescaped = View::unescape($escaped);
+        $this->assertEquals($escaped, $expected);
+        $this->assertEquals($unescaped, $input);
+	}
 }
 
 class ViewStub extends View
