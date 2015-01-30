@@ -1,14 +1,16 @@
 # Translation
-# Copyright (C) 2013-2014 City of Bloomington
+# Copyright (C) 2013-2015 City of Bloomington
 # This file is distributed under the same license as the Blossom package.
 #
-# Cliff Ingham, 2013-2014.
+# Cliff Ingham, 2013-2015.
+domain "labels"
+
 msgid ""
 msgstr ""
 "Project-Id-Version: Blossom\n"
 "Report-Msgid-Bugs-To: dev@bloomington.in.gov\n"
 "POT-Creation-Date: 2013-09-20 16:33-0400\n"
-"PO-Revision-Date: 2014-10-30 16:17-0500\n"
+"PO-Revision-Date: 2015-01-30 15:42-0500\n"
 "Last-Translator: Cliff Ingham <inghamn@bloomington.in.gov>\n"
 "Language-Team: City of Bloomington <dev@bloomington.in.gov>\n"
 "MIME-Version: 1.0\n"
