@@ -2,7 +2,7 @@
 /**
  * Provides markup for button links
  *
- * @copyright 2014 City of Bloomington, Indiana
+ * @copyright 2014-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -12,9 +12,12 @@ use Blossom\Classes\Helper;
 
 class ButtonLink extends Helper
 {
-	public function buttonLink($url, $label, $type)
+	public function buttonLink($url, $label, $type, array $additionalAttributes=[])
 	{
-		$a = '<a  href="%s" class="%s button">%s</a>';
-		return sprintf($a, $url, $type, $label);
+        $attrs = '';
+        foreach ($additionalAttributes as $key=>$value) {
+            $attrs.= "$key=\"$value\"";
+        }
+		return "<a  href=\"$url\" class=\"$type button\" $attrs>$label</a>";
 	}
 }
