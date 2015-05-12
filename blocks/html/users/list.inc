@@ -10,7 +10,7 @@ use Blossom\Classes\View;
 ?>
 <section>
 	<h1><?php echo $this->_(['user','users',2]); ?></h1>
-	<div>
+	<div class="tools">
 	<?php
         $helper = $this->template->getHelper('buttonLink');
         if (Person::isAllowed('users')) {

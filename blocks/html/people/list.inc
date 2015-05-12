@@ -11,7 +11,7 @@ use Blossom\Classes\Url;
 ?>
 <section>
 	<h1><?php echo $this->translate(['person','people',2]); ?></h1>
-	<div>
+	<div class="tools">
 	<?php
         $return_url = Url::current_url();
         $helper = $this->template->getHelper('buttonLink');

@@ -7,3 +7,6 @@ tests/configuration.inc
 build
 dist
 *.mo
+public/css/screen.css.map
+public/css/**/.sass-cache
+

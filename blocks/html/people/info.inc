@@ -33,7 +33,7 @@ $name = View::escape($this->person->getFullname());
 echo "
 <section>
 	<h1>$name</h1>
-	<div>$editButton</div>
+	<div class=\"tools\">$editButton</div>
 	<table>
 		<tr><th>Email</th>
 			<td>{$this->person->getEmail()}</td>
