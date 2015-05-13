@@ -1,9 +1,24 @@
 .container.full-width { }
 .full-width #content-panel { }
 
-.container.two-column { padding:4px; overflow:auto; }
-.two-column #panel-one { float:left; width:176px; }
-.two-column #content-panel { margin-left: 180px; }
+.container.two-column {
+    padding: 0;
+    position: relative;
+
+    #panel-one {
+        box-sizing: border-box;
+        float: left;
+        min-height: 40rem;
+        overflow: auto;
+        padding: 0 1rem 0 1rem;
+        width: 33.3333%;
+    }
+    #content-panel {
+        box-sizing: border-box;
+        margin-left: 33.3333%;;
+        min-height: 1rem;
+    }
+}
 
 .container.three-column { overflow:auto; }
 .three-column #panel-one { float:left; width:180px; }
