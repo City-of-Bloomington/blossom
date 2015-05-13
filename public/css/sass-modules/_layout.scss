@@ -1,0 +1,13 @@
+.container.full-width { }
+.full-width #content-panel { }
+
+.container.two-column { padding:4px; overflow:auto; }
+.two-column #panel-one { float:left; width:176px; }
+.two-column #content-panel { margin-left: 180px; }
+
+.container.three-column { overflow:auto; }
+.three-column #panel-one { float:left; width:180px; }
+.three-column #panel-two { float:right; width:180px; }
+.three-column #content-panel { margin-left: 190px; margin-right: 190px; }
+
+footer { clear:both; }

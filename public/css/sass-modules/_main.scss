@@ -1,5 +1,5 @@
 body > main {
-    > .panel {
+    > .container {
         box-sizing: border-box;
         padding: 2em;
     }
@@ -23,7 +23,7 @@ body > main {
             z-index: 1;
 
         }
-        > .panel {
+        > .container {
             background: $color-content-background;
             border-top: .4em solid $color-accent;
             margin: 0 auto;
@@ -35,7 +35,7 @@ body > main {
         }
     }
     @media screen and (min-width: $window-lg) {
-        > .panel {
+        > .container {
             width: 60em;
         }
     }
