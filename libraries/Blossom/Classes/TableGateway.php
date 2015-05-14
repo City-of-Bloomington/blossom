@@ -90,6 +90,19 @@ abstract class TableGateway
 			return $this->tableGateway->selectWith($select);
 		}
 	}
+	
+	/**
+	 * @param Zend\Db\ResultSet
+	 * @return array
+	 */
+	public static function hydrateResults(ResultSet $results)
+	{
+        $output = [];
+        foreach ($results as $object) {
+            $output[] = $object;
+        }
+        return $output;
+	}
 
 	/**
 	 * Returns the generated sql
