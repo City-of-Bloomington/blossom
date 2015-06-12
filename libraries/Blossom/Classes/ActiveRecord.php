@@ -108,19 +108,20 @@ abstract class ActiveRecord
 	/**
 	 * Sets a date
 	 *
-	 * Dates should be in DATE_FORMAT, set in configuration.inc
-	 * If we cannot parse the string using DATE_FORMAT, we will
+	 * Dates should be in DATETIME_FORMAT, set in configuration.inc
+	 * If we cannot parse the string using DATETIME_FORMAT, we will
 	 * fall back to trying something strtotime() understands
 	 * http://www.php.net/manual/en/function.strtotime.php
 	 *
 	 * @param string $dateField
 	 * @param string $date
+	 * @param string $format
 	 */
-	protected function setDateData($dateField, $date)
+	protected function setDateData($dateField, $date, $format=DATETIME_FORMAT)
 	{
 		$date = trim($date);
 		if ($date) {
-			$d = \DateTime::createFromFormat(DATE_FORMAT, $date);
+			$d = \DateTime::createFromFormat($format, $date);
 			if (!$d) {
 				try {
 					$d = new \DateTime($date);
