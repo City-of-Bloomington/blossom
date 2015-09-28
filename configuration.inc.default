@@ -3,8 +3,6 @@
  * Where on the filesystem this application is installed
  */
 define('APPLICATION_HOME', __DIR__);
-define('BLOSSOM', APPLICATION_HOME.'/libraries/Blossom');
-define('ZEND',    APPLICATION_HOME.'/libraries/zf2/library/Zend');
 
 /**
  * Multi-Site support
@@ -53,13 +51,18 @@ define('ERROR_REPORTING','PHP_DEFAULT');
 /**
  * Enable autoloading for the PHP libraries
  */
-require_once ZEND.'/Loader/AutoloaderFactory.php';
+require_once APPLICATION_HOME.'/vendor/zendframework/zend-loader/src/AutoloaderFactory.php';
 $config = [
 	'Zend\Loader\StandardAutoloader' => [
 		'namespaces' => [
 			'Application' => APPLICATION_HOME,
-			'Blossom'     => BLOSSOM,
-			'Zend'        => ZEND
+            'Blossom'                => APPLICATION_HOME . '/City-of-Bloomington/blossom-lib/src',
+            'Zend\\Stdlib'           => APPLICATION_HOME . '/zendframework/zend-stdlib/src',
+            'Zend\\Permissions\\Acl' => APPLICATION_HOME . '/zendframework/zend-permissions-acl/src',
+            'Zend\\Paginator'        => APPLICATION_HOME . '/zendframework/zend-paginator/src',
+            'Zend\\Loader'           => APPLICATION_HOME . '/zendframework/zend-loader/src',
+            'Zend\\Hydrator'         => APPLICATION_HOME . '/zendframework/zend-hydrator/src',
+            'Zend\\Db'               => APPLICATION_HOME . '/zendframework/zend-db/src',
 		]
 	]
 ];

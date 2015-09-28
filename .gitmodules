@@ -1,6 +1,0 @@
-[submodule "libraries/zf2"]
-	path = libraries/zf2
-	url = https://github.com/zendframework/zf2.git
-[submodule "libraries/phpCAS"]
-	path = libraries/phpCAS
-	url = https://github.com/Jasig/phpCAS.git
