@@ -3,6 +3,7 @@
  * Where on the filesystem this application is installed
  */
 define('APPLICATION_HOME', __DIR__);
+define('BLOSSOM', APPLICATION_HOME.'/vendor/City-of-Bloomington/blossom-lib');
 
 /**
  * Multi-Site support
@@ -56,13 +57,13 @@ $config = [
 	'Zend\Loader\StandardAutoloader' => [
 		'namespaces' => [
 			'Application' => APPLICATION_HOME,
-            'Blossom'                => APPLICATION_HOME . '/City-of-Bloomington/blossom-lib/src',
-            'Zend\\Stdlib'           => APPLICATION_HOME . '/zendframework/zend-stdlib/src',
-            'Zend\\Permissions\\Acl' => APPLICATION_HOME . '/zendframework/zend-permissions-acl/src',
-            'Zend\\Paginator'        => APPLICATION_HOME . '/zendframework/zend-paginator/src',
-            'Zend\\Loader'           => APPLICATION_HOME . '/zendframework/zend-loader/src',
-            'Zend\\Hydrator'         => APPLICATION_HOME . '/zendframework/zend-hydrator/src',
-            'Zend\\Db'               => APPLICATION_HOME . '/zendframework/zend-db/src',
+            'Blossom'     => BLOSSOM.'/src',
+            'Zend\\Stdlib'           => APPLICATION_HOME.'/vendor/zendframework/zend-stdlib/src',
+            'Zend\\Permissions\\Acl' => APPLICATION_HOME.'/vendor/zendframework/zend-permissions-acl/src',
+            'Zend\\Paginator'        => APPLICATION_HOME.'/vendor/zendframework/zend-paginator/src',
+            'Zend\\Loader'           => APPLICATION_HOME.'/vendor/zendframework/zend-loader/src',
+            'Zend\\Hydrator'         => APPLICATION_HOME.'/vendor/zendframework/zend-hydrator/src',
+            'Zend\\Db'               => APPLICATION_HOME.'/vendor/zendframework/zend-db/src',
 		]
 	]
 ];
