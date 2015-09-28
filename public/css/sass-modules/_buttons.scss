@@ -1,8 +1,3 @@
-// Submit and cancel button area
-.input-buttons {
-    margin: 1em 0;
-}
-
 /**
  * Base styles for buttons and button links
  */
@@ -16,9 +11,6 @@ button, .button {
     font-weight:normal;
     background: linear-gradient(to bottom, #f2f2f9 21%,#CDD1D9 80%);
     vertical-align: middle;
-    > .fa {
-        font-size: (15em/15);
-    }
     &:hover {
         background: linear-gradient(to bottom, #f8f8fd 21%, #d5dfe4 80%);
     }
@@ -27,15 +19,10 @@ a.button:hover {
     cursor: default;
     text-decoration: none;
 }
-.hidden-label       { font-size:0; height:1px; overflow:hidden; }
-.fa-times       { color:red;   }
-.fa-pencil      { color:blue;  }
-.fa-edit        { color:blue;  }
-.fa-plus        { color:green; }
-.fa-ok          { color:green; }
-.fa-save        { color:green; }
-.fa-map-marker  { color:blue;  }
-.fa-list-ul     { color:blue;  }
-.fa-print       { color:blue;  }
-.fa-upload      { color:black; }
-.fa-download    { color:black; }
+.hidden-label { font-size:0; height:1px; overflow:hidden; }
+.add    { color:green; }
+.edit   { color:blue;  }
+.delete { color:red;   }
+.save   { color:green; }
+.cancel { color:red;   }
+.login  { color:green; }

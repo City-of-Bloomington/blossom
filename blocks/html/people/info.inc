@@ -35,10 +35,10 @@ echo "
 	<h1>$name</h1>
 	<div class=\"tools\">$editButton</div>
 	<table>
-		<tr><th>Email</th>
+		<tr><th>{$this->_('email')}</th>
 			<td>{$this->person->getEmail()}</td>
 		</tr>
-		<tr><th>Username</th>
+		<tr><th>{$this->_('username')}</th>
 			<td>$username</td>
 		</tr>
 	</table>
