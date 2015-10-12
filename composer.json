@@ -7,6 +7,7 @@
         "php": ">=5.6",
         "City-of-Bloomington/blossom-lib": "dev-master",
         "jasig/phpcas": "~1",
+        "aura/router": "~2",
         "zendframework/zend-db": "~2.5",
         "zendframework/zend-loader": "~2.5",
         "zendframework/zend-paginator": "~2.5",

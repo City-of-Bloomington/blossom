@@ -9,17 +9,19 @@ use Blossom\Classes\View;
 
 if (isset($_SESSION['USER'])) {
     $name = View::escape($_SESSION['USER']->getFullname());
+    $url = self::generateUri('login.logout');
 
     echo "
     <div class=\"menuLauncher\">$name</div>
     <div class=\"menuLinks closed\">
-        <a href=\"".BASE_URI."/login/logout\">{$this->_('logout')}</a>
+        <a href=\"$url\">{$this->_('logout')}</a>
     </div>
     ";
 }
 else {
     $return_url = View::escape($_SERVER['REQUEST_URI']);
-    echo "<a href=\"".BASE_URI."/login?return_url=$return_url\">{$this->_('login')}</a>";
+    $url = self::generateUri('login.index');
+    echo "<a href=\"$url?return_url=$return_url\">{$this->_('login')}</a>";
 }
 ?>
 </nav>

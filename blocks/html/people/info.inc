@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009-2014 City of Bloomington, Indiana
+ * @copyright 2009-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
@@ -15,7 +15,7 @@ $h = $this->template->getHelper('buttonLink');
 $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
 	$username = $h->buttonLink(
-		BASE_URI."/users/update?user_id={$this->person->getId()};return_url=$return_url",
+		self::generateUri('users.update', ['id'=>$this->person->getId()])."?return_url=$return_url",
 		$this->translate('user_add'),
 		'add'
 	);
@@ -24,7 +24,7 @@ if (!$username && Person::isAllowed('users')) {
 $editButton = '';
 if (Person::isAllowed('people', 'edit')) {
     $editButton = $h->buttonLink(
-        BASE_URI."/people/update?person_id={$this->person->getId()};return_url=$return_url",
+        self::generateUri('people.update', ['id'=>$this->person->getId()])."?return_url=$return_url",
         $this->translate('edit'),
         'edit'
     );

@@ -58,16 +58,20 @@ $config = [
 		'namespaces' => [
 			'Application' => APPLICATION_HOME,
             'Blossom'     => BLOSSOM.'/src',
-            'Zend\\Stdlib'           => APPLICATION_HOME.'/vendor/zendframework/zend-stdlib/src',
-            'Zend\\Permissions\\Acl' => APPLICATION_HOME.'/vendor/zendframework/zend-permissions-acl/src',
-            'Zend\\Paginator'        => APPLICATION_HOME.'/vendor/zendframework/zend-paginator/src',
-            'Zend\\Loader'           => APPLICATION_HOME.'/vendor/zendframework/zend-loader/src',
-            'Zend\\Hydrator'         => APPLICATION_HOME.'/vendor/zendframework/zend-hydrator/src',
-            'Zend\\Db'               => APPLICATION_HOME.'/vendor/zendframework/zend-db/src',
+            'Aura\Router'          => APPLICATION_HOME.'/vendor/aura/router/src',
+            'Zend\Stdlib'          => APPLICATION_HOME.'/vendor/zendframework/zend-stdlib/src',
+            'Zend\Permissions\Acl' => APPLICATION_HOME.'/vendor/zendframework/zend-permissions-acl/src',
+            'Zend\Paginator'       => APPLICATION_HOME.'/vendor/zendframework/zend-paginator/src',
+            'Zend\Loader'          => APPLICATION_HOME.'/vendor/zendframework/zend-loader/src',
+            'Zend\Hydrator'        => APPLICATION_HOME.'/vendor/zendframework/zend-hydrator/src',
+            'Zend\Db'              => APPLICATION_HOME.'/vendor/zendframework/zend-db/src',
 		]
 	]
 ];
 Zend\Loader\AutoloaderFactory::factory($config);
+
+include APPLICATION_HOME.'/routes.inc';
+include APPLICATION_HOME.'/access_control.inc';
 
 /**
  * Session Startup
@@ -85,11 +89,6 @@ if (ERROR_REPORTING != 'PHP_DEFAULT') {
     set_exception_handler     ('Blossom\Classes\Error::customExceptionHandler');
     register_shutdown_function('Blossom\Classes\Error::shutdownHandler');
 }
-
-/**
- * Load the Zend_Acl
- */
-include APPLICATION_HOME.'/access_control.inc';
 
 /**
  * Grab a timestamp for calculating process time

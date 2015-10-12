@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009-2013 City of Bloomington, Indiana
+ * @copyright 2009-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -229,9 +229,6 @@ class Person extends ActiveRecord
 	//----------------------------------------------------------------
 	// Custom Functions
 	//----------------------------------------------------------------
-	public function getUrl() { return BASE_URL.'/people/view?person_id='.$this->getId(); }
-	public function getUri() { return BASE_URI.'/people/view?person_id='.$this->getId(); }
-
 	/**
 	 * @return string
 	 */

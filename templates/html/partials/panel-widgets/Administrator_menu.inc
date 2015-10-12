@@ -15,7 +15,8 @@ if (Person::isAllowed('users')) {
     foreach ($routes as $plural=>$singular) {
         $requiredAction = 'index';
         if (Person::isAllowed($plural, $requiredAction)) {
-            $links.= "<a href=\"".BASE_URI."/$plural\">{$this->_([$singular, $plural, 2])}</a>";
+            $url = self::generateUri("$plural.index");
+            $links.= "<a href=\"$url\">{$this->_([$singular, $plural, 2])}</a>";
         }
     }
 }

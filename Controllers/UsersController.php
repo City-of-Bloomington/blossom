@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2012-2013 City of Bloomington, Indiana
+ * @copyright 2012-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -24,19 +24,19 @@ class UsersController extends Controller
 		$users->setCurrentPageNumber($page);
 		$users->setItemCountPerPage(20);
 
-		$this->template->blocks[] = new Block('users/list.inc',array('users'=>$users));
+		$this->template->blocks[] = new Block('users/list.inc',     ['users'    =>$users]);
 		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$users]);
 	}
 
 	public function update()
 	{
-		$person = isset($_REQUEST['user_id']) ? new Person($_REQUEST['user_id']) : new Person();
+		$person = isset($_REQUEST['id']) ? new Person($_REQUEST['id']) : new Person();
 
 		if (isset($_POST['username'])) {
 			try {
 				$person->handleUpdateUserAccount($_POST);
 				$person->save();
-				header('Location: '.BASE_URL.'/users');
+				header('Location: '.self::generateUrl('users.index'));
 				exit();
 			}
 			catch (\Exception $e) {
@@ -45,22 +45,22 @@ class UsersController extends Controller
 		}
 
 		if ($person->getId()) {
-			$this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
+			$this->template->blocks[] = new Block('people/info.inc', ['person'=>$person]);
 		}
-		$this->template->blocks[] = new Block('users/updateForm.inc',array('user'=>$person));
+		$this->template->blocks[] = new Block('users/updateForm.inc', ['user' =>$person]);
 	}
 
 	public function delete()
 	{
 		try {
-			$person = new Person($_REQUEST['user_id']);
+			$person = new Person($_REQUEST['id']);
 			$person->deleteUserAccount();
 			$person->save();
 		}
 		catch (\Exception $e) {
 			$_SESSION['errorMessages'][] = $e;
 		}
-		header('Location: '.BASE_URL.'/users');
+		header('Location: '.self::generateUrl('users.index'));
 		exit();
 	}
 }

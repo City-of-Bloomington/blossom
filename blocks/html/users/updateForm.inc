@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2006-2014 City of Bloomington, Indiana
+ * @copyright 2006-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param User $this->user
@@ -11,12 +11,12 @@ use Blossom\Classes\View;
 $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
 ?>
 <section>
-    <h1><?php echo $title; ?></h1>
-	<form method="post" action="<?php echo BASE_URI; ?>/users/update">
-		<fieldset><legend><?php echo $this->_('user_info'); ?></legend>
-			<input name="user_id" type="hidden" value="<?php echo $this->user->getId(); ?>" />
+    <h1><?= $title; ?></h1>
+	<form method="post" action="<?= self::generateUri('users.update'); ?>">
+		<fieldset><legend><?= $this->_('user_info'); ?></legend>
+			<input name="id" type="hidden" value="<?= $this->user->getId(); ?>" />
 
-            <dl><dt><label for="authenticationMethod"><?php echo $this->_('authenticationMethod'); ?></label></dt>
+            <dl><dt><label  for="authenticationMethod"><?= $this->_('authenticationMethod'); ?></label></dt>
                 <dd><select name="authenticationMethod" id="authenticationMethod" required="required">
                     <?php
                         foreach (Person::getAuthenticationMethods() as $method) {
@@ -29,15 +29,15 @@ $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
                     </select>
                 </dd>
             </dl>
-            <dl><dt><label for="username"><?php echo $this->_('username'); ?></label></dt>
-                <dd><input name="username" id="username" value="<?php echo View::escape($this->user->getUsername()); ?>"
+            <dl><dt><label  for="username"><?= $this->_('username'); ?></label></dt>
+                <dd><input name="username" id="username" value="<?= View::escape($this->user->getUsername()); ?>"
                         required="required" />
                 </dd>
             </dl>
-            <dl><dt><label for="password"><?php echo $this->_('password'); ?></label></dt>
+            <dl><dt><label  for="password"><?= $this->_('password'); ?></label></dt>
                 <dd><input name="password" id="password" type="password" /></dd>
             </dl>
-            <dl><dt><label for="role"><?php echo $this->_('role'); ?></label></dt>
+            <dl><dt><label  for="role"><?= $this->_('role'); ?></label></dt>
                 <dd><select name="role" id="role"><option></option>
                     <?php
                         global $ZEND_ACL;
@@ -53,7 +53,7 @@ $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
             </dl>
 			<?php
 				$helper = $this->template->getHelper('saveAndCancelButtons');
-				echo $helper->saveAndCancelButtons(BASE_URI.'/users');
+				echo $helper->saveAndCancelButtons(self::generateUri('users.index'));
 			?>
 		</fieldset>
 	</form>

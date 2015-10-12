@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2012-2014 City of Bloomington, Indiana
+ * @copyright 2012-2015 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
@@ -19,7 +19,7 @@ class PeopleController extends Controller
         }
         catch (\Exception $e) {
             $_SESSION['errorMessages'][] = $e;
-            header('Location: '.BASE_URL.'/people');
+            header('Location: '.self::generateUrl('people.index'));
             exit();
         }
     }
@@ -38,14 +38,14 @@ class PeopleController extends Controller
 
 	public function view()
 	{
-        $person = $this->loadPerson($_REQUEST['person_id']);
-        $this->template->blocks[] = new Block('people/info.inc',array('person'=>$person));
+        $person = $this->loadPerson($_REQUEST['id']);
+        $this->template->blocks[] = new Block('people/info.inc', ['person'=>$person]);
 	}
 
 	public function update()
 	{
-        $person = !empty($_REQUEST['person_id'])
-            ? $this->loadPerson($_REQUEST['person_id'])
+        $person = !empty($_REQUEST['id'])
+            ? $this->loadPerson($_REQUEST['id'])
             : new Person();
 
         $return_url = !empty($_REQUEST['return_url'])
@@ -57,7 +57,7 @@ class PeopleController extends Controller
 			try {
 				$person->save();
 
-				if (!$return_url) { $return_url = BASE_URL."/people/view?person_id={$person->getId()}"; }
+				if (!$return_url) { $return_url = self::generateUrl('people.view', ['id'=>$person->getId()]); }
 				header("Location: $return_url");
 				exit();
 			}
@@ -65,7 +65,6 @@ class PeopleController extends Controller
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
-
 		$this->template->blocks[] = new Block('people/updateForm.inc', ['person'=>$person, 'return_url'=>$return_url]);
 	}
 }
