@@ -1,12 +1,10 @@
 <?php
 /**
- * @copyright 2009-2015 City of Bloomington, Indiana
+ * @copyright 2009-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Zend\Db\ResultSet $people
  */
 use Application\Models\Person;
-use Blossom\Classes\View;
 use Blossom\Classes\Url;
 ?>
 <section>
@@ -35,7 +33,7 @@ use Blossom\Classes\Url;
 		<tbody>
 		<?php
 			foreach ($this->people as $person) {
-				$name = View::escape($person->getFullname());
+				$name = self::escape($person->getFullname());
 				$url = self::generateUri('people.view', ['id'=>$person->getId()]);
 				echo "
 				<tr><td><a href=\"$url\">{$person->getUsername()}</a></td>

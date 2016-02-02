@@ -1,12 +1,11 @@
 <?php
 /**
- * @copyright 2007-2015 City of Bloomington, Indiana
+ * @copyright 2007-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Zend\Db\Sql\Select $users
  */
 use Application\Models\Person;
-use Blossom\Classes\View;
 ?>
 <section>
 	<h1><?= $this->_(['user','users',2]); ?></h1>
@@ -46,7 +45,7 @@ use Blossom\Classes\View;
 					);
 				}
 
-				$name = View::escape($user->getFullname());
+				$name = self::escape($user->getFullname());
 				echo "
 				<tr><td>$editButton</td>
 					<td>{$user->getUsername()}</td>

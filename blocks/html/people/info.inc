@@ -1,12 +1,10 @@
 <?php
 /**
- * @copyright 2009-2015 City of Bloomington, Indiana
+ * @copyright 2009-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
  */
 use Application\Models\Person;
-use Blossom\Classes\View;
 use Blossom\Classes\Url;
 
 $return_url = Url::current_url();
@@ -29,7 +27,7 @@ if (Person::isAllowed('people', 'edit')) {
         'edit'
     );
 }
-$name = View::escape($this->person->getFullname());
+$name = self::escape($this->person->getFullname());
 echo "
 <section>
 	<h1>$name</h1>

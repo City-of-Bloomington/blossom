@@ -1,18 +1,15 @@
 <?php
 /**
- * @copyright 2009-2015 City of Bloomington, Indiana
+ * @copyright 2009-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
  */
-use Blossom\Classes\View;
-
 $fields = array('firstname','lastname','email');
 foreach ($fields as $field) {
 	$get = 'get'.ucfirst($field);
-	$$field = View::escape($this->person->$get());
+	$$field = self::escape($this->person->$get());
 }
-$title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
+$title = $this->person->getId() ? self::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
 ?>
 <section>
 	<h1><?= $title; ?></h1>

@@ -1,12 +1,10 @@
 <?php
 /**
- * @copyright 2006-2015 City of Bloomington, Indiana
+ * @copyright 2006-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param User $this->user
  */
 use Application\Models\Person;
-use Blossom\Classes\View;
 
 $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
 ?>
@@ -30,7 +28,7 @@ $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
                 </dd>
             </dl>
             <dl><dt><label  for="username"><?= $this->_('username'); ?></label></dt>
-                <dd><input name="username" id="username" value="<?= View::escape($this->user->getUsername()); ?>"
+                <dd><input name="username" id="username" value="<?= self::escape($this->user->getUsername()); ?>"
                         required="required" />
                 </dd>
             </dl>

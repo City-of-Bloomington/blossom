@@ -8,7 +8,7 @@
 use Blossom\Classes\View;
 
 if (isset($_SESSION['USER'])) {
-    $name = View::escape($_SESSION['USER']->getFullname());
+    $name = self::escape($_SESSION['USER']->getFullname());
     $url = self::generateUri('login.logout');
 
     echo "
@@ -19,7 +19,7 @@ if (isset($_SESSION['USER'])) {
     ";
 }
 else {
-    $return_url = View::escape($_SERVER['REQUEST_URI']);
+    $return_url = self::escape($_SERVER['REQUEST_URI']);
     $url = self::generateUri('login.index');
     echo "<a href=\"$url?return_url=$return_url\">{$this->_('login')}</a>";
 }
