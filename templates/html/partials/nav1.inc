@@ -1,8 +1,3 @@
-<div class="nav1">
-    <nav class="container">
-		<?php
-			$a = '<a href="%s">%s</a>';
-			echo sprintf($a, BASE_URI, $this->_('home'));
-		?>
-    </nav>
-</div>
+<nav id="nav1">
+    <a href="<?= BASE_URI; ?>"><?= $this->_('home'); ?></a>
+</nav>

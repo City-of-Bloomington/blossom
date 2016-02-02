@@ -19,23 +19,3 @@
 
     a { display: block; }
 }
-
-.site-utilityBar {
-    .menuLinks {
-        background: $color-content-background;
-        border: 1px solid $color-border-modal;
-        box-shadow: 0 0 1em 0 $color-shadow;
-        padding: .5em 0;
-
-        a {
-            padding: .5em 1em;
-            transition: background .25s, color .25s;
-
-            &:hover {
-                background: $color-header;
-                color: $color-content-background;
-                text-decoration: none;
-            }
-        }
-    }
-}

@@ -8,16 +8,13 @@ button, .button {
     display:inline-block;
     padding: .25em 1em;
     font-size: (14em/16);
-    font-weight:normal;
+    font-weight:bold;
     background: linear-gradient(to bottom, #f2f2f9 21%,#CDD1D9 80%);
     vertical-align: middle;
     &:hover {
         background: linear-gradient(to bottom, #f8f8fd 21%, #d5dfe4 80%);
+        cursor:pointer;
     }
-}
-a.button:hover {
-    cursor: default;
-    text-decoration: none;
 }
 .hidden-label { font-size:0; height:1px; overflow:hidden; }
 .add    { color:green; }

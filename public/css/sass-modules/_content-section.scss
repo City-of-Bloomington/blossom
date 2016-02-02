@@ -1,3 +1,7 @@
+main {
+    padding:1em; 
+}
+
 section {
     > header {
         margin: 2em 0 0 0;
@@ -7,7 +11,7 @@ section {
             display: inline-block;
             vertical-align: middle;
         }
-        > .tools {
+        .tools {
             display: inline-block;
             margin: 0 0 0 2em;
             vertical-align: middle;
