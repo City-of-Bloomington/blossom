@@ -57,6 +57,7 @@ $config = [
 	'Zend\Loader\StandardAutoloader' => [
 		'namespaces' => [
 			'Application' => APPLICATION_HOME,
+			'Site'        => SITE_HOME,
             'Blossom'     => BLOSSOM.'/src',
             'Aura\Router'          => APPLICATION_HOME.'/vendor/aura/router/src',
             'Zend\Stdlib'          => APPLICATION_HOME.'/vendor/zendframework/zend-stdlib/src',

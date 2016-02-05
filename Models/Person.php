@@ -1,8 +1,7 @@
 <?php
 /**
- * @copyright 2009-2015 City of Bloomington, Indiana
+ * @copyright 2009-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Application\Models;
 use Blossom\Classes\ActiveRecord;
@@ -74,10 +73,7 @@ class Person extends ActiveRecord
 		}
 	}
 
-	public function save()
-	{
-		parent::save();
-	}
+	public function save() { parent::save(); }
 
 	/**
 	 * Removes all the user account related fields from this Person
@@ -140,6 +136,8 @@ class Person extends ActiveRecord
 	 */
 	public function handleUpdateUserAccount($post)
 	{
+        global $DIRECTORY_CONFIG;
+
 		$fields = array(
 			'firstname','lastname','email',
 			'username','authenticationMethod','role'
@@ -156,7 +154,7 @@ class Person extends ActiveRecord
 
 		$method = $this->getAuthenticationMethod();
 		if ($this->getUsername() && $method && $method != 'local') {
-			$class = "Blossom\\Classes\\$method";
+            $class = $DIRECTORY_CONFIG[$method]['classname'];
 			$identity = new $class($this->getUsername());
 			$this->populateFromExternalIdentity($identity);
 		}
@@ -192,6 +190,8 @@ class Person extends ActiveRecord
 	 */
 	public function authenticate($password)
 	{
+        global $DIRECTORY_CONFIG;
+
 		if ($this->getUsername()) {
 			switch($this->getAuthenticationMethod()) {
 				case "local":
@@ -200,7 +200,7 @@ class Person extends ActiveRecord
 
 				default:
 					$method = $this->getAuthenticationMethod();
-					$class = "Blossom\\Classes\\$method";
+					$class = $DIRECTORY_CONFIG[$method]['classname'];
 					return $class::authenticate($this->getUsername(),$password);
 			}
 		}
@@ -220,7 +220,7 @@ class Person extends ActiveRecord
 	{
 		global $ZEND_ACL;
 		$role = 'Anonymous';
-		if (isset($_SESSION['USER']) && $_SESSION['USER']->getRole()) {
+		if (isset  ($_SESSION['USER']) && $_SESSION['USER']->getRole()) {
 			$role = $_SESSION['USER']->getRole();
 		}
 		return $ZEND_ACL->isAllowed($role, $resource, $action);
