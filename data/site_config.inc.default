@@ -9,14 +9,6 @@ define('BASE_URL','http://localhost/application');
 define('BASE_URI','/application');
 
 /**
- * Used when there's an error on the site.  The Framework will
- * print out a nice error message, encouraging users to report any problems
- * See: Blossom\Classes\Error
- */
-define('ADMINISTRATOR_NAME','Site Admin');
-define('ADMINISTRATOR_EMAIL','admin@servername.com');
-
-/**
  * Database Setup
  * Refer to the PDO documentation for DSN sytnax for your database type
  * http://www.php.net/manual/en/pdo.drivers.php
