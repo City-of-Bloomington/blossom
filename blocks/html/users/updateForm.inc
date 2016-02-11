@@ -9,7 +9,10 @@ use Application\Models\Person;
 $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
 ?>
 <section>
-    <h1><?= $title; ?></h1>
+    <header>
+        <h1><?= $title; ?></h1>
+    </header>
+    
 	<form method="post" action="<?= self::generateUri('users.update'); ?>">
 		<fieldset><legend><?= $this->_('user_info'); ?></legend>
 			<input name="id" type="hidden" value="<?= $this->user->getId(); ?>" />

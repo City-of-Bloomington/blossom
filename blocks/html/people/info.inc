@@ -30,8 +30,11 @@ if (Person::isAllowed('people', 'edit')) {
 $name = self::escape($this->person->getFullname());
 echo "
 <section>
-	<h1>$name</h1>
-	<div class=\"tools\">$editButton</div>
+    <header>
+        <h1>$name</h1>
+        <div class=\"tools\">$editButton</div>
+    </header>
+    
 	<table>
 		<tr><th>{$this->_('email')}</th>
 			<td>{$this->person->getEmail()}</td>

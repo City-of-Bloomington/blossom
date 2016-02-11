@@ -12,7 +12,10 @@ foreach ($fields as $field) {
 $title = $this->person->getId() ? self::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
 ?>
 <section>
-	<h1><?= $title; ?></h1>
+    <header>
+        <h1><?= $title; ?></h1>
+    </header>
+    
 	<form method="post" action="<?= self::generateUri('people.update'); ?>">
 		<fieldset><legend><?= $this->_('person_info'); ?></legend>
 			<input name="id" type="hidden" value="<?= $this->person->getId(); ?>" />

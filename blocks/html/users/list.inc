@@ -8,15 +8,18 @@
 use Application\Models\Person;
 ?>
 <section>
-	<h1><?= $this->_(['user','users',2]); ?></h1>
-	<div class="tools">
-	<?php
-        $helper = $this->template->getHelper('buttonLink');
-        if (Person::isAllowed('users')) {
-            echo $helper->buttonLink(self::generateUri('users.update'), $this->_('user_add'), 'add');
-        }
-	?>
-	</div>
+    <header>
+        <h1><?= $this->_(['user','users',2]); ?></h1>
+        <div class="tools">
+        <?php
+            $helper = $this->template->getHelper('buttonLink');
+            if (Person::isAllowed('users')) {
+                echo $helper->buttonLink(self::generateUri('users.update'), $this->_('user_add'), 'add');
+            }
+        ?>
+        </div>
+    </header>
+    
 	<table>
 		<thead>
 			<tr><th></th>
