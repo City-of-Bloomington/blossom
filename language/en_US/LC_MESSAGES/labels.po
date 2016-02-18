@@ -114,3 +114,6 @@ msgstr "Delete Account"
 
 msgid "user_info"
 msgstr "Account Info"
+
+msgid "error"
+msgstr "Sorry"
