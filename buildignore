@@ -6,7 +6,5 @@
 .git*
 configuration.inc
 site_config.inc
+backup.cnf
 /data/sessions/*
-/data/templates/
-/data/blocks/
-/scripts/backup.cnf
