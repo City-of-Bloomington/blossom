@@ -30,24 +30,51 @@ class UsersController extends Controller
 
 	public function update()
 	{
-		$person = isset($_REQUEST['id']) ? new Person($_REQUEST['id']) : new Person();
+        if (!empty($_REQUEST['id'])) {
+            try { $person = new Person($_REQUEST['id']); }
+            catch (\Exception $e) { $_SESSION['errorMessages'][] = $e; }
+        }
+        else {
+            $person = new Person();
+        }
 
-		if (isset($_POST['username'])) {
-			try {
-				$person->handleUpdateUserAccount($_POST);
-				$person->save();
-				header('Location: '.self::generateUrl('users.index'));
-				exit();
-			}
-			catch (\Exception $e) {
-				$_SESSION['errorMessages'][] = $e;
-			}
-		}
+        if (isset($person)) {
+            if (isset($_POST['username'])) {
+                try {
+                    $person->handleUpdateUserAccount($_POST);
+                    // We might have populated this person's information from LDAP
+                    // We need to do a new lookup in the system, to see if a person
+                    // with their email address already exists.
+                    // If they already exist, we should add the account info to that
+                    // person record.
+                    if (!$person->getId() && $person->getEmail()) {
+                        try {
+                            $existingPerson = new Person($person->getEmail());
+                            $existingPerson->handleUpdateUserAccount($_POST);
+                        }
+                        catch (\Exception $e) { }
+                    }
 
-		if ($person->getId()) {
-			$this->template->blocks[] = new Block('people/info.inc', ['person'=>$person]);
-		}
-		$this->template->blocks[] = new Block('users/updateForm.inc', ['user' =>$person]);
+                    if (isset($existingPerson)) { $existingPerson->save(); }
+                    else { $person->save(); }
+
+                    header('Location: '.BASE_URL.'/users');
+                    exit();
+                }
+                catch (\Exception $e) {
+                    $_SESSION['errorMessages'][] = $e;
+                }
+            }
+
+            $this->template->blocks[] = new Block('users/updateForm.inc', ['user'   => $person]);
+            if ($person->getId()) {
+                $this->template->blocks[] = new Block('people/info.inc',  ['person' => $person]);
+            }
+        }
+        else {
+            header('HTTP/1.1 404 Not Found', true, 404);
+            $this->template->blocks[] = new Block('404.inc');
+        }
 	}
 
 	public function delete()

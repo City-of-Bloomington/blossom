@@ -6,22 +6,28 @@
  */
 use Application\Models\Person;
 
+$fields = ['id', 'authenticationMethod', 'role', 'username', 'email'];
+foreach ($fields as $f) {
+    $get = 'get'.ucfirst($f);
+    $$f = self::escape($this->user->$get());
+}
+
 $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
 ?>
 <section>
     <header>
         <h1><?= $title; ?></h1>
     </header>
-    
+
 	<form method="post" action="<?= self::generateUri('users.update'); ?>">
 		<fieldset><legend><?= $this->_('user_info'); ?></legend>
 			<input name="id" type="hidden" value="<?= $this->user->getId(); ?>" />
 
             <dl><dt><label  for="authenticationMethod"><?= $this->_('authenticationMethod'); ?></label></dt>
-                <dd><select name="authenticationMethod" id="authenticationMethod" required="required">
+                <dd><select name="authenticationMethod" id="authenticationMethod" required="true">
                     <?php
                         foreach (Person::getAuthenticationMethods() as $method) {
-                            $selected = $this->user->getAuthenticationMethod()==$method
+                            $selected = $authenticationMethod === $method
                                 ? 'selected="selected"'
                                 : '';
                             echo "<option $selected>$method</option>";
@@ -30,16 +36,14 @@ $title = $this->user->getId() ? $this->_('user_edit') : $this->_('user_add');
                     </select>
                 </dd>
             </dl>
-            <dl><dt><label  for="username"><?= $this->_('username'); ?></label></dt>
-                <dd><input name="username" id="username" value="<?= self::escape($this->user->getUsername()); ?>"
-                        required="required" />
-                </dd>
-            </dl>
-            <dl><dt><label  for="password"><?= $this->_('password'); ?></label></dt>
-                <dd><input name="password" id="password" type="password" /></dd>
-            </dl>
+            <?php
+                $field = $this->template->getHelper('field');
+                echo $field->input(['name'=>'username', 'id'=>'username', 'label'=>$this->_('username'), 'value'=>$username, 'required'=>true]);
+                echo $field->input(['name'=>'password', 'id'=>'password', 'label'=>$this->_('password'), 'type'=>'password']);
+				echo $field->input(['name'=>'email',    'id'=>'email',    'label'=>$this->_('email'   ), 'value'=>$email]);
+            ?>
             <dl><dt><label  for="role"><?= $this->_('role'); ?></label></dt>
-                <dd><select name="role" id="role"><option></option>
+                <dd><select name="role" id="role" required="true"><option></option>
                     <?php
                         global $ZEND_ACL;
                         foreach (array_reverse($ZEND_ACL->getRoles()) as $role) {
