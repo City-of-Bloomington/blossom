@@ -7,6 +7,11 @@
 use Blossom\Classes\Block;
 use Blossom\Classes\Template;
 
+/**
+ * Grab a timestamp for calculating process time
+ */
+$startTime = microtime(1);
+
 include '../configuration.inc';
 
 // Create the default Template
@@ -47,3 +52,11 @@ else {
 }
 
 echo $template->render();
+
+
+if ($template->outputFormat === 'html') {
+    # Calculate the process time
+    $endTime = microtime(1);
+    $processTime = $endTime - $startTime;
+    echo "<!-- Process Time: $processTime -->";
+}
