@@ -2,7 +2,7 @@
 /**
  * @copyright 2009-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @param Zend\Db\ResultSet $people
+ * @param array $this->people
  */
 use Application\Models\Person;
 use Blossom\Classes\Url;
@@ -25,7 +25,7 @@ use Blossom\Classes\Url;
         ?>
         </div>
     </header>
-    
+
 	<table>
 		<thead>
 			<tr><th><?= $this->_('username'); ?></th>

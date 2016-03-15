@@ -28,10 +28,10 @@ class Person extends ActiveRecord
 	{
 		if ($id) {
 			if (is_array($id)) {
-				$this->exchangeArray($id);
+				$this->data = $id;
 			}
 			else {
-				$zend_db = Database::getConnection();
+                $pdo = Database::getConnection();
 				if (ActiveRecord::isId($id)) {
 					$sql = 'select * from people where id=?';
 				}
@@ -41,13 +41,14 @@ class Person extends ActiveRecord
 				else {
 					$sql = 'select * from people where username=?';
 				}
-				$result = $zend_db->createStatement($sql)->execute([$id]);
-				if (count($result)) {
-					$this->exchangeArray($result->current());
-				}
-				else {
-					throw new \Exception('people/unknownPerson');
-				}
+
+				$rows = parent::doQuery($sql, [$id]);
+                if (count($rows)) {
+                    $this->data = $rows[0];
+                }
+                else {
+                    throw new \Exception('people/unknownPerson');
+                }
 			}
 		}
 		else {

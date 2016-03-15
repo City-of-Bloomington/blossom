@@ -1,28 +1,22 @@
 <?php
 /**
- * @copyright 2012-2015 City of Bloomington, Indiana
+ * @copyright 2012-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Application\Controllers;
+
 use Application\Models\Person;
 use Application\Models\PeopleTable;
 use Blossom\Classes\Controller;
 use Blossom\Classes\Block;
-use Blossom\Classes\Database;
-use Zend\Paginator\Paginator;
-use Zend\Paginator\Adapter\DbSelect;
 
 class UsersController extends Controller
 {
 	public function index()
 	{
 		$people = new PeopleTable();
-		$users = $people->find(['user_account'=>true], null, true);
-
 		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
-		$users->setCurrentPageNumber($page);
-		$users->setItemCountPerPage(20);
+		$users = $people->find(['user_account'=>true], null, 20, $page);
 
 		$this->template->blocks[] = new Block('users/list.inc',     ['users'    =>$users]);
 		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$users]);

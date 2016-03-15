@@ -2,8 +2,7 @@
 /**
  * @copyright 2007-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
- * @param Zend\Db\Sql\Select $users
+ * @param array $this->users
  */
 use Application\Models\Person;
 ?>
@@ -19,7 +18,7 @@ use Application\Models\Person;
         ?>
         </div>
     </header>
-    
+
 	<table>
 		<thead>
 			<tr><th></th>
