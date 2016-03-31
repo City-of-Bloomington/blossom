@@ -30,14 +30,13 @@ class PeopleController extends Controller
 		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
 		$people = $table->find(null, null, 20, $page);
 
-		$this->template->blocks[] = new Block('people/list.inc',    ['people'   =>$people]);
-		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$people]);
+		return new \Application\Views\People\ListView(['people'=>$people]);
 	}
 
 	public function view()
 	{
         $person = $this->loadPerson($_REQUEST['id']);
-        $this->template->blocks[] = new Block('people/info.inc', ['person'=>$person]);
+        return new \Application\Views\People\InfoView(['person'=>$person]);
 	}
 
 	public function update()
@@ -63,6 +62,10 @@ class PeopleController extends Controller
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
-		$this->template->blocks[] = new Block('people/updateForm.inc', ['person'=>$person, 'return_url'=>$return_url]);
+
+		return new \Application\Views\People\UpdateView([
+            'person'     => $person,
+            'return_url' => $return_url
+		]);
 	}
 }

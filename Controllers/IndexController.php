@@ -11,5 +11,6 @@ class IndexController extends Controller
 {
 	public function index()
 	{
+        return new \Application\Views\IndexView();
 	}
 }

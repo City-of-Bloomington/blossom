@@ -1,8 +1,7 @@
 <?php
 /**
- * @copyright 2012-2015 City of Bloomington, Indiana
+ * @copyright 2012-2016 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Application\Controllers;
 use Blossom\Classes\Controller;
@@ -14,9 +13,8 @@ class LoginController extends Controller
 {
 	private $return_url;
 
-	public function __construct(Template $template)
+	public function __construct()
 	{
-		parent::__construct($template);
 		$this->return_url = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
 	}
 
@@ -52,7 +50,9 @@ class LoginController extends Controller
 			$_SESSION['errorMessages'][] = $e;
 		}
 
-		$this->template->blocks[] = new Block('loginForm.inc', ['return_url'=>$this->return_url]);
+		return new \Application\Views\Login\LoginView([
+            'return_url' => $this->return_url
+		]);
 	}
 
 	/**
@@ -76,7 +76,9 @@ class LoginController extends Controller
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
-		$this->template->blocks[] = new Block('loginForm.inc', ['return_url'=>$this->return_url]);
+		return new \Application\Views\Login\LoginView([
+            'return_url'=>$this->return_url
+        ]);
 	}
 
 	public function logout()

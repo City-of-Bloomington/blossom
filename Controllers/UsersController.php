@@ -18,8 +18,7 @@ class UsersController extends Controller
 		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
 		$users = $people->find(['user_account'=>true], null, 20, $page);
 
-		$this->template->blocks[] = new Block('users/list.inc',     ['users'    =>$users]);
-		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$users]);
+		return new \Application\Views\Users\ListView(['users'=>$users]);
 	}
 
 	public function update()
@@ -60,14 +59,10 @@ class UsersController extends Controller
                 }
             }
 
-            $this->template->blocks[] = new Block('users/updateForm.inc', ['user'   => $person]);
-            if ($person->getId()) {
-                $this->template->blocks[] = new Block('people/info.inc',  ['person' => $person]);
-            }
+            return new \Application\Views\Users\UpdateView(['user' => $person]);
         }
         else {
-            header('HTTP/1.1 404 Not Found', true, 404);
-            $this->template->blocks[] = new Block('404.inc');
+            return new \Applications\Views\NotFoundView();
         }
 	}
 
