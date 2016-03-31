@@ -34,6 +34,7 @@ $config = [
 			'Site'        => SITE_HOME,
             'Blossom'     => BLOSSOM.'/src',
             'Aura\Router'          => APPLICATION_HOME.'/vendor/aura/router/src',
+            'Aura\SqlQuery'        => APPLICATION_HOME.'/vendor/aura/sqlquery/src',
             'Zend\Stdlib'          => APPLICATION_HOME.'/vendor/zendframework/zend-stdlib/src',
             'Zend\Permissions\Acl' => APPLICATION_HOME.'/vendor/zendframework/zend-permissions-acl/src',
             'Zend\Paginator'       => APPLICATION_HOME.'/vendor/zendframework/zend-paginator/src',
