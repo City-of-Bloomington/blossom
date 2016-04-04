@@ -10,3 +10,7 @@ site_config.inc
 /data/templates/
 /data/blocks/
 /scripts/backup.cnf
+node_modules
+.gulp-build
+.ftppass
+gulpfile.js
