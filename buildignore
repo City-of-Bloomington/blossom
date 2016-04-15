@@ -8,3 +8,5 @@ configuration.inc
 site_config.inc
 backup.cnf
 /data/sessions/*
+composer.lock
+.sass-cache
