@@ -6,5 +6,6 @@ php:
 install:
   - cp ./configuration.inc.default ./configuration.inc
   - cp ./tests/UnitTests/site_config.inc.default ./tests/UnitTests/site_config.inc
+  - composer update
 
 script: phpunit --bootstrap ./tests/UnitTests/bootstrap.php ./tests/UnitTests
