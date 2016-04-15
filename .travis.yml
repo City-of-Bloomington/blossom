@@ -1,0 +1,10 @@
+language: php
+php:
+  - '5.6'
+  - '7.0'
+
+install:
+  - cp ./configuration.inc.default ./configuration.inc
+  - cp ./tests/UnitTests/site_config.inc.default ./tests/UnitTests/site_config.inc
+
+script: phpunit --bootstrap ./tests/UnitTests/bootstrap.php ./tests/UnitTests
