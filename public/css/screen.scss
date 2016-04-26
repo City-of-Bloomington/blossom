@@ -1,4 +1,9 @@
+// Import Normalize first. It doesn't require any variables or mixins.
+@import 'sass-modules/_normalize';
+
+// Import the variables and mixins next. The other imports depend on this import.
 @import 'sass-modules/_vars-mixins';
+
 @import 'sass-modules/_layout';
 @import 'sass-modules/_html-elements';
 @import 'sass-modules/_header';
