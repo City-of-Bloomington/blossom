@@ -1,5 +1,5 @@
-"use strict";
 (function () {
+    "use strict";
     var closeMenus = function () {
         var openMenus = document.querySelectorAll('.menuLinks.open'),
             len = openMenus.length,
