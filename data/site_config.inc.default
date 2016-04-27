@@ -24,12 +24,10 @@ define('THEME', 'Kirkwood');
  */
 $DATABASES = [
     'default' => [
-        'driver'   => 'Pdo_Mysql',
-        'hostname' => 'localhost',
-        'database' => 'application',
-        'username' => 'application',
-        'password' => 'password',
-        'charset'  => 'utf8'
+        'dsn'      => 'mysql:dbname=database;host=localhost',
+        'username' => 'user',
+        'password' => 'pass',
+        'options'  => []
     ]
 ];
 
