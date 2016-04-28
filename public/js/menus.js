@@ -1,5 +1,5 @@
+"use strict";
 (function () {
-    "use strict";
     var closeMenus = function () {
         var openLaunchers = document.querySelectorAll('.dropdown [aria-expanded="true"]'),
             len = openLaunchers.length,
