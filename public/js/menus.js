@@ -1,30 +1,29 @@
 (function () {
     "use strict";
     var closeMenus = function () {
-        var openMenus = document.querySelectorAll('.menuLinks.open'),
-            len = openMenus.length,
+        var openLaunchers = document.querySelectorAll('.dropdown [aria-expanded="true"]'),
+            len = openLaunchers.length,
             i   = 0;
             for (i=0; i<len; i++) {
-                openMenus[i].classList.remove('open');
-                (function (i) {
-                    setTimeout(function() { openMenus[i].classList.add('closed'); }, 300);
-                })(i);
+                openLaunchers[i].setAttribute("aria-expanded", "false");
             }
         },
         launcherClick = function(e) {
-            var menu      = e.target.parentElement.querySelector('.menuLinks');
-
+            var launcher      = e.target;
+            var menu          = launcher.parentElement.querySelector('.dropdown .links');
+            e.preventDefault();
+            launcher.blur();
             closeMenus();
-            menu.classList.remove('closed');
-            menu.classList.add('open');
+            launcher.setAttribute("aria-expanded", "true");
             e.stopPropagation();
+            menu.focus();
         },
-        menus = document.querySelectorAll('.menuLauncher'),
-        len   = menus.length,
+        launchers = document.querySelectorAll('.dropdown .launcher'),
+        len   = launchers.length,
         i = 0;
 
     for (i=0; i<len; i++) {
-        menus[i].addEventListener('click', launcherClick);
+        launchers[i].addEventListener('click', launcherClick);
     }
     document.addEventListener('click', closeMenus);
 })();

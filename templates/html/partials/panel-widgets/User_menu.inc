@@ -12,8 +12,8 @@ if (isset($_SESSION['USER'])) {
     $url = self::generateUri('login.logout');
 
     echo "
-    <div class=\"menuLauncher\">$name</div>
-    <div class=\"menuLinks closed\">
+    <button class=\"menuLauncher\" id=\"userMenu\" aria-haspopup=\"true\" aria-expanded=\"false\">$name</button>
+    <div class=\"menuLinks\" aria-labeledby=\"userMenu\">
         <a href=\"$url\">{$this->_('logout')}</a>
     </div>
     ";

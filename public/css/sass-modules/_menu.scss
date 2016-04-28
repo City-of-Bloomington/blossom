@@ -3,19 +3,24 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-.menuLauncher {
-    cursor: pointer; display: inline-table;
-}
-.menuLinks {
-    position:absolute;
-    display:inline-table;
-    opacity: 0;
-    white-space:nowrap;
-    transition: opacity .2s;
-    z-index:7;
+.dropdown {
+    .launcher {
+        cursor: pointer; display: inline-table;
 
-    &.open   { opacity: 1; }
-    &.closed { top: -10000px; left: -10000px; }
+        &[aria-expanded="true"] + .links {
+            opacity: 1;
+        }
+        &[aria-expanded="false"] + .links {
+            opacity: 0;
+        }
+    }
+    .links {
+        position:absolute;
+        display:inline-table;
+        white-space:nowrap;
+        transition: opacity .2s;
+        z-index:7;
 
-    a { display: block; }
+        a { display: block; }
+    }
 }
