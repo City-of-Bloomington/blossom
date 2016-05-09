@@ -23,9 +23,9 @@ if (Person::isAllowed('users')) {
 
 if ($links) {
     echo "
-    <nav>
-        <div class=\"menuLauncher\">{$this->_('admin')}</div>
-        <div class=\"menuLinks closed\">$links</div>
+    <nav class=\"dropdown\">
+        <button class=\"launcher\" id=\"adminMenu\"  aria-haspopup=\"true\" aria-expanded=\"false\">{$this->_('admin')}</button>
+        <div class=\"links\" aria-labeledby=\"adminMenu\">$links</div>
     </nav>
     ";
 }
