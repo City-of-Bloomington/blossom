@@ -23,7 +23,8 @@ class PeopleController extends Controller
             exit();
         }
     }
-	public function index()
+
+	public function index(array $params)
 	{
 		$table = new PeopleTable();
 
@@ -33,13 +34,13 @@ class PeopleController extends Controller
 		return new \Application\Views\People\ListView(['people'=>$people]);
 	}
 
-	public function view()
+	public function view(array $params)
 	{
         $person = $this->loadPerson($_REQUEST['id']);
         return new \Application\Views\People\InfoView(['person'=>$person]);
 	}
 
-	public function update()
+	public function update(array $params)
 	{
         $person = !empty($_REQUEST['id'])
             ? $this->loadPerson($_REQUEST['id'])

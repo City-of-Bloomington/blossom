@@ -21,7 +21,7 @@ class LoginController extends Controller
 	/**
 	 * Attempts to authenticate users via CAS
 	 */
-	public function index()
+	public function index(array $params)
 	{
 		// If they don't have CAS configured, send them onto the application's
 		// internal authentication system
@@ -58,7 +58,7 @@ class LoginController extends Controller
 	/**
 	 * Attempts to authenticate users based on AuthenticationMethod
 	 */
-	public function login()
+	public function login(array $params)
 	{
 		if (isset($_POST['username'])) {
 			try {
@@ -81,7 +81,7 @@ class LoginController extends Controller
         ]);
 	}
 
-	public function logout()
+	public function logout(array $params)
 	{
 		session_destroy();
 		header('Location: '.$this->return_url);

@@ -9,7 +9,7 @@ use Blossom\Classes\Controller;
 
 class IndexController extends Controller
 {
-	public function index()
+	public function index(array $params)
 	{
         return new \Application\Views\IndexView();
 	}

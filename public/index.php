@@ -33,7 +33,7 @@ if ($route) {
             }
 
             $c = new $controller();
-            $view = $c->$action();
+            $view = $c->$action($route->params);
         }
         else {
             $view = new \Application\Views\ForbiddenView();
