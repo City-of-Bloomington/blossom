@@ -9,7 +9,7 @@ foreach ($fields as $field) {
 	$get = 'get'.ucfirst($field);
 	$$field = self::escape($this->person->$get());
 }
-$title = $this->person->getId() ? self::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
+$title = $this->person->getId() ? $this->_('person_edit') : $this->_('person_add');
 ?>
 <section>
     <header>

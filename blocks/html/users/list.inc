@@ -8,7 +8,7 @@ use Application\Models\Person;
 ?>
 <section>
     <header>
-        <h1><?= $this->_(['user','users',2]); ?></h1>
+        <h1><?= $this->_(['user', 'users', count($this->users)]); ?></h1>
         <div class="tools">
         <?php
             $helper = $this->template->getHelper('buttonLink');

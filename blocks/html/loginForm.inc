@@ -1,13 +1,13 @@
 <form method="post" action="<?= self::generateUri('login.login'); ?>">
 	<fieldset><legend><?= $this->_('login'); ?></legend>
 		<input name="return_url" type="hidden" value="<?= self::escape($this->return_url); ?>" />
-		
-        <dl><dt><label  for="username"><?= $this->_('username'); ?></label></dt>
-            <dd><input name="username" id="username" /></dd>
-        </dl>
-        <dl><dt><label  for="password"><?= $this->_('password'); ?></label></dt>
-            <dd><input type="password" name="password" id="password" /></dd>
-        </dl>
+
+		<?php
+            $h = $this->template->getHelper('field');
+            echo $h->field(['name'=>'username', 'id'=>'username', 'label'=>$this->_('username'), 'required'=>true]);
+            echo $h->field(['name'=>'password', 'id'=>'password', 'label'=>$this->_('password'), 'required'=>true, 'type'=>'password']);
+		?>
+
 		<button type="submit" class="login"><?= $this->_('login'); ?></button>
 	</fieldset>
 </form>

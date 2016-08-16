@@ -112,3 +112,6 @@ msgstr "Account Info"
 
 msgid "error"
 msgstr "Sorry"
+
+msgid "my_account"
+msgstr "My Account"

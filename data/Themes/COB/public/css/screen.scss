@@ -1,0 +1,28 @@
+/**
+ * City of Bloomington Theme
+ *
+ * This stylesheet extends the default Factory Number One CSS.
+ * @see https://github.com/City-of-Bloomington/factory-number-one
+ *
+ * To use this stylesheet, make sure to include a link to the factory-number-one
+ * stylesheet in the template head.
+ *
+ * This CSS should only include properties that are not include in fn1.
+ */
+@import 'modules/vars.scss';
+@import 'modules/header.scss';
+@import 'modules/table.scss';
+
+footer { background-color:$color-background-footer; color:$color-heading-1; }
+h1 { font-size:1.5rem; }
+fieldset { border:none; }
+
+main .dropdown .launcher {
+    background-color:$green;
+    border-bottom: .25em solid $green-light;
+    color: $color-content-background;
+}
+
+.pageNavigation          { margin:.5em; }
+.pageNavigation li       { display:inline; margin:.5em; }
+a.current { border:2px solid green; }

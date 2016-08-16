@@ -14,7 +14,7 @@ $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
 	$username = $h->buttonLink(
 		self::generateUri('users.update', ['id'=>$this->person->getId()])."?return_url=$return_url",
-		$this->translate('user_add'),
+		$this->_('user_add'),
 		'add'
 	);
 }
@@ -23,7 +23,7 @@ $editButton = '';
 if (Person::isAllowed('people', 'edit')) {
     $editButton = $h->buttonLink(
         self::generateUri('people.update', ['id'=>$this->person->getId()])."?return_url=$return_url",
-        $this->translate('edit'),
+        $this->_('edit'),
         'edit'
     );
 }
@@ -34,7 +34,7 @@ echo "
         <h1>$name</h1>
         <div class=\"tools\">$editButton</div>
     </header>
-    
+
 	<table>
 		<tr><th>{$this->_('email')}</th>
 			<td>{$this->person->getEmail()}</td>

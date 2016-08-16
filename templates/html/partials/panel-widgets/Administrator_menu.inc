@@ -6,26 +6,20 @@
  */
 use Application\Models\Person;
 
-$links = '';
-if (Person::isAllowed('users')) {
-    $routes = [
-        'people' => 'person',
-        'users'  => 'user'
-    ];
-    foreach ($routes as $plural=>$singular) {
-        $requiredAction = 'index';
-        if (Person::isAllowed($plural, $requiredAction)) {
-            $url = self::generateUri("$plural.index");
-            $links.= "<a href=\"$url\">{$this->_([$singular, $plural, 2])}</a>";
-        }
+$links  = [];
+$routes = [
+    'people'         => 'person',
+    'users'          => 'user'
+];
+foreach ($routes as $plural=>$singular) {
+    $requiredAction = 'index';
+    if (Person::isAllowed($plural, $requiredAction)) {
+        $url = BASE_URI."/$plural";
+        $links[] = ['url'=>$url, 'label'=>$this->_([$singular, $plural, 2])];
     }
 }
 
 if ($links) {
-    echo "
-    <nav class=\"dropdown\">
-        <button class=\"launcher\" id=\"adminMenu\"  aria-haspopup=\"true\" aria-expanded=\"false\">{$this->_('admin')}</button>
-        <div class=\"links\" aria-labeledby=\"adminMenu\">$links</div>
-    </nav>
-    ";
+    $helper = $this->getHelper('dropdown');
+    echo $helper->dropdown($links, $this->_('admin'), 'Administrator_menu');
 }
