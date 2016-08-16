@@ -4,7 +4,6 @@
 /dist
 .git/
 .git*
-configuration.inc
 site_config.inc
 backup.cnf
 /data/sessions/*
