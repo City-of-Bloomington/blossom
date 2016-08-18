@@ -1,0 +1,14 @@
+<header>
+    <h1><a href="{{ BASE_URI }}">{{ APPLICATION_NAME }}</a></h1>
+    <div class="utilityBar">
+    {% import "/macros/dropdown.html" as helper %}
+
+    {% if not utilityBar is empty %}
+        {% for menu in utilityBar %}
+            {{ helper.dropdown(menu.links, menu.label, menu.id) }}
+        {% endfor %}
+    {% else %}
+        <a href="{{ uri('login.index') }}">{{ _('login') }}</a>
+    {% endif %}
+    </div>
+</header>

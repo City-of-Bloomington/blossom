@@ -1,0 +1,26 @@
+{% macro dropdown(links, title, id, class) %}
+<nav class="dropdown {{ class }}">
+    <button id="{{ id }}" class="launcher" aria-haspopup="true" aria-expanded="false">{{ title }}</button>
+    <div class="links" aria-labeledby="{{ id }}">
+        {{ _self.renderLinks(links) }}
+    </div>
+</nav>
+{% endmacro %}
+
+{% macro renderLinks(links) %}
+    {% for l in links %}
+
+        {% set attrs = '' %}
+        {% if l.attrs is defined %}
+            {% for key, value in l.attrs %}
+                {% set attrs %}attrs {{ key }}="{{ value }}"{% endset %}
+            {% endfor %}
+        {% endif %}
+
+        {% if l.subgroup is defined %}
+            <div class="subgroup">{{ _self.renderLinks(l.subgroup) }}</div>
+        {% else %}
+            <a href="{{ l.url }}" {{ attrs }}>{{ l.label }}</a>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

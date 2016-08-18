@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ lang }}" lang="{{ lang }}">
+
+{{ include('/layouts/partials/head.html') }}
+
+<body class="full-width">
+    {{ include('/layouts/partials/header.html') }}
+
+	<main>
+        <div id="content-panel" class="panel">
+            {% block errorMessages %}
+            {% endblock %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+	</main>
+
+	{{ include('/layouts/partials/footer.html') }}
+
+	{% block javascript %}
+	<script type="text/javascript" src="{{ BASE_URI }}/js/menus.js"></script>
+	{% endblock %}
+
+</body>
+</html>

@@ -5,13 +5,10 @@
  */
 namespace Application\Views;
 
-use Blossom\Classes\Template;
-
-class IndexView extends Template
+class IndexView extends BaseView
 {
-    public function __construct(array $vars=null)
+    public function render()
     {
-        $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
-        parent::__construct('default', $format, $vars);
+        echo $this->twig->render('index.html', $this->vars);
     }
 }
