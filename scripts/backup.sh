@@ -19,6 +19,9 @@ num_days_to_keep=5
 now=`date +%s`
 today=`date +%F`
 
+if [ ! -d $BACKUP_DIR ]
+	then mkdir $BACKUP_DIR
+fi
 cd $BACKUP_DIR
 mkdir $today
 
