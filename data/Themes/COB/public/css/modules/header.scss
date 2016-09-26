@@ -1,6 +1,6 @@
 body > header {
-    background-color: #fff;
-    border-top: .4em solid $color-header;
+    background-color: $color-content-background;
+    border-top: $size-gutter solid $color-header;
     box-shadow: none;
     margin-bottom: 0;
     padding:0;
@@ -17,28 +17,26 @@ body > header {
         }
         h1 a {
             background:url('images/logo.svg') no-repeat left center;
-            font-size:1rem; font-weight:normal; margin:0;
+            font-size:$font-size-normal; font-weight:normal; margin:0;
             padding-left:3rem;
             background-size:2.5rem 2.5rem;
         }
         h2 {
-            font-size:.8rem;
+            font-size:$font-size-small;
             margin: 0 0 0 2em;
-            padding:0 0 0 2em;
+            padding:$size-gutter 2em;
             border-left:1px solid $color-border-table;
         }
     }
 
-    @media screen and (min-width: $viewport-med) {
+    @media all and (min-width: $size-viewport-med) {
         position: relative;
-
         > .container { }
     }
-
-    @include largeViewport {
+    @media all and (min-width: $size-viewport-large) {
         > .container { }
     }
-    @media screen and (max-height: $viewport-notTall) {
+    @media all and (max-height: $size-viewport-notTall) {
         border-top: 0;
     }
 
