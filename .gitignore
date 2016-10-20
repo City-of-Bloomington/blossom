@@ -1,6 +1,11 @@
-configuration.inc
-site_config.inc
+*~
+*\#
+._*
+.DS_Store
+*.retry
+data/site_config.inc
 data/sessions/*
+configuration.inc
 build
 dist
 *.mo
@@ -14,3 +19,7 @@ gulpfile.js
 .gulp-build
 vendor
 composer.lock
+ansible/roles/geerlingguy*
+ansible/roles/City-of-Bloomington.*
+ansible/hosts.txt
+ansible/group_vars/vault

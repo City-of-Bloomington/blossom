@@ -1,0 +1,41 @@
+- hosts: all
+  become: yes
+  vars_files:
+    #these should be picked up automatically if using ansible 2.x
+    #but for 1.x this works:
+    - ../group_vars/blossom.yml
+    - ../group_vars/vault/blossom.yml
+
+  vars:
+    #mysql variables... these are specific to this playbook
+
+    #mysql_root_password: "{{ blossom_db_password }}"
+    mysql_databases:
+      - name: "{{ blossom_db_name }}"
+        #encoding: latin1
+        #collation: latin1_general_ci
+    mysql_users:
+      - name: "{{ blossom_db_username }}"
+        host: "%"
+        password: "{{ blossom_db_password }}"
+        priv: "{{ blossom_db_name }}.*:ALL"
+
+  roles:
+    - City-of-Bloomington.linux
+    - City-of-Bloomington.apache
+    - City-of-Bloomington.php
+
+    # # via:
+    # # https://github.com/geerlingguy/ansible-role-composer
+    # # this requires using ansible-galaxy to pull down the role first:
+    # # sudo ansible-galaxy install geerlingguy.composer
+    - geerlingguy.composer
+
+    # # this requires using ansible-galaxy to pull down the role first:
+    # # sudo ansible-galaxy install geerlingguy.mysql
+    - geerlingguy.mysql
+
+    - City-of-Bloomington.fn1
+
+    - cob.blossom
+

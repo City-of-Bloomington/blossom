@@ -1,0 +1,19 @@
+---
+# vars file for cob.blossom
+
+blossom_path: /srv/sites/blossom
+blossom_base: blossom
+
+#these should be defined elsewhere (these are not sane defaults)
+#blossom_db_name: blossom
+#blossom_db_username: user
+#blossom_db_password: pass
+
+blossom_apache_config: /etc/apache2/sites-available/blossom.conf
+
+cas_server: bloomington.in.gov
+directory_server: 'http://apps.bloomington.in.gov/directory'
+
+blossom_user_fname: Charles
+blossom_user_lname: Brandt
+blossom_user_email: something@somewhere.com

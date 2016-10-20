@@ -14,6 +14,9 @@ Themable
 Speaking of themes.  All look and feel is provided via drop-in themes.  Any core template or block can be overridden by providing a matching file in your theme directory.
 
 
+## Install
 
-## [Wiki](https://github.com/City-of-Bloomington/blossom/wiki)
-All documentation is now in the [Github Wiki](https://github.com/City-of-Bloomington/blossom/wiki)
+Ansible scripts are available to assist with setting up a new instance. These also provide a description of requirements, in case you need to install using a different mechanism:
+
+[Install Documentation](ansible/)
+
