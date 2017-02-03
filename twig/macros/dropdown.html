@@ -1,8 +1,9 @@
 {% macro dropdown(links, title, id, class) %}
+{% import _self as self %}
 <nav class="dropdown {{ class }}">
     <button id="{{ id }}" class="launcher" aria-haspopup="true" aria-expanded="false">{{ title }}</button>
     <div class="links" aria-labeledby="{{ id }}">
-        {{ _self.renderLinks(links) }}
+        {{ self.renderLinks(links) }}
     </div>
 </nav>
 {% endmacro %}

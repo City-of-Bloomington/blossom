@@ -7,7 +7,7 @@ namespace Application\Views;
 
 use Application\Models\Person;
 
-class BaseView
+abstract class BaseView
 {
     protected $twig;
     public $outputFormat;
@@ -23,17 +23,6 @@ class BaseView
     {
         if (count($data)) { foreach ($data as $k=>$v) { $this->vars[$k] = $v; } }
 
-        if (defined('THEME')) {
-            $dir = SITE_HOME.'/Themes/'.THEME;
-
-            if (is_dir($dir)) {
-                $this->vars['THEME'] = THEME;
-                $config_file = $dir.'/theme_config.inc';
-
-                if (is_file($config_file)) { $this->vars['theme_config'] = require $config_file; }
-            }
-        }
-
         $locale = LOCALE.'.utf8';
         $this->vars['lang'] = strtolower(substr(LOCALE, 0, 2));
 
@@ -44,15 +33,21 @@ class BaseView
         bindtextdomain('messages', APPLICATION_HOME.'/language');
         textdomain('labels');
 
-        $this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
+        #$this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
 
         $loader     = new \Twig_Loader_Filesystem(APPLICATION_HOME.'/twig');
+        if (defined('THEME')) {
+            $dir = SITE_HOME.'/Themes/'.THEME.'/twig';
+            if (is_dir($dir)) { $loader->addPath($dir); }
+        }
         #$this->twig = new \Twig_Environment($loader, ['cache' => SITE_HOME.'/twig']);
         $this->twig = new \Twig_Environment($loader, [
             'cache'            => false,
-            'strict_variables' => true
+            'strict_variables' => true,
+            'debug'            => true
         ]);
         $this->twig->addExtension(new \Twig_Extensions_Extension_I18n());
+        $this->twig->addExtension(new \Twig_Extension_Debug());
         $this->twig->addFunction (new \Twig_SimpleFunction('_', [$this, '_']));
         $this->twig->addFunction (new \Twig_SimpleFunction('url',       function ($route_name, $params=[]  ) { return self::generateUrl($route_name, $params); }));
         $this->twig->addFunction (new \Twig_SimpleFunction('uri',       function ($route_name, $params=[]  ) { return self::generateUri($route_name, $params); }));
