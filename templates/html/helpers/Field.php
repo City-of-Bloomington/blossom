@@ -67,11 +67,12 @@ class Field extends Helper
         $input = $this->$renderInput($params, $required, $attr);
         $for   = !empty($params['id'   ]) ? " for=\"$params[id]\""                       : '';
         $label = !empty($params['label']) ? "<dt><label$for>$params[label]</label></dt>" : '';
+        $help  = !empty($params['help' ]) ? "<p class=\"help\">$params[help]</p>"        : '';
 
         return "
         <dl$classes>
             $label
-            <dd>$input</dd>
+            <dd>$input$help</dd>
         </dl>
         ";
     }
@@ -93,13 +94,12 @@ class Field extends Helper
     {
         $value = !empty($params['value']) ? $params['value'] : '';
 
+        $id   = '';
         $type = '';
-        if (!empty($params['type'])) {
-            $type = "type=\"$params[type]\"";
+        if (!empty($params['id'  ])) { $id   =   "id=\"$params[id]\""; }
+        if (!empty($params['type'])) { $type = "type=\"$params[type]\""; }
 
-        }
-
-        return "<input name=\"$params[name]\" id=\"$params[id]\" $type value=\"$value\" $required  $attr />";
+        return "<input name=\"$params[name]\" $id $type value=\"$value\" $required  $attr />";
     }
 
     /**

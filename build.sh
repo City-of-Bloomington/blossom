@@ -3,6 +3,12 @@ APPNAME=blossom
 DIR=`pwd`
 BUILD=$DIR/build
 
+declare -a dependencies=(msgfmt node-sass node npm)
+for i in "${dependencies[@]}"; do
+    command -v $i > /dev/null 2>&1 || { echo "$i not installed" >&2; exit 1; }
+done
+
+
 if [ ! -d $BUILD ]
 	then mkdir $BUILD
 fi

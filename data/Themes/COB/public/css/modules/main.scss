@@ -1,0 +1,32 @@
+footer {
+    background-color: $color-background-footer; color: $color-heading-1;
+    margin-top: ($size-gutter*2);
+    padding: $size-gutter;
+    font-size: $font-size-small;
+}
+fieldset { border:none; }
+
+main {
+    padding-left: $size-gutter;
+
+    .dropdown .launcher {
+        background-color:$color-calltoaction-background;
+        border-bottom: .25em solid $color-calltoaction-border;
+        color: $color-content-background;
+    }
+}
+
+.pageNavigation          { margin: $size-gutter; }
+.pageNavigation li       { display:inline; margin: $size-gutter; }
+a.current { border:2px solid $color-calltoaction-background; }
+
+@media print {
+    body { font-size:10pt; }
+    main { padding:0; }
+
+    body > header,
+    body > footer,
+    .dropdown {
+        display:none;
+    }
+}

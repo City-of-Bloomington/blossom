@@ -118,12 +118,9 @@ class Person extends ActiveRecord
 		else    { $this->data['password'] = null;     }
 	}
 
-	/**
-	 * @param array $post
-	 */
-	public function handleUpdate($post)
+	public function handleUpdate(array $post)
 	{
-		$fields = array( 'firstname', 'middlename', 'lastname', 'email' );
+		$fields = ['firstname', 'lastname', 'email'];
 		foreach ($fields as $field) {
 			if (isset($post[$field])) {
 				$set = 'set'.ucfirst($field);
@@ -133,16 +130,17 @@ class Person extends ActiveRecord
 	}
 
 	/**
-	 * @param array $post
+	 * A "User Account" is just a username/authenticationMethod added to this
+	 * Person object.  If a person has a username/authenticationMethod, then
+	 * they might be able to log in.
+	 * Adding or removing these field values is all that is required to
+	 * enable or disable a person from being able to log in.
 	 */
-	public function handleUpdateUserAccount($post)
+	public function handleUpdateUserAccount(array $post)
 	{
         global $DIRECTORY_CONFIG;
 
-		$fields = array(
-			'firstname','lastname','email',
-			'username','authenticationMethod','role'
-		);
+		$fields = ['firstname', 'lastname', 'email', 'username', 'authenticationMethod', 'role'];
 		foreach ($fields as $f) {
 			if (isset($post[$f])) {
 				$set = 'set'.ucfirst($f);
@@ -155,10 +153,29 @@ class Person extends ActiveRecord
 
 		$method = $this->getAuthenticationMethod();
 		if ($this->getUsername() && $method && $method != 'local') {
-            $class = $DIRECTORY_CONFIG[$method]['classname'];
-			$identity = new $class($this->getUsername());
-			$this->populateFromExternalIdentity($identity);
+            $missingData = false;
+            foreach (self::$externalFieldsToCopy as $f) {
+                $get = 'get'.ucfirst($f);
+                if (!$this->$get()) { $missingData = true; }
+            }
+
+            if ($missingData) {
+                $class = $DIRECTORY_CONFIG[$method]['classname'];
+                $identity = new $class($this->getUsername());
+                $this->populateFromExternalIdentity($identity);
+            }
 		}
+	}
+
+	public static $externalFieldsToCopy = [ 'firstname', 'lastname', 'email' ];
+
+	public function populateFromExternalIdentity(ExternalIdentity $identity)
+	{
+        foreach (self::$externalFieldsToCopy as $f) {
+            $get = 'get'.ucfirst($f);
+            $set = 'set'.ucfirst($f);
+            if (!$this->$get() && $identity->$get()) { $this->$set($identity->$get()); }
+        }
 	}
 
 	//----------------------------------------------------------------
@@ -238,19 +255,4 @@ class Person extends ActiveRecord
 		return "{$this->getFirstname()} {$this->getLastname()}";
 	}
 
-	/**
-	 * @param ExternalIdentity $identity An object implementing ExternalIdentity
-	 */
-	public function populateFromExternalIdentity(ExternalIdentity $identity)
-	{
-		if (!$this->getFirstname() && $identity->getFirstname()) {
-			$this->setFirstname($identity->getFirstname());
-		}
-		if (!$this->getLastname() && $identity->getLastname()) {
-			$this->setLastname($identity->getLastname());
-		}
-		if (!$this->getEmail() && $identity->getEmail()) {
-			$this->setEmail($identity->getEmail());
-		}
-	}
 }

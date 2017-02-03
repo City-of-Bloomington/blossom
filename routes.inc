@@ -35,6 +35,5 @@ $ROUTES->attach('users', '/users', function ($r) {
 });
 
 $NAV1 = [
-    ['msgid'=>'home',                  'uri'=>$ROUTES->generate('home')],
-    ['msgid'=>['person', 'people', 2], 'uri'=>$ROUTES->generate('people.index')]
+    ['msgid'=>'home', 'uri'=>$ROUTES->generate('home')]
 ];

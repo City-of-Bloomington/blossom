@@ -12,17 +12,4 @@
 @import 'modules/vars.scss';
 @import 'modules/header.scss';
 @import 'modules/table.scss';
-
-footer { background-color:$color-background-footer; color:$color-heading-1; }
-h1 { font-size:1.5rem; }
-fieldset { border:none; }
-
-main .dropdown .launcher {
-    background-color:$green;
-    border-bottom: .25em solid $green-light;
-    color: $color-content-background;
-}
-
-.pageNavigation          { margin:.5em; }
-.pageNavigation li       { display:inline; margin:.5em; }
-a.current { border:2px solid green; }
+@import 'modules/main.scss';
