@@ -1,0 +1,5 @@
+# do *not* include trailing slash!
+blossom_path: /srv/sites/blossom
+blossom_db_name: "{{ vault_blossom_db_name }}"
+blossom_db_username: "{{ vault_blossom_db_username }}"
+blossom_db_password: "{{ vault_blossom_db_password }}"

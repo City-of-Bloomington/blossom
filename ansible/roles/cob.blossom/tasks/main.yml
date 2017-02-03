@@ -1,0 +1,110 @@
+---
+# tasks file for cob.blossom
+
+# this sets up the environment for development
+# tarball would include many of these dependencies
+
+- file: path='{{ blossom_path }}' state=directory mode=2755  
+  
+- name: Check out source repository with git
+  git: repo=https://github.com/City-of-Bloomington/blossom.git dest='{{ blossom_path }}' update=no
+
+#TODO:
+# this won't work if the path is a directory on a VM shared with host
+# way to check for that?
+- name: Update ownership for blossom_path
+  file: path={{ blossom_path }} state=directory owner=www-data group=staff recurse=yes mode=g+rw
+  #file: path={{ blossom_path }} state=directory owner=www-data group=staff recurse=yes mode=2770
+
+  
+- name: check if blossom apache config already exists
+  stat: path={{ blossom_apache_config }}
+  register: original
+  
+# check if backup of blossom_apache_config exists
+# if it already exists, we won't move it again
+- name: check if blossom apached config backup already exists
+  stat: path={{ blossom_apache_config }}.bkup
+  register: backup
+
+#note that "copy" command in ansible copies from ansible host to client
+#one machine to the other
+#here we just want to do the copy only on the client 
+- name: Make a backup copy of blossom apache config file
+  shell: cp {{ blossom_apache_config }} {{ blossom_apache_config }}.bkup
+  when: original.stat.exists and not backup.stat.exists
+
+- name: Create an apache config file for blossom site based on template
+  template: src=blossom.conf dest={{ blossom_apache_config }}
+  notify:
+    - restart apache
+  tags: blossom
+
+- name: a2ensite blossom
+  command: a2ensite blossom
+  notify:
+    - restart apache
+
+    
+- name: Fetch blossom dependencies with composer
+  composer: command=install working_dir={{ blossom_path }}
+
+- name: Run the build script
+  shell: ./build.sh
+  become_user: "{{ ansible_ssh_user }}"
+  args:
+    chdir: "{{ blossom_path }}"
+
+# once there are custom styles for the application, may need to compile them:
+# - name: Compile the theme Sass
+#   shell: ./build_css.sh
+#   become_user: "{{ ansible_ssh_user }}"
+#   args:
+#     chdir: "{{ blossom_path }}/data/Themes/COB/public/css"
+    
+- name: configure blossom application
+  template: src=site_config.inc dest={{ blossom_path }}/data/
+  tags: blossom
+
+- name: configure asset library location
+  template: src=theme_config.inc dest={{ blossom_path }}/data/Themes/COB
+  tags: blossom
+
+  
+
+- name: Update ownership for sessions path
+  #file: path='{{ blossom_path }}/data/sessions' state=directory owner=www-data group=staff recurse=yes mode=2770  
+  file: path='{{ blossom_path }}/data/sessions' state=directory owner=www-data group=staff recurse=yes mode=g+rw
+
+#build creates files owned by user...
+#this is a common pattern to have to chown after build
+- name: Update ownership for blossom_path (again)
+  #file: path={{ blossom_path }} state=directory owner=www-data group=staff recurse=yes mode=2770
+  file: path={{ blossom_path }} state=directory owner=www-data group=staff recurse=yes mode=g+rw
+
+- name: Check if database has already been initialized
+  command: mysql -u {{ blossom_db_username }} -p{{ blossom_db_password }} -D {{ blossom_db_name }} -NBe "show tables;"
+  register: db_tables_result
+
+#capture text output, then count the rows to check
+  
+- name: Initialize the database 
+  shell: mysql -u {{ blossom_db_username }} -p{{ blossom_db_password }} {{ blossom_db_name }} < mysql.sql
+  args:
+    chdir: "{{ blossom_path }}/scripts"
+  when: db_tables_result.stdout_lines|length <= 1
+
+- name: update createPerson script
+  template: src=createPerson.php dest={{ blossom_path }}/scripts/
+  tags: blossom
+
+#TODO:
+# this requires a bootstrap.inc (formerly configuration.inc) to exist
+# havent' done that yet at this stage
+  
+# run create user (if not already initialized)
+# - name: Create first user!
+#   shell: php createPerson.php
+#   args:
+#     chdir: "{{ blossom_path }}/scripts"
+#   when: db_tables_result.stdout_lines|length <= 1
