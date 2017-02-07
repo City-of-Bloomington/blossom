@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ lang }}" lang="{{ lang }}">
 
-{{ include('/layouts/partials/head.html') }}
+{{ include('/layouts/partials/head.html.twig') }}
 
 <body class="full-width">
-    {{ include('/layouts/partials/header.html') }}
+    {{ include('/layouts/partials/header.html.twig') }}
 
 	<main>
         <div id="content-panel" class="panel">
@@ -17,7 +17,7 @@
         </div>
 	</main>
 
-	{{ include('/layouts/partials/footer.html') }}
+	{{ include('/layouts/partials/footer.html.twig') }}
 
 	{% block javascript %}
 	<script type="text/javascript" src="{{ BASE_URI }}/js/menus.js"></script>

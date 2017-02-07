@@ -1,7 +1,7 @@
 <header>
     <h1><a href="{{ BASE_URI }}">{{ APPLICATION_NAME }}</a></h1>
     <div class="utilityBar">
-    {% import "/macros/dropdown.html" as helper %}
+    {% import "/macros/dropdown.html.twig" as helper %}
 
     {% if not utilityBar is empty %}
         {% for menu in utilityBar %}

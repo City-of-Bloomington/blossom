@@ -1,8 +1,8 @@
-{% extends "/layouts/default.html" %}
+{% extends "/layouts/default.html.twig" %}
 
 {% block content %}
 <form method="post" action="{{ uri('login.login') }}">
-	<fieldset><legend><{{ _('login') }}</legend>
+	<fieldset><legend>{{ _('login') }}</legend>
 		<input name="return_url" type="hidden" value="{{ return_url }}" />
 
 		<?php
