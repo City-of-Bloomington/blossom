@@ -10,6 +10,9 @@ use Blossom\Classes\Template;
 
 class ListView extends Template
 {
+    /**
+     * @param array|Paginator $this->people An array of Person objects
+     */
     public function __construct(array $vars)
     {
         $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';

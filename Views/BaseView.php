@@ -35,11 +35,16 @@ abstract class BaseView
 
         #$this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
 
-        $loader     = new \Twig_Loader_Filesystem(APPLICATION_HOME.'/twig');
+        $templateLocations = [];
         if (defined('THEME')) {
             $dir = SITE_HOME.'/Themes/'.THEME.'/twig';
-            if (is_dir($dir)) { $loader->addPath($dir); }
+            if (is_dir($dir)) {
+                $templateLocations[] = $dir;
+            }
         }
+        $templateLocations[] = APPLICATION_HOME.'/twig';
+        $loader = new \Twig_Loader_Filesystem($templateLocations);
+
         #$this->twig = new \Twig_Environment($loader, ['cache' => SITE_HOME.'/twig']);
         $this->twig = new \Twig_Environment($loader, [
             'cache'            => false,
