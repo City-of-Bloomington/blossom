@@ -1,13 +1,12 @@
 <?php
 /**
- * @copyright 2012-2016 City of Bloomington, Indiana
+ * @copyright 2012-2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
 namespace Application\Controllers;
-use Blossom\Classes\Controller;
-use Blossom\Classes\Template;
-use Blossom\Classes\Block;
+
 use Application\Models\Person;
+use Blossom\Classes\Controller;
 
 class LoginController extends Controller
 {
