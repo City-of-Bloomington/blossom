@@ -35,6 +35,10 @@ class Field extends Helper
         if (isset(  $params['type'])) {
             switch ($params['type']) {
                 case 'date':
+                    // Until all browsers implement a date picker,
+                    // we must continute to use plain text inputs for dates.
+                    unset($params['type']);
+
                     $params['value'] = !empty($params['value']) ? date(DATE_FORMAT, $params['value']) : '';
                     $params['attr']['placeholder'] = View::translateDateString(DATE_FORMAT);
                     $renderInput = 'input';
@@ -45,6 +49,7 @@ class Field extends Helper
                 case 'radio':
                 case 'checkbox':
                 case 'person':
+                case 'file':
                     $class[]     = $params['type'];
                     $renderInput = $params['type'];
                 break;
@@ -67,7 +72,7 @@ class Field extends Helper
         $input = $this->$renderInput($params, $required, $attr);
         $for   = !empty($params['id'   ]) ? " for=\"$params[id]\""                       : '';
         $label = !empty($params['label']) ? "<dt><label$for>$params[label]</label></dt>" : '';
-        $help  = !empty($params['help' ]) ? "<p class=\"help\">$params[help]</p>"        : '';
+        $help  = !empty($params['help' ]) ? "<div class=\"help\">$params[help]</div>"    : '';
 
         return "
         <dl$classes>
@@ -231,9 +236,27 @@ class Field extends Helper
      * @param string $required  The string for the attribute 'required="true"'
      * @param string $attr      The string for any and all additional attributes
      */
+    public function file(array $params, $required=null, $attr=null)
+    {
+        return "<input type=\"file\" name=\"$params[name]\" id=\"$params[id]\" $required $attr />";
+    }
+
+    /**
+     * Parameters:
+     *
+     * label string
+     * name  string
+     * id    string
+     * value Person   Value must be a Person object
+     * type  string   HTML5 input tag type (text, email, date, etc.)
+     *
+     * @param array  $params
+     * @param string $required  The string for the attribute 'required="true"'
+     * @param string $attr      The string for any and all additional attributes
+     */
     public function person(array $params, $required=null, $attr=null)
     {
         $h = $this->template->getHelper('personChooser');
-        return $h->personChooser($params['name'], $params['value']);
+        return $h->personChooser($params['name'], $params['id'], $params['value']);
     }
 }
