@@ -37,9 +37,15 @@ abstract class BaseView
 
         $templateLocations = [];
         if (defined('THEME')) {
-            $dir = SITE_HOME.'/Themes/'.THEME.'/twig';
-            if (is_dir($dir)) {
-                $templateLocations[] = $dir;
+            $dir  = SITE_HOME.'/Themes/'.THEME;
+            $twig = $dir.'/twig';
+            $conf = $dir.'/theme_config.inc';
+            
+            if (is_dir($twig)) {
+                $templateLocations[] = $twig;
+            }
+            if (is_file($conf)) {
+                $this->vars['THEME'] = include $conf;
             }
         }
         $templateLocations[] = APPLICATION_HOME.'/twig';
