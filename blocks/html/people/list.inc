@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2009-2016 City of Bloomington, Indiana
+ * @copyright 2009-2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @param Zend\Db\ResultSet $people
  */
@@ -11,7 +11,7 @@ use Blossom\Classes\Url;
 	<h1><?= $this->translate(['person','people',2]); ?></h1>
 	<div class="tools">
 	<?php
-        $return_url = Url::current_url();
+        $return_url = Url::current_url(BASE_HOST);
         $helper = $this->template->getHelper('buttonLink');
 
         if (Person::isAllowed('people', 'add')) {
