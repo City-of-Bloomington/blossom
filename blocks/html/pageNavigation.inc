@@ -4,14 +4,14 @@
  *
  * @copyright 2007-2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @param Zend\Paginator $this->paginator
+ * @param Blossom\Classes\Paginator $this->paginator
  */
 use Blossom\Classes\Url;
+$pages = $this->paginator->getPages();
 
-if ($this->paginator->count() > 1) {
-	$pages = $this->paginator->getPages();
+if (count($pages->pagesInRange) > 1) {
 
-	$url = new Url(Url::current_url(BASE_HOST));
+	$url = new Url($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 	$url->purgeEmptyParameters();
 
 	echo '<ul class="pageNavigation">';
