@@ -1,11 +1,10 @@
 <?php
 /**
- * @copyright 2009-2016 City of Bloomington, Indiana
+ * @copyright 2009-2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
 namespace Application\Models;
 use Blossom\Classes\ActiveRecord;
-use Blossom\Classes\Database;
 use Blossom\Classes\ExternalIdentity;
 
 class Person extends ActiveRecord
@@ -31,7 +30,6 @@ class Person extends ActiveRecord
 				$this->data = $id;
 			}
 			else {
-                $pdo = Database::getConnection();
 				if (ActiveRecord::isId($id)) {
 					$sql = 'select * from people where id=?';
 				}
