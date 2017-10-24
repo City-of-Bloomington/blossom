@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2015-2016 City of Bloomington, Indiana
+ * @copyright 2015-2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
 use Blossom\Classes\Block;
@@ -18,18 +18,20 @@ $route = $ROUTES->match($p, $_SERVER);
 if ($route) {
     if (isset($route->params['controller']) && isset($route->params['action'])) {
 
+        list($resource, $permission) = explode('.', $route->name);
         $role = isset($_SESSION['USER']) ? $_SESSION['USER']->getRole() : 'Anonymous';
 
-        if (   $ZEND_ACL->hasResource($route->params['controller'])
-            && $ZEND_ACL->isAllowed($role, $route->params['controller'], $route->params['action'])) {
+        if (   $ZEND_ACL->hasResource($resource)
+            && $ZEND_ACL->isAllowed($role, $resource, $permission)) {
 
-            $controller = 'Application\\Controllers\\'.ucfirst($route->params['controller']).'Controller';
+            $controller = $route->params['controller'];
             $action     = $route->params['action'];
 
             if (!empty($route->params['id'])) {
                     $_GET['id'] = $route->params['id'];
                 $_REQUEST['id'] = $route->params['id'];
             }
+            echo "$controller::$action\n";
 
             $c = new $controller();
             $view = $c->$action($route->params);
