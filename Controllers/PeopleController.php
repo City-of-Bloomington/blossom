@@ -12,18 +12,6 @@ use Blossom\Classes\Block;
 
 class PeopleController extends Controller
 {
-    private function loadPerson($id)
-    {
-        try {
-            return new Person($id);
-        }
-        catch (\Exception $e) {
-            $_SESSION['errorMessages'][] = $e;
-            header('Location: '.self::generateUrl('people.index'));
-            exit();
-        }
-    }
-
 	public function index(array $params)
 	{
 		$table = new PeopleTable();
@@ -36,37 +24,48 @@ class PeopleController extends Controller
 
 	public function view(array $params)
 	{
-        $person = $this->loadPerson($_REQUEST['id']);
-        return new \Application\Views\People\InfoView(['person'=>$person]);
+        if (!empty($_REQUEST['id'])) {
+            try { $person = new Person($_REQUEST['id']); }
+            catch (\Exception $e) { $_SESSION['errorMessages'][] = $e; }
+        }
+        if (isset($person)) {
+            return new \Application\Views\People\InfoView(['person'=>$person]);
+        }
+        return new \Application\Views\NotFoundView();
 	}
 
 	public function update(array $params)
 	{
-        $person = !empty($_REQUEST['id'])
-            ? $this->loadPerson($_REQUEST['id'])
-            : new Person();
+        if (!empty($_REQUEST['id'])) {
+            try { $person = new Person($_REQUEST['id']); }
+            catch (\Exception $e) { $_SESSION['errorMessages'][] = $e; }
+        }
+        else { $person = new Person(); }
 
-        $return_url = !empty($_REQUEST['return_url'])
-            ? $_REQUEST['return_url']
-            : null;
+        if (isset($person)) {
+            $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? urldecode($_REQUEST['return_url']) : '';
 
-		if (isset($_POST['firstname'])) {
-			$person->handleUpdate($_POST);
-			try {
-				$person->save();
+            if (isset($_POST['firstname'])) {
+                $person->handleUpdate($_POST);
+                try {
+                    $person->save();
 
-				if (!$return_url) { $return_url = self::generateUrl('people.view', ['id'=>$person->getId()]); }
-				header("Location: $return_url");
-				exit();
-			}
-			catch (\Exception $e) {
-				$_SESSION['errorMessages'][] = $e;
-			}
-		}
+                    $return_url = !empty($_SESSION['return_url'])
+                                ? $_SESSION['return_url']
+                                : ($person->getId()
+                                    ? parent::generateUrl('people.view', ['id'=>$person->getId()])
+                                    : parent::generateUrl('people.view'));
+                    unset($_SESSION['return_url']);
+                    header("Location: $return_url");
+                    exit();
+                }
+                catch (\Exception $e) {
+                    $_SESSION['errorMessages'][] = $e;
+                }
+            }
 
-		return new \Application\Views\People\UpdateView([
-            'person'     => $person,
-            'return_url' => $return_url
-		]);
+            return new \Application\Views\People\UpdateView(['person' => $person]);
+        }
+        return new \Application\Views\NotFoundView();
 	}
 }
