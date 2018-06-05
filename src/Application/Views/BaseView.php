@@ -21,7 +21,7 @@ abstract class BaseView
 
     public function __construct(array $data=null)
     {
-        if (count($data)) { foreach ($data as $k=>$v) { $this->vars[$k] = $v; } }
+        if ($data) { foreach ($data as $k=>$v) { $this->vars[$k] = $v; } }
 
         $locale = LOCALE.'.utf8';
         $this->vars['lang'] = strtolower(substr(LOCALE, 0, 2));

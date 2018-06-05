@@ -82,5 +82,17 @@ $DIRECTORY_CONFIG = [
 //define('CAS_SERVER','cas.somewhere.org');
 //define('CAS_URI','cas');
 
+/**
+ * Skidder is a web service for error loggin.  This application supports
+ * logging errors to a Skidder server.  You must register for an application_id
+ * on the skidder server you want to post errors to.
+ */
+//$writer = new Blossom\Classes\Log\SkidderWriter('http://localhost/skidder/index', 100 );
+//$logger = new Zend\Log\Logger();
+//$logger->addWriter($writer);
+//Zend\Log\Logger::registerErrorHandler($logger);
+//Zend\Log\Logger::registerExceptionHandler($logger);
+//Zend\Log\Logger::registerFatalErrorShutdownFunction($logger);
+
 define('DATE_FORMAT', 'n/j/Y H:i:s');
 define('LOCALE', 'en_US');
