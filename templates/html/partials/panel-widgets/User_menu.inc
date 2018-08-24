@@ -15,6 +15,6 @@ if (isset($_SESSION['USER'])) {
 }
 else {
     $return_url = self::escape($_SERVER['REQUEST_URI']);
-    $url = BASE_URI.'/login';
+    $url = self::generateUri('login.cas');
     echo "<nav><a href=\"$url?return_url=$return_url\">{$this->_('login')}</a></nav>";
 }

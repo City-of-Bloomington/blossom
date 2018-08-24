@@ -17,8 +17,12 @@ $p = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $route = $ROUTES->match($p, $_SERVER);
 if ($route) {
     if (isset($route->params['controller']) && isset($route->params['action'])) {
-
-        list($resource, $permission) = explode('.', $route->name);
+        if ($route->name != 'home') {
+            list($resource, $permission) = explode('.', $route->name);
+        }
+        else {
+            list($resource, $permission) = ['home', 'index'];
+        }
         $role = isset($_SESSION['USER']) ? $_SESSION['USER']->getRole() : 'Anonymous';
 
         if (   $ZEND_ACL->hasResource($resource)
@@ -31,7 +35,6 @@ if ($route) {
                     $_GET['id'] = $route->params['id'];
                 $_REQUEST['id'] = $route->params['id'];
             }
-            echo "$controller::$action\n";
 
             $c = new $controller();
             $view = $c->$action($route->params);

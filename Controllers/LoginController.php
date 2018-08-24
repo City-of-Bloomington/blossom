@@ -6,6 +6,7 @@
 namespace Application\Controllers;
 
 use Application\Models\Person;
+use Auth0\SDK\Auth0;
 use Blossom\Classes\Controller;
 
 class LoginController extends Controller
@@ -17,47 +18,68 @@ class LoginController extends Controller
 		$this->return_url = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
 	}
 
+	public function auth0(array $params)
+	{
+        $auth0 = new Auth0([
+            'domain'        => 'bloomington.auth0.com',
+            'client_id'     => 'zADAd1zOQCoAMUqAKe1LtGLxv6HesaXR',
+            'client_secret' => 'XGSrESnb12En5TGjAoRIfqW5jvGAmBkOa5YH1ezTfuTflpHsdrxPxYPAwCRPHvxq',
+            'redirect_uri'  => 'https://aoi.bloomington.in.gov/blossom/login/auth0',
+            'audience'      => 'https://bloomington.auth0.com/userinfo',
+            'scope'         => 'openid profile'
+        ]);
+        $user = $auth0->getUser();
+        if ($user) {
+            $this->registerUser($user['name']);
+        }
+        else {
+            $auth0->login();
+        }
+	}
+
 	/**
 	 * Attempts to authenticate users via CAS
 	 */
-	public function index(array $params)
+	public function cas(array $params)
 	{
 		// If they don't have CAS configured, send them onto the application's
 		// internal authentication system
-		if (!defined('CAS')) {
-			header('Location: '.self::generateUrl('login.login').'?return_url='.$this->return_url);
-			exit();
-		}
+		if (defined('CAS')) {
+            require_once CAS.'/CAS.php';
+            \phpCAS::client(CAS_VERSION_2_0, CAS_SERVER, 443, CAS_URI, false);
+            \phpCAS::setNoCasServerValidation();
+            \phpCAS::forceAuthentication();
+            // at this step, the user has been authenticated by the CAS server
+            // and the user's login name can be read with phpCAS::getUser().
 
-		require_once CAS.'/CAS.php';
-		\phpCAS::client(CAS_VERSION_2_0, CAS_SERVER, 443, CAS_URI, false);
-		\phpCAS::setNoCasServerValidation();
-		\phpCAS::forceAuthentication();
-		// at this step, the user has been authenticated by the CAS server
-		// and the user's login name can be read with phpCAS::getUser().
+            $this->registerUser(\phpCAS::getUser());
+        }
 
-		// They may be authenticated according to CAS,
-		// but that doesn't mean they have person record
-		// and even if they have a person record, they may not
-		// have a user account for that person record.
-		try {
-			$_SESSION['USER'] = new Person(\phpCAS::getUser());
-			header("Location: {$this->return_url}");
-			exit();
-		}
-		catch (\Exception $e) {
-			$_SESSION['errorMessages'][] = $e;
-		}
+        header('Location: '.self::generateUrl('login.index').'?return_url='.$this->return_url);
+        exit();
+	}
 
-		return new \Application\Views\Login\LoginView([
-            'return_url' => $this->return_url
-		]);
+	/**
+	 * Checks for a user account with the given username.
+	 * If they exist it will register the user into the session and redirect.
+	 * Writes to $_SESSION[errorMessages] if there's a problem.
+	 */
+	private function registerUser(string $username)
+	{
+        try {
+            $_SESSION['USER'] = new Person($username);
+            header("Location: {$this->return_url}");
+            exit();
+        }
+        catch (\Exception $e) {
+            $_SESSION['errorMessages'][] = $e;
+        }
 	}
 
 	/**
 	 * Attempts to authenticate users based on AuthenticationMethod
 	 */
-	public function login(array $params)
+	public function index(array $params)
 	{
 		if (isset($_POST['username'])) {
 			try {

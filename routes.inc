@@ -12,7 +12,8 @@ $ROUTES->attach('login', '/login', function ($r) {
     $r->setValues(['controller'=>'Application\Controllers\LoginController']);
 
     $r->add('index',  '')       ->addValues(['action'=>'index' ]);
-    $r->add('login',  '/login') ->addValues(['action'=>'login' ]);
+    $r->add('auth0',  '/auth0') ->addValues(['action'=>'auth0' ]);
+    $r->add('cas',    '/cas')   ->addValues(['action'=>'cas'   ]);
     $r->add('logout', '/logout')->addValues(['action'=>'logout']);
 });
 
