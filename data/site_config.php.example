@@ -1,0 +1,121 @@
+<?php
+/**
+ * @copyright 2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ */
+declare (strict_types=1);
+define('APPLICATION_NAME','application');
+
+/**
+ * URL Generation settings
+ *
+ * Do NOT use trailing slashes
+ *
+ * If your site is being proxied, change BASE_HOST to the hostname
+ * used for the outside world.
+ */
+define('BASE_URI' , '/application');
+#define('BASE_HOST', isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+#                        ? $_SERVER['HTTP_X_FORWARDED_HOST']
+#                        : $_SERVER['SERVER_NAME']);
+define('BASE_HOST', 'localhost');
+define('BASE_URL' , "$_SERVER[REQUEST_SCHEME]://".BASE_HOST.BASE_URI);
+
+/**
+ * Specify the theme directory
+ *
+  * Remember to create a symbolic link in public/css to the theme CSS
+  * that you declare here.
+ *
+ * A theme can consist of templates, blocks which will override core.
+ * The current theme's screen.css will be included in the HTML head.
+ */
+#define('THEME', 'COB');
+
+/**
+ * Database Setup
+ */
+$DATABASES = [
+    'default' => [
+        'driver'   => 'mysql',
+        'host'     => 'localhost',
+        'dbname'   => 'application',
+        'schema'   => '',
+        'username' => 'application',
+        'password' => 'password',
+        'options'  => []
+    ]
+];
+
+/**
+ * Authentication Configuration
+ *
+ * This supports doing user authentication from multiple external
+ * directories, such as LDAP or ADS. This is required since city staff
+ * are in a seperate LDAP directory from public user accounts.
+ * Classes that implement AuthenticationInterface should have an entry here.
+ *
+ * @see Domain\Auth
+ */
+// Example for ADS style authentication
+$AUTHENTICATION_METHODS = [
+//  'ActiveDirectory' => [
+//      'classname'          => 'Site\Employee',
+//      'server'             => 'ldaps://example.org:636',
+//      'base_dn'            => 'OU=Department,DC=example,DC=org',
+//      'username_attribute' => 'CN',
+//      'user_binding'       => '{username}@example.org',
+//      'admin_binding'      => 'admin@example.org',
+//      'admin_pass'         => 'password'
+//  ]
+//
+// Example for LDAP style authentication
+//  'Employee' => [
+//      'classname'          => 'Site\Employee',
+//      'server'             => 'ldaps://example.org:636',
+//      'base_dn'            => 'OU=People,DC=example,DC=org',
+//      'username_attribute' => 'uid',
+//      'user_binding'       => 'uid={username},OU=People,DC=example,DC=org',
+//      'admin_binding'      => 'uid=admin,OU=People,DC=example,DC=org',
+//      'admin_pass'         => 'password'
+//  ]
+// Example for Directory webservice
+  'Employee' => [
+      'classname' => 'Site\Employee',
+      'server'    => 'https://localhost/directory',
+  ]
+];
+
+/**
+ * CAS authentication http://www.jasig.org/cas
+ *
+ * https://wiki.jasig.org/display/CASC/phpCAS
+ *
+ * phpCAS is a PHP library for handling the calls to the CAS service
+ * It is the official library, part of the Jasig CAS project
+ */
+//define('CAS', APPLICATION_HOME.'/vendor/jasig/phpcas/source');
+//define('CAS_SERVER','cas.somewhere.org');
+//define('CAS_URI','cas');
+
+define('DATE_FORMAT',    'n/j/Y');
+define('TIME_FORMAT',    'g:i a');
+define('DATETIME_FORMAT', DATE_FORMAT.' '.TIME_FORMAT);
+define('LOCALE', 'en_US');
+
+define('PAGINATION_ITEMS_PER_PAGE', 20);
+
+$DEFAULTS = [
+];
+
+/**
+ * Graylog is a centralized log manager
+ *
+ * Uncomment to enable Graylog support.
+ *
+ * This application supports sending errors and exceptions to a graylog instance.
+ * This is handy for notifying developers of a problem before users notice.
+ ** @see https://graylog.org
+ */
+//define('GRAYLOG_DOMAIN', 'graylog.example.org');
+//define('GRAYLOG_PORT',   12201);

@@ -1,28 +1,35 @@
 <?php
 /**
- * @copyright 2007-2016 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
- * @param Zend\Db\Sql\Select $users
+ * @copyright 2007-2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @param array $this->users
  */
-use Application\Models\Person;
 ?>
 <section>
-	<h1><?= $this->_(['user','users',2]); ?></h1>
-	<div class="tools">
-	<?php
-        $helper = $this->template->getHelper('buttonLink');
-        if (Person::isAllowed('users')) {
-            echo $helper->buttonLink(self::generateUri('users.update'), $this->_('user_add'), 'add');
-        }
-	?>
-	</div>
+    <header>
+        <h1><?= $this->_(['user', 'users', count($this->users)]); ?></h1>
+        <div class="tools">
+        <?php
+            $helper = $this->template->getHelper('buttonLink');
+            $userCanEdit   = parent::isAllowed('users', 'update');
+            $userCanDelete = parent::isAllowed('users', 'delete');
+            if ($userCanEdit) {
+                echo $helper->buttonLink(
+                    self::generateUri('users.update'),
+                    $this->_('user_add'),
+                    'add'
+                );
+            }
+        ?>
+        </div>
+    </header>
+
 	<table>
 		<thead>
 			<tr><th></th>
 				<th><?= $this->_('username'); ?></th>
 				<th><?= $this->_('name'); ?></th>
-				<th><?= $this->_('authenticationMethod'); ?></th>
+				<th><?= $this->_('authentication_method'); ?></th>
 				<th><?= $this->_('role'); ?></th>
 				<th></th>
 			</tr>
@@ -30,28 +37,33 @@ use Application\Models\Person;
 		<tbody>
 		<?php
 			foreach ($this->users as $user) {
-				$editButton = '';
+				$editButton   = '';
 				$deleteButton = '';
-				if (Person::isAllowed('users')) {
+				if ($userCanEdit) {
 					$editButton = $helper->buttonLink(
-                        self::generateUri('users.update', ['id'=>$user->getId()]),
+                        self::generateUri('users.update', ['id'=>$user->id]),
 						$this->_('user_edit'),
 						'edit'
 					);
+                }
+                if ($userCanDelete) {
 					$deleteButton = $helper->buttonLink(
-                        self::generateUri('users.delete', ['id'=>$user->getId()]),
+                        self::generateUri('users.delete', ['id'=>$user->id]),
 						$this->_('user_delete'),
 						'delete'
 					);
 				}
 
-				$name = self::escape($user->getFullname());
+				$username = parent::escape($user->username);
+				$name     = parent::escape("{$user->firstname} {$user->lastname}");
+				$role     = parent::escape($user->role);
+				$auth     = parent::escape($user->authentication_method);
 				echo "
 				<tr><td>$editButton</td>
-					<td>{$user->getUsername()}</td>
+					<td>{$user->username}</td>
 					<td>$name</td>
-					<td>{$user->getAuthenticationMethod()}</td>
-					<td>{$user->getRole()}</td>
+					<td>$auth</td>
+					<td>$role</td>
 					<td>$deleteButton</td>
 				</tr>
 				";

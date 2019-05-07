@@ -1,48 +1,28 @@
 <?php
 /**
- * @copyright 2009-2016 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @param Zend\Db\ResultSet $people
+ * @copyright 2009-2019 City of Bloomington, Indiana
+ * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @param array  $this->people
  */
-use Application\Models\Person;
-use Blossom\Classes\Url;
 ?>
-<section>
-	<h1><?= $this->translate(['person','people',2]); ?></h1>
-	<div class="tools">
-	<?php
-        $return_url = Url::current_url();
-        $helper = $this->template->getHelper('buttonLink');
+<table>
+    <thead>
+        <tr><th><?= $this->_('name' ); ?></th>
+            <th><?= $this->_('email'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+        foreach ($this->people as $person) {
+            $name = parent::escape("{$person->firstname} {$person->lastname}");
+            $url  = parent::generateUri('people.view', ['id'=>$person->id]);
 
-        if (Person::isAllowed('people', 'add')) {
-            echo $helper->buttonLink(
-                self::generateUri('people.update')."?return_url=$return_url",
-                $this->translate('person_add'),
-                'add'
-            );
+            echo "
+            <tr><td><a href=\"$url\">$name</a></td>
+                <td><a href=\"$url\">{$person->email}</a></td>
+            </tr>
+            ";
         }
-	?>
-	</div>
-	<table>
-		<thead>
-			<tr><th><?= $this->_('username'); ?></th>
-				<th><?= $this->_('name'); ?></th>
-				<th><?= $this->_(['email','emails',1]); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php
-			foreach ($this->people as $person) {
-				$name = self::escape($person->getFullname());
-				$url = self::generateUri('people.view', ['id'=>$person->getId()]);
-				echo "
-				<tr><td><a href=\"$url\">{$person->getUsername()}</a></td>
-					<td><a href=\"$url\">$name</a></td>
-					<td><a href=\"$url\">{$person->getEmail()}</a></td>
-				</tr>
-				";
-			}
-		?>
-		</tbody>
-	</table>
-</section>
+    ?>
+    </tbody>
+</table>

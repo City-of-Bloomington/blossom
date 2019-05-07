@@ -2,13 +2,12 @@
 /**
  * Provides markup for button links
  *
- * @copyright 2014-2015 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ * @copyright 2014-2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
-namespace Application\Templates\Helpers;
+namespace Web\Templates\Helpers;
 
-use Blossom\Classes\Helper;
+use Web\Helper;
 
 class ButtonLink extends Helper
 {

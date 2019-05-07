@@ -1,38 +1,31 @@
 <?php
 /**
- * @copyright 2009-2016 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ * @copyright 2009-2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  * @param Person $this->person
+ * @param string $this->title
  */
-$fields = array('firstname','lastname','email');
-foreach ($fields as $field) {
-	$get = 'get'.ucfirst($field);
-	$$field = self::escape($this->person->$get());
+use Domain\People\Entities\Person;
+
+$fields = ['firstname','lastname','email'];
+foreach ($fields as $f) {
+    $$f = parent::escape($this->person->$f);
 }
-$title = $this->person->getId() ? self::escape('Edit '.$this->person->getFirstname()) : 'Add Someone';
 ?>
 <section>
-	<h1><?= $title; ?></h1>
+    <header>
+        <h1><?= $this->title; ?></h1>
+    </header>
+
 	<form method="post" action="<?= self::generateUri('people.update'); ?>">
 		<fieldset><legend><?= $this->_('person_info'); ?></legend>
-			<input name="id" type="hidden" value="<?= $this->person->getId(); ?>" />
+			<input name="id" type="hidden" value="<?= $this->person->id; ?>" />
+            <?php
+                $field = $this->template->getHelper('field');
+                echo $field->field(['name'=>'firstname', 'id'=>'firstname', 'label'=>$this->_('firstname'), 'value'=>$firstname, 'required'=>true]);
+                echo $field->field(['name'=>'lastname',  'id'=>'lastname',  'label'=>$this->_('lastname'),  'value'=>$lastname,  'required'=>true]);
+                echo $field->field(['name'=>'email',     'id'=>'email',     'label'=>$this->_('email'),     'value'=>$email, 'type'=>'email']);
 
-            <dl><dt><label  for="firstname"><?= $this->_('firstname'); ?></label></dt>
-                <dd><input name="firstname" id="firstname" value="<?= $firstname; ?>"
-                        required="required" inputmode="latin-name" />
-                </dd>
-            </dl>
-
-            <dl><dt><label  for="lastname"><?= $this->_('lastname'); ?></label></dt>
-                <dd><input name="lastname" id="lastname" value="<?= $lastname; ?>"
-                        required="required" inputmode="latin-name" />
-                </dd>
-            </dl>
-
-            <dl><dt><label  for="email"><?= $this->_(['email', 'emails', 1]); ?></label></dt>
-                <dd><input name="email" id="email" type="email" value="<?= $email; ?>" /></dd>
-            </dl>
-			<?php
 				$h = $this->template->getHelper('saveAndCancelButtons');
 				echo $h->saveAndCancelButtons(BASE_URI.'/people');
 			?>
