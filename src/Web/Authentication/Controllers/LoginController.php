@@ -6,30 +6,33 @@
 declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
+use Web\Authentication\Views\LoginView;
+
 use Domain\Auth\AuthInterface;
-use Web\View;
 
 class LoginController
 {
-    private $this->auth;
+    private $auth;
 
     public function __construct(AuthInterface $authInterface)
     {
         $this->auth = $authInterface;
     }
 
-    public function __invoke(): View
+    public function __invoke(): LoginView
     {
+		$return_url = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
+
 		if (isset($_POST['username'])) {
 			try {
                 $_SESSION['USER'] = $this->auth->authenticate($_POST['username'], $_POST['password']);
-                header('Location: '.$this->return_url);
+                header("Location: $return_url");
                 exit();
 			}
 			catch (\Exception $e) {
 				$_SESSION['errorMessages'][] = $e;
 			}
 		}
-		return new LoginView(['return_url'=>$this->return_url]);
+		return new LoginView($return_url);
     }
 }
