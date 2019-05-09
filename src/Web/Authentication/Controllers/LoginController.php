@@ -7,10 +7,11 @@ declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
 use Domain\Auth\AuthInterface;
+use Web\View;
 
 class LoginController
 {
-    $this->auth;
+    private $this->auth;
 
     public function __construct(AuthInterface $authInterface)
     {

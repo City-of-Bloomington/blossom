@@ -7,6 +7,7 @@ declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
 use Domain\Auth\AuthInterface;
+use Web\View;
 
 class CasController
 {
@@ -47,5 +48,7 @@ class CasController
 
         header("Location: $return_url");
         exit();
+
+        return new \Web\Views\ForbiddenView();
     }
 }
