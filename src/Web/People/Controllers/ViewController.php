@@ -6,20 +6,26 @@
 declare (strict_types=1);
 namespace Web\People\Controllers;
 
-use Web\Controller;
 use Web\People\Views\InfoView;
 use Web\View;
 
+use Domain\People\UseCases\Info\Info;
 use Domain\People\UseCases\Info\InfoRequest;
 
 class ViewController extends Controller
 {
+    private $info;
+
+    public function __construct(Info $info)
+    {
+        $this->info = $info;
+    }
+
     public function __invoke(array $params): View
     {
         if (!empty($_REQUEST['id'])) {
-            $info = $this->di->get('Domain\People\UseCases\Info\Info');
             $req  = new InfoRequest((int)$_REQUEST['id']);
-            $res  = $info($req);
+            $res  = ($this->info)($req);
             if ($res->person) {
                 return new InfoView($res);
             }

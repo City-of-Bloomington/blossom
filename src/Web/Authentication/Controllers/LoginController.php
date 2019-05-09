@@ -6,13 +6,19 @@
 declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
-use Web\Controller;
+use Domain\Auth\AuthInterface;
 
-class LoginController extends Controller
+class LoginController
 {
+    $this->auth;
+
+    public function __construct(AuthInterface $authInterface)
+    {
+        $this->auth = $authInterface;
+    }
+
     public function __invoke(): View
     {
-		$auth = $this->di->get('Web\Authentication\AuthenticationService');
 		if (isset($_POST['username'])) {
 			try {
                 $_SESSION['USER'] = $this->auth->authenticate($_POST['username'], $_POST['password']);

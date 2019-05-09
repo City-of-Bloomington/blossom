@@ -6,15 +6,25 @@
 declare (strict_types=1);
 namespace Web\People\Controllers;
 
-use Web\Controller;
 use Web\People\Views\UpdateView;
 use Web\View;
 
 use Domain\People\Entities\Person;
+use Domain\People\UseCases\Info\Info;
+use Domain\People\UseCases\Info\InfoRequest;
+use Domain\People\UseCases\Update\Update;
 use Domain\People\UseCases\Update\UpdateRequest;
 
-class UpdateController extends Controller
+class UpdateController
 {
+    private $update;
+    private $info;
+
+    public function __construct(Update $update)
+    {
+        $this->update = $update;
+    }
+
     public function __invoke(array $params): View
     {
         if (!empty($_REQUEST['return_url'])) {
@@ -22,9 +32,8 @@ class UpdateController extends Controller
         }
 
         if (isset($_POST['firstname'])) {
-            $update   = $this->di->get('Domain\People\UseCases\Update\Update');
             $request  = new UpdateRequest($_POST);
-            $response = $update($request);
+            $response = ($this->update)($request);
             if (!count($response->errors)) {
                 $return_url = !empty($_SESSION['return_url'])
                             ? $_SESSION['return_url']
@@ -36,10 +45,9 @@ class UpdateController extends Controller
             $person = new Person((array)$request);
         }
         elseif (!empty($_REQUEST['id'])) {
-            $info = $this->di->get('Domain\People\UseCases\Info\Info');
             $req  = new InfoRequest((int)$_REQUEST['id']);
             try {
-                $res    = $info($req);
+                $res    = ($this->info)($req);
                 $person = $res->person;
             }
             catch (\Exception $e) {

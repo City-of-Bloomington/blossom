@@ -8,7 +8,7 @@ namespace Web;
 
 use Web\View;
 
-class HomeController extends Controller
+class HomeController
 {
     public function __invoke(array $params): View
     {

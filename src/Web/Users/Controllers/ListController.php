@@ -6,20 +6,26 @@
 declare (strict_types=1);
 namespace Web\Users\Controllers;
 
-use Web\Controller;
 use Web\Users\Views\ListView;
 
+use Domain\Users\UseCases\Search\Search;
 use Domain\Users\UseCases\Search\SearchRequest;
 
-class ListController extends Controller
+class ListController
 {
     const ITEMS_PER_PAGE = 20;
-    
+
+    private $search;
+
+    public function __construct(Search $search)
+    {
+        $this->search = $search;
+    }
+
     public function __invoke(array $params): ListView
     {
-		$page   =  !empty($_GET['page']) ? (int)$_GET['page'] : 1;
-        $search = $this->di->get('Domain\Users\UseCases\Search\Search');
-        $res    = $search(new SearchRequest($_GET, null, self::ITEMS_PER_PAGE, $page));
+		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
+        $res  = ($this->search)(new SearchRequest($_GET, null, self::ITEMS_PER_PAGE, $page));
 
         return new ListView($res, self::ITEMS_PER_PAGE, $page);
     }

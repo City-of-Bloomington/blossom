@@ -6,9 +6,7 @@
 declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
-use Web\Controller;
-
-class LogoutController extends Controller
+class LogoutController
 {
     public function __invoke()
     {

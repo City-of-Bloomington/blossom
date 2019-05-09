@@ -15,9 +15,8 @@ $url   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $route = $ROUTES->match($url, $_SERVER);
 if ($route) {
     if (isset($route->params['controller'])) {
-        $class      = $route->params['controller'];
-        $controller = new $class($DI);
-       
+        $controller = $DI->get($route->params['controller']);
+
         // Permissions are based on the route names
         list($resource, $permission) = explode('.', $route->name);
         $role = isset($_SESSION['USER']) ? $_SESSION['USER']->role : 'Anonymous';

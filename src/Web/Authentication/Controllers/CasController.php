@@ -6,17 +6,15 @@
 declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
-use Aura\Di\Container;
-use Web\Controller;
+use Domain\Auth\AuthInterface;
 
-class CasController extends Controller
+class CasController
 {
     private $auth;
 
-    public function __construct(Container $container)
+    public function __construct(AuthInterface $authInterface)
     {
-        parent::__construct($container);
-        $this->auth = $container->get('Web\Authentication\AuthenticationService');
+        $this->auth = $authInterface;
     }
 
     public function __invoke(): View

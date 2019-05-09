@@ -6,19 +6,25 @@
 declare (strict_types=1);
 namespace Web\Users\Controllers;
 
-use Web\Controller;
 use Web\View;
 
+use Domain\Users\UseCases\Delete\Delete;
 use Domain\Users\UseCases\Delete\DeleteRequest;
 
-class UpdateController extends Controller
+class UpdateController
 {
+    private $delete;
+
+    public function __construct(Delete $delete)
+    {
+        $this->delete = $delete;
+    }
+
     public function __invoke(array $params): View
     {
         if (!empty($_REQUEST['id'])) {
-            $delete = $this->di->get('Domain\Users\UseCases\Delete\Delete');
-            $req    = new DeleteRequest((int)$_REQUEST['id']);
-            $res    = $delete($req);
+            $req = new DeleteRequest((int)$_REQUEST['id']);
+            $res = ($this->delete)($req);
             if (count($res->errors)) {
                 $_SESSION['errorMessages'] = $res->errors;
             }

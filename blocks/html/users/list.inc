@@ -29,7 +29,7 @@
 			<tr><th></th>
 				<th><?= $this->_('username'); ?></th>
 				<th><?= $this->_('name'); ?></th>
-				<th><?= $this->_('authentication_method'); ?></th>
+				<th><?= $this->_('authenticationMethod'); ?></th>
 				<th><?= $this->_('role'); ?></th>
 				<th></th>
 			</tr>
@@ -57,7 +57,7 @@
 				$username = parent::escape($user->username);
 				$name     = parent::escape("{$user->firstname} {$user->lastname}");
 				$role     = parent::escape($user->role);
-				$auth     = parent::escape($user->authentication_method);
+				$auth     = parent::escape($user->authenticationMethod);
 				echo "
 				<tr><td>$editButton</td>
 					<td>{$user->username}</td>

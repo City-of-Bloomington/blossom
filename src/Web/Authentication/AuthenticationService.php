@@ -48,7 +48,6 @@ class AuthenticationService implements AuthInterface
                     return ($user->password == self::password_hash($password))
                         ? $user
                         : null;
-                    }
                 break;
 
                 default:
