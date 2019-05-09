@@ -6,14 +6,23 @@
 declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
+use Aura\Di\Container;
 use Web\Controller;
 
 class CasController extends Controller
 {
+    private $auth;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+        $this->auth = $container->get('Web\Authentication\AuthenticationService');
+    }
+
     public function __invoke(): View
     {
 		$return_url = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
-		
+
 		// If they don't have CAS configured, send them onto the application's
 		// internal authentication system
 		if (!defined('CAS')) {

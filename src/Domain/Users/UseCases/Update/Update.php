@@ -1,12 +1,12 @@
 <?php
 /**
- * @copyright 2018 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ * @copyright 2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
 namespace Domain\Users\UseCases\Update;
 
-use Domain\Auth\AuthenticationService;
+use Domain\Auth\AuthInterface;
 use Domain\Users\Entities\User;
 use Domain\Users\DataStorage\UsersRepository;
 
@@ -15,7 +15,7 @@ class Update
     private $repo;
     private $auth;
 
-    public function __construct(UsersRepository $repository, AuthenticationService $auth)
+    public function __construct(UsersRepository $repository, AuthInterface $auth)
     {
         $this->repo = $repository;
         $this->auth = $auth;

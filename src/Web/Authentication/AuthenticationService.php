@@ -6,10 +6,12 @@
 declare (strict_types=1);
 namespace Web\Authentication;
 
+use Domain\Auth\AuthInterface;
+use Domain\Auth\Identity;
 use Domain\Users\Entities\User;
 use Domain\Users\DataStorage\UsersRepository;
 
-class AuthenticationService
+class AuthenticationService implements AuthInterface
 {
     private $repo;
     private $config;
@@ -26,7 +28,7 @@ class AuthenticationService
         return $user ? $user : null;
     }
 
-    public function externalIdentify(string $method, string $username): ?ExternalIdentity
+    public function externalIdentify(string $method, string $username): ?Identity
     {
         $o = $this->loadAuthenticationMethod($method);
         return $o->identify($username);
@@ -39,20 +41,19 @@ class AuthenticationService
      */
     public function authenticate(string $username, string $password): ?User
     {
-        $row = $this->repo->loadByUsername($username);
-        if ($row && !empty($row['authentication_method'])) {
-            switch ($row['authentication_method']) {
+        $user = $this->repo->loadByUsername($username);
+        if ($user && $user->authentcationMethod) {
+            switch ( $user->authentcationMethod) {
                 case 'local':
-                    if ($row['password'] == self::password_hash($password)) {
-                        return new User($row);
+                    return ($user->password == self::password_hash($password))
+                        ? $user
+                        : null;
                     }
                 break;
 
                 default:
-                    $o = $this->loadAuthenticationMethod($row['authentication_method']);
-                    if ($o->authenticate($username, $password)) {
-                        return new User($row);
-                    }
+                    $o = $this->loadAuthenticationMethod($user->authentcationMethod);
+                    return $o->authenticate($username, $password);
             }
         }
     }

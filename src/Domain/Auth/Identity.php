@@ -4,9 +4,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Authentication;
+namespace Domain\Auth;
 
-class ExternalIdentity
+class Identity
 {
     public $username;
     public $firstname;

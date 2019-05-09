@@ -16,7 +16,7 @@ class UpdateRequest
     public $username;
     public $role;
     public $password;
-    public $authentication_method;
+    public $authenticationMethod;
 
     public function __construct(?array $data=null)
     {
@@ -29,7 +29,7 @@ class UpdateRequest
             if (!empty($data['username' ])) { $this->username  = $data['username' ]; }
             if (!empty($data['password' ])) { $this->password  = $data['password' ]; }
             if (!empty($data['role'     ])) { $this->role      = $data['role'     ]; }
-            if (!empty($data['authentication_method'])) { $this->authentication_method = $data['authentication_method']; }
+            if (!empty($data['authenticationMethod'])) { $this->authenticationMethod = $data['authenticationMethod']; }
         }
     }
 }

@@ -10,13 +10,14 @@ use Web\Controller;
 use Web\Users\Views\UpdateView;
 use Web\View;
 
+use Domain\Users\UseCases\Info\InfoRequest;
 use Domain\Users\UseCases\Update\UpdateRequest;
 
 class UpdateController extends Controller
 {
     const DEFAULT_ROLE   = 'Public';
     const DEFAULT_AUTH   = 'local';
-    
+
     public function __invoke(array $params): View
     {
         if (isset($_POST['firstname'])) {
@@ -45,6 +46,6 @@ class UpdateController extends Controller
         }
         else { $user = new User(); }
 
-        return new Views\UpdateView($user, isset($response) ? $response : null);
+        return new UpdateView($user, isset($response) ? $response : null);
     }
 }

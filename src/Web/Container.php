@@ -48,6 +48,7 @@ foreach(['Info', 'Load', 'Search', 'Update'] as $a) {
 }
 
 // Users
+$DI->params['Domain\Users\UseCases\Update\Update']['auth'] = $DI->lazyGet('Web\Authentication\AuthenticationService');
 foreach (['Delete', 'Info', 'Search', 'Update'] as $a) {
     $DI->params[ "Domain\\Users\\UseCases\\$a\\$a"]["repository"] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
     $DI->set(    "Domain\\Users\\UseCases\\$a\\$a",
