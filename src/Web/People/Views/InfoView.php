@@ -8,8 +8,10 @@ namespace Web\People\Views;
 
 use Web\Block;
 use Web\Template;
+use Web\Url;
 
 use Domain\People\UseCases\Info\InfoResponse;
+use Domain\People\Entities\Person;
 
 class InfoView extends Template
 {
@@ -24,8 +26,29 @@ class InfoView extends Template
         $person = $response->person;
 
         $this->vars['title'] = parent::escape("{$person->firstname} {$person->lastname}");
-		$this->blocks = [
-            new Block('people/info.inc', ['person'=>$person])
-        ];
+        if ($this->outputFormat == 'html') {
+            $this->blocks = [
+                new Block('people/info.inc', ['person'=>$person])
+            ];
+        }
+        else {
+            $self  = Url::current_url(BASE_HOST);
+            $model = (array)$person;
+            $model['_links'   ] = self::linksForPerson($person);
+            $model['_embedded'] = ['errors' => $response->errors];
+
+
+            $this->blocks = [
+                new Block('people/info.inc', ['response'=>$model])
+            ];
+        }
+    }
+
+    private static function linksForPerson(Person $person): array
+    {
+        $self = Url::current_url(BASE_HOST);
+        return parent::isAllowed('people', 'update')
+            ? ['self'=>$self, 'edit' => parent::generateUrl('people.update', ['id'=>$person->id])]
+            : ['self'=>$self ];
     }
 }

@@ -12,7 +12,7 @@ use Web\View;
 use Domain\People\UseCases\Info\Info;
 use Domain\People\UseCases\Info\InfoRequest;
 
-class ViewController extends Controller
+class ViewController
 {
     private $info;
 
@@ -24,8 +24,7 @@ class ViewController extends Controller
     public function __invoke(array $params): View
     {
         if (!empty($_REQUEST['id'])) {
-            $req  = new InfoRequest((int)$_REQUEST['id']);
-            $res  = ($this->info)($req);
+            $res  = ($this->info)((int)$_REQUEST['id']);
             if ($res->person) {
                 return new InfoView($res);
             }
