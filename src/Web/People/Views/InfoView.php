@@ -24,17 +24,24 @@ class InfoView extends Template
             $_SESSION['errorMessages'] = $response->errors;
         }
         $person = $response->person;
+        $links  = self::linksForPerson($person);
 
         $this->vars['title'] = parent::escape("{$person->firstname} {$person->lastname}");
+
         if ($this->outputFormat == 'html') {
+            unset($links['self']);
             $this->blocks = [
-                new Block('people/info.inc', ['person'=>$person])
+                new Block('people/info.inc', [
+                    'name'   => parent::escape($person),
+                    'email'  => parent::escape($person->email),
+                    'links'  => $links
+                ])
             ];
         }
         else {
             $self  = Url::current_url(BASE_HOST);
             $model = (array)$person;
-            $model['_links'   ] = self::linksForPerson($person);
+            $model['_links'   ] = $links;
             $model['_embedded'] = ['errors' => $response->errors];
 
 
