@@ -1,31 +1,29 @@
 <?php
 /**
- * @copyright 2015 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ * @copyright 2015-2020 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
-use Application\Models\Person;
+declare (strict_types=1);
 
-$links = '';
-if (Person::isAllowed('users')) {
-    $routes = [
-        'people' => 'person',
-        'users'  => 'user'
-    ];
-    foreach ($routes as $plural=>$singular) {
-        $requiredAction = 'index';
-        if (Person::isAllowed($plural, $requiredAction)) {
-            $url = self::generateUri("$plural.index");
-            $links.= "<a href=\"$url\">{$this->_([$singular, $plural, 2])}</a>";
-        }
+$links  = '';
+$routes = [
+    'people'        => 'person',
+    'users'         => 'user'
+];
+foreach ($routes as $plural=>$singular) {
+    if (parent::isAllowed($plural, 'index')) {
+        $url   = parent::generateUri("$plural.index");
+        $label = $this->_([$singular, $plural, 2]);
+        $links.= "<a href=\"$url\">$label</a>";
     }
 }
-
 if ($links) {
     echo "
-    <nav class=\"dropdown\">
-        <button class=\"launcher\" id=\"adminMenu\"  aria-haspopup=\"true\" aria-expanded=\"false\">{$this->_('admin')}</button>
-        <div class=\"links\" aria-labeledby=\"adminMenu\">$links</div>
+    <nav>
+        <header>
+            <h2>{$this->_('admin')}</h2>
+        </header>
+        $links
     </nav>
     ";
 }

@@ -26,10 +26,8 @@ or for development:
 ```
 git clone https://github.com/City-of-Bloomington/ansible-role-linux.git ./roles/City-of-Bloomington.linux
 git clone https://github.com/City-of-Bloomington/ansible-role-apache.git ./roles/City-of-Bloomington.apache
+git clone https://github.com/City-of-Bloomington/ansible-role-mysql.git ./roles/City-of-Bloomington.mysql
 git clone https://github.com/City-of-Bloomington/ansible-role-php.git ./roles/City-of-Bloomington.php
-git clone https://github.com/City-of-Bloomington/ansible-role-fn1.git ./roles/City-of-Bloomington.fn1
-git clone https://github.com/geerlingguy/ansible-role-composer ./roles/geerlingguy.composer
-git clone https://github.com/geerlingguy/ansible-role-mysql ./roles/geerlingguy.mysql
 etc
 ```
 
@@ -38,29 +36,18 @@ Variables
 
 Variables are set and configured in a few different places. Update these to match your needs:
 
-  -  roles/cob.blossom/vars/main.yml
-  -  group_vars/blossom.yml
-
-Vaulting (encrypting) any sensitive information is recommended. These variables should be in:
-
-group_vars/vault/blossom.yml
+  -  group_vars/blossom/public.yml
+  -  group_vars/blossom/vault.yml
 
 More information about vaulting passwords is available here:
 
 https://github.com/City-of-Bloomington/system-playbooks/tree/master/group_vars
 
 
-Templates
---------------
-
-It may be necessary to update the configuration file settings in the templates:
-
-roles/cob.blossom/templates/*
-
 Run the Playbook
 -----------------
 
-    ansible-playbook playbooks/blossom.yml -i hosts.txt --ask-become-pass --ask-vault-pass
+    ansible-playbook deploy.yml -i /path/to/inventory --limit=blossom
 
 Additional Information
 -------------------------
@@ -75,9 +62,9 @@ https://github.com/city-of-bloomington
 License
 -------
 
-Copyright (c) 2016 City of Bloomington, Indiana
+Copyright (c) 2016-2020 City of Bloomington, Indiana
 
-This material is avialable under the GNU General Public License (GLP) v3.0:
-https://www.gnu.org/licenses/gpl.txt
+This material is avialable under the GNU Affero General Public License (GLP):
+https://www.gnu.org/licenses/agpl-3.0.txt
 
 

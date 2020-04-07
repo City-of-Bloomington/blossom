@@ -4,9 +4,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-namespace Application\Templates\Helpers;
+namespace Web\Templates\Helpers;
 
-use Blossom\Classes\Helper;
+use Web\Helper;
 
 class SaveAndCancelButtons extends Helper
 {

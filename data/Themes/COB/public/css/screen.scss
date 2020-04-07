@@ -1,0 +1,20 @@
+@import 'scss/reset';
+@import 'scss/vars';
+
+@import 'scss/html-elements';
+@import 'scss/layout';
+@import 'scss/header';
+
+#panel-one {
+    nav { border: 1px solid black; margin-bottom: $size-gutter; }
+    h2  { font-size: $font-size-normal; }
+    a   { display: block; }
+}
+
+#errorMessages {
+    background-color: $color-error;
+}
+
+.modified {
+    th, td { background-color: $color-alert; }
+}

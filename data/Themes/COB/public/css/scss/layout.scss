@@ -1,0 +1,11 @@
+main {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+
+    #panel-one     { grid-column: 1; grid-row: 1; }
+    #content-panel { grid-column: 2; grid-row: 1; }
+
+    .panel {
+        margin: $size-gutter;
+    }
+}

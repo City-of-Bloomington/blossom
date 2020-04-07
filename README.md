@@ -1,7 +1,7 @@
 blossom
 =======
 
-A PHP 5 scaffolding for building web applications and services.
+A skeleton for building web applications and services in PHP.
 
 ## Features
 Internationalization and Localization ready
@@ -16,7 +16,9 @@ Speaking of themes.  All look and feel is provided via drop-in themes.  Any core
 
 ## Install
 
+### Ansible
 Ansible scripts are available to assist with setting up a new instance. These also provide a description of requirements, in case you need to install using a different mechanism:
 
 [Install Documentation](ansible/)
 
+### Docker

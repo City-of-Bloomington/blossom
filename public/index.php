@@ -1,49 +1,70 @@
 <?php
 /**
- * @copyright 2015 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
- * @author Cliff Ingham <inghamn@bloomington.in.gov>
+ * @copyright 2015-2019 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
-use Blossom\Classes\Block;
-use Blossom\Classes\Template;
+/**
+ * Grab a timestamp for calculating process time
+ */
+declare (strict_types=1);
+use Web\Authentication\Auth;
 
-include '../configuration.inc';
+$startTime = microtime(true);
 
-// Create the default Template
-$template = !empty($_REQUEST['format'])
-	? new Template('default',$_REQUEST['format'])
-	: new Template('default');
+include '../src/Web/bootstrap.php';
+
 
 $p = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $route = $ROUTES->match($p, $_SERVER);
 if ($route) {
-    if (isset($route->params['controller']) && isset($route->params['action'])) {
-
-        $role = isset($_SESSION['USER']) ? $_SESSION['USER']->getRole() : 'Anonymous';
-
-        if (   $ZEND_ACL->hasResource($route->params['controller'])
-            && $ZEND_ACL->isAllowed($role, $route->params['controller'], $route->params['action'])) {
-
-            $controller = 'Application\\Controllers\\'.ucfirst($route->params['controller']).'Controller';
-            $action     = $route->params['action'];
-
-            if (!empty($route->params['id'])) {
-                    $_GET['id'] = $route->params['id'];
-                $_REQUEST['id'] = $route->params['id'];
+    if (isset($route->params['controller'])) {
+        $controller = $route->params['controller'];
+        $c = new $controller($DI);
+        if (is_callable($c)) {
+            $user = Auth::getAuthenticatedUser($DI->get('Web\Authentication\AuthenticationService'));
+            if (Auth::isAuthorized($route->name, $user)) {
+                if (!empty($route->params['id'])) {
+                        $_GET['id'] = $route->params['id'];
+                    $_REQUEST['id'] = $route->params['id'];
+                }
+                $view = $c($route->params);
             }
-
-            $c = new $controller($template);
-            $c->$action();
+            else {
+                if     ( isset($_SESSION['USER'])
+                    || (!empty($_REQUEST['format']) && $_REQUEST['format'] != 'html')) {
+                    $view = new \Web\Views\ForbiddenView();
+                }
+                else {
+                    header('Location: '.\Web\View::generateUrl('login.login'));
+                    exit();
+                }
+            }
         }
         else {
-            header('HTTP/1.1 403 Forbidden', true, 403);
+            $f = $ROUTES->getFailedRoute();
+            $view = new \Web\Views\NotFoundView();
         }
     }
 }
 else {
     $f = $ROUTES->getFailedRoute();
-	header('HTTP/1.1 404 Not Found', true, 404);
-	$template->blocks[] = new Block('404.inc');
+    $view = new \Web\Views\NotFoundView();
 }
 
-echo $template->render();
+
+echo $view->render();
+
+if ($view->outputFormat === 'html') {
+    # Calculate the process time
+    $endTime = microtime(true);
+    $processTime = $endTime - $startTime;
+    echo "<!-- Process Time: $processTime -->\n";
+
+    function human_filesize(int $bytes, ?int $decimals = 2) {
+        $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+        $factor = floor((strlen("$bytes") - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+    }
+    $memory = human_filesize(memory_get_peak_usage());
+    echo "<!-- Memory: $memory -->";
+}
