@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-APPNAME := monroe
+APPNAME := blossom
 
 SASS := $(shell command -v sassc 2> /dev/null)
 MSGFMT := $(shell command -v msgfmt 2> /dev/null)
@@ -25,8 +25,8 @@ clean:
 	for f in $(shell find data/Themes  -name '*-*.css'   ); do rm $$f; done
 
 compile: deps $(LANGUAGES)
-	cd public/css                 && sassc -mt compact screen.scss screen-${VERSION}.css
-	cd data/Themes/COB/public/css && sassc -mt compact screen.scss screen-${VERSION}.css
+	cd public/css                 && sassc -t compact -m screen.scss screen-${VERSION}.css
+	cd data/Themes/COB/public/css && sassc -t compact -m screen.scss screen-${VERSION}.css
 	for f in ${JAVASCRIPT}; do cp $$f $${f%.js}-${VERSION}.js; done
 
 test:

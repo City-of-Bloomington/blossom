@@ -19,7 +19,7 @@ define('VERSION', trim(file_get_contents(APPLICATION_HOME.'/VERSION')));
  * configuration are stored.  For backup purposes, backing up this
  * directory would be sufficient for an easy full restore.
  */
-define('SITE_HOME', !empty($_SERVER['SITE_HOME']) ? $_SERVER['SITE_HOME'] : __DIR__.'/data');
+define('SITE_HOME', !empty($_SERVER['SITE_HOME']) ? $_SERVER['SITE_HOME'] : APPLICATION_HOME.'/data');
 include SITE_HOME.'/site_config.php';
 
 /**

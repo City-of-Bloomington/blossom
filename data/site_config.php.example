@@ -5,7 +5,7 @@
  */
 declare (strict_types=1);
 
-define('APPLICATION_NAME', 'monroe');
+define('APPLICATION_NAME', 'blossom');
 
 /**
  * URL Generation settings
@@ -15,7 +15,7 @@ define('APPLICATION_NAME', 'monroe');
  * If your site is being proxied, change BASE_HOST to the hostname
  * used for the outside world.
  */
-define('BASE_URI' , '/monroe');
+define('BASE_URI' , '/blossom');
 #define('BASE_HOST', isset($_SERVER['HTTP_X_FORWARDED_HOST'])
 #                        ? $_SERVER['HTTP_X_FORWARDED_HOST']
 #                        : $_SERVER['SERVER_NAME']);
@@ -40,8 +40,8 @@ $DATABASES = [
     'default' => [
         'driver' => 'mysql',
         'host'   => 'localhost',
-        'name'   => 'monroe',
-        'user'   => 'monroe',
+        'name'   => 'blossom',
+        'user'   => 'blossom',
         'pass'   => 'secret password',
         'opts'   => []
     ]
@@ -70,14 +70,13 @@ $LDAP = [
 ];
 
 /**
- * CAS authentication http://www.jasig.org/cas
+ * CAS authentication https://www.apereo.org/projects/cas
  *
- * https://wiki.jasig.org/display/CASC/phpCAS
+ * https://github.com/apereo/phpCAS
  *
  * phpCAS is a PHP library for handling the calls to the CAS service
- * It is the official library, part of the Jasig CAS project
+ * It is the official library, part of the Apereo CAS project
  */
-define('CAS', APPLICATION_HOME.'/vendor/jasig/phpcas/source');
 define('CAS_SERVER','example.org');
 define('CAS_URI','cas');
 
