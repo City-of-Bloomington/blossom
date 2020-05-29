@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2015-2019 City of Bloomington, Indiana
+ * @copyright 2015-2020 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 /**
@@ -23,10 +23,22 @@ if ($route) {
         if (is_callable($c)) {
             $user = Auth::getAuthenticatedUser($DI->get('Web\Authentication\AuthenticationService'));
             if (Auth::isAuthorized($route->name, $user)) {
+                // Convenience:
+                // Most of our applications are just basic form processing.
+                // Thus, the controllers typically read directly from the PHP
+                // global SERVER variables.
+                //
+                // 'id' is the standard name for primary key in tables.
+                // Most routes, by default, allow for a fancy treatment of {id} in the URL.
+                // If it the id param comes from the route handling, we copy
+                // it to the PHP Server variables, so we don't have to have
+                // special parameter handling code for the common case of checking
+                // for an id parameter.
                 if (!empty($route->params['id'])) {
                         $_GET['id'] = $route->params['id'];
                     $_REQUEST['id'] = $route->params['id'];
                 }
+
                 $view = $c($route->params);
             }
             else {
@@ -54,17 +66,16 @@ else {
 
 echo $view->render();
 
+// Append some useful stats to the output of HTML pages
 if ($view->outputFormat === 'html') {
     # Calculate the process time
     $endTime = microtime(true);
     $processTime = $endTime - $startTime;
     echo "<!-- Process Time: $processTime -->\n";
 
-    function human_filesize(int $bytes, ?int $decimals = 2) {
-        $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
-        $factor = floor((strlen("$bytes") - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
-    }
-    $memory = human_filesize(memory_get_peak_usage());
+    $size   = ['B','kB','MB','GB','TB','PB','EB','ZB','YB'];
+    $bytes  = memory_get_peak_usage();
+    $factor = floor( (strlen("$bytes") - 1) / 3);
+    $memory = sprintf("%.2f", $bytes / pow(1024, $factor)) . @$size[$factor];
     echo "<!-- Memory: $memory -->";
 }
