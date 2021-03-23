@@ -9,7 +9,7 @@ namespace Web\People\Views;
 use Web\Block;
 use Web\Template;
 
-use Domain\People\UseCases\Info\Response as InfoResponse;
+use Domain\People\Actions\Info\Response as InfoResponse;
 
 class InfoView extends Template
 {

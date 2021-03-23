@@ -7,8 +7,8 @@ declare (strict_types=1);
 
 namespace Web\People\Views;
 
-use Domain\People\UseCases\Update\Request;
-use Domain\People\UseCases\Update\Response;
+use Domain\People\Actions\Update\Request;
+use Domain\People\Actions\Update\Response;
 use Web\Block;
 use Web\Template;
 

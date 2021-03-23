@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Domain\People\UseCases\Search;
+namespace Domain\People\Actions\Search;
 
 use Domain\People\DataStorage\PeopleRepository;
 use Domain\People\Entities\Person;

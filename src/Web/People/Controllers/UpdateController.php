@@ -7,7 +7,7 @@ declare (strict_types=1);
 
 namespace Web\People\Controllers;
 
-use Domain\People\UseCases\Update\Request as UpdateRequest;
+use Domain\People\Actions\Update\Request as UpdateRequest;
 use Web\People\Views\UpdateView;
 use Web\Controller;
 use Web\View;
@@ -21,7 +21,7 @@ class UpdateController extends Controller
         $_SESSION['return_url'] = self::defaultReturnUrl($person_id);
 
         if (isset($_POST['firstname'])) {
-            $update  = $this->di->get('Domain\People\UseCases\Update\Command');
+            $update  = $this->di->get('Domain\People\Actions\Update\Command');
             $req = new UpdateRequest($_POST);
             $res = $update($req);
 
@@ -33,7 +33,7 @@ class UpdateController extends Controller
             }
         }
         elseif ($person_id) {
-            $info = $this->di->get('Domain\People\UseCases\Info\Command');
+            $info = $this->di->get('Domain\People\Actions\Info\Command');
             $ir   = $info($person_id);
             if ($ir->errors) {
                 $_SESSION['errorMessages'] = $ir->errors;

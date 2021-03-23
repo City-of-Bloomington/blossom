@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Domain\Users\UseCases\Update;
+namespace Domain\Users\Actions\Update;
 
 class Response
 {

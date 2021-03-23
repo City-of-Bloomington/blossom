@@ -10,8 +10,8 @@ use Web\Block;
 use Web\Template;
 use Web\Paginator;
 
-use Domain\People\UseCases\Search\Request;
-use Domain\People\UseCases\Search\Response;
+use Domain\People\Actions\Search\Request;
+use Domain\People\Actions\Search\Response;
 
 class SearchView extends Template
 {

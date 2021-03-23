@@ -9,7 +9,7 @@ namespace Web\People;
 use Aura\SqlQuery\Common\SelectInterface;
 use Domain\People\DataStorage\PeopleRepository;
 use Domain\People\Entities\Person;
-use Domain\People\UseCases\Search\Request as SearchRequest;
+use Domain\People\Actions\Search\Request as SearchRequest;
 use Web\PdoRepository;
 
 

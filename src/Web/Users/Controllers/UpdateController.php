@@ -6,8 +6,8 @@
 declare (strict_types=1);
 
 namespace Web\Users\Controllers;
-use Domain\Users\UseCases\Info\Request   as InfoRequest;
-use Domain\Users\UseCases\Update\Request as UpdateRequest;
+use Domain\Users\Actions\Info\Request   as InfoRequest;
+use Domain\Users\Actions\Update\Request as UpdateRequest;
 use Web\Users\Views\InfoView;
 use Web\Users\Views\UpdateView;
 use Web\Controller;
@@ -22,7 +22,7 @@ class UpdateController extends Controller
     public function __invoke(array $params): View
     {
         if (isset($_POST['firstname'])) {
-            $update   = $this->di->get('Domain\Users\UseCases\Update\Command');
+            $update   = $this->di->get('Domain\Users\Actions\Update\Command');
             $request  = new UpdateRequest($_POST);
             if (!$request->role                 ) { $request->role                  = self::DEFAULT_ROLE; }
             if (!$request->authentication_method) { $request->authentication_method = self::DEFAULT_AUTH; }
@@ -30,7 +30,7 @@ class UpdateController extends Controller
 
             if (!count($response->errors)) {
                 if (!empty($_REQUEST['format']) && $_REQUEST['format']!='html') {
-                    $info = $this->di->get('Domain\Users\UseCases\Info\Command');
+                    $info = $this->di->get('Domain\Users\Actions\Info\Command');
                     $ir   = $info($response->id);
                     return new InfoView($ir->user);
                 }
@@ -41,7 +41,7 @@ class UpdateController extends Controller
             }
         }
         elseif (!empty($_REQUEST['id'])) {
-            $info = $this->di->get('Domain\Users\UseCases\Info\Command');
+            $info = $this->di->get('Domain\Users\Actions\Info\Command');
             $res  = $info((int)$_REQUEST['id']);
             if ($res->errors) {
                 $_SESSION['errorMessages'] = $res->errors;

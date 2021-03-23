@@ -8,7 +8,7 @@ declare (strict_types=1);
 namespace Web\People\Controllers;
 
 use Domain\People\Entities\Person;
-use Domain\People\UseCases\Info\Request as InfoRequest;
+use Domain\People\Actions\Info\Request as InfoRequest;
 use Web\People\Views\InfoView;
 use Web\Controller;
 use Web\View;
@@ -18,7 +18,7 @@ class ViewController extends Controller
     public function __invoke(array $parms): View
     {
         if (!empty($_REQUEST['id'])) {
-            $info = $this->di->get('Domain\People\UseCases\Info\Command');
+            $info = $this->di->get('Domain\People\Actions\Info\Command');
             $res  = $info((int)$_REQUEST['id']);
             if ($res->person) {
                 return new InfoView($res);

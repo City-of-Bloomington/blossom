@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Domain\People\UseCases\Update;
+namespace Domain\People\Actions\Update;
 
 use Domain\People\Entities\Person;
 use Domain\People\DataStorage\PeopleRepository;

@@ -40,15 +40,15 @@ $DI->lazyNew('Web\Authentication\AuthenticationService'));
 //---------------------------------------------------------
 // People
 foreach(['Info', 'Load', 'Search', 'Update'] as $a) {
-    $DI->params[ "Domain\\People\\UseCases\\$a\\Command"]['repository'] = $DI->lazyGet('Domain\People\DataStorage\PeopleRepository');
-    $DI->set(    "Domain\\People\\UseCases\\$a\\Command",
-    $DI->lazyNew("Domain\\People\\UseCases\\$a\\Command"));
+    $DI->params[ "Domain\\People\\Actions\\$a\\Command"]['repository'] = $DI->lazyGet('Domain\People\DataStorage\PeopleRepository');
+    $DI->set(    "Domain\\People\\Actions\\$a\\Command",
+    $DI->lazyNew("Domain\\People\\Actions\\$a\\Command"));
 }
 
 // Users
 foreach (['Delete', 'Info', 'Search', 'Update'] as $a) {
-    $DI->params[ "Domain\\Users\\UseCases\\$a\\Command"]["repository"] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
-    $DI->set(    "Domain\\Users\\UseCases\\$a\\Command",
-    $DI->lazyNew("Domain\\Users\\UseCases\\$a\\Command"));
+    $DI->params[ "Domain\\Users\\Actions\\$a\\Command"]["repository"] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
+    $DI->set(    "Domain\\Users\\Actions\\$a\\Command",
+    $DI->lazyNew("Domain\\Users\\Actions\\$a\\Command"));
 }
-$DI->params['Domain\Users\UseCases\Update\Command']['auth'] = $DI->lazyGet('Web\Authentication\AuthenticationService');
+$DI->params['Domain\Users\Actions\Update\Command']['auth'] = $DI->lazyGet('Web\Authentication\AuthenticationService');

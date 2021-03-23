@@ -11,8 +11,8 @@ use Web\Block;
 use Web\Template;
 use Web\Paginator;
 
-use Domain\Users\UseCases\Search\Request;
-use Domain\Users\UseCases\Search\Response;
+use Domain\Users\Actions\Search\Request;
+use Domain\Users\Actions\Search\Response;
 
 class SearchView extends Template
 {

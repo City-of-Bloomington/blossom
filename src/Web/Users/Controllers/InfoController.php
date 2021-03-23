@@ -16,7 +16,7 @@ class InfoController extends Controller
     public function __invoke(array $params): View
     {
         if (!empty($_REQUEST['id'])) {
-            $info = $this->di->get('Domain\Users\UseCases\Info\Command');
+            $info = $this->di->get('Domain\Users\Actions\Info\Command');
             $res  = $info((int)$_REQUEST['id']);
             if ($res->user) {
                 return new InfoView($res->user);

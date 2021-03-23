@@ -9,7 +9,7 @@ namespace Web\Users;
 use Aura\SqlQuery\Common\SelectInterface;
 use Domain\Users\DataStorage\UsersRepository;
 use Domain\Users\Entities\User;
-use Domain\Users\UseCases\Search\Request as SearchRequest;
+use Domain\Users\Actions\Search\Request as SearchRequest;
 use Web\PdoRepository;
 
 class PdoUsersRepository extends PdoRepository implements UsersRepository

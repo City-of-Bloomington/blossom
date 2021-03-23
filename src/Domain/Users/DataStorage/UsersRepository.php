@@ -7,7 +7,7 @@ declare (strict_types=1);
 namespace Domain\Users\DataStorage;
 
 use Domain\Users\Entities\User;
-use Domain\Users\UseCases\Search\Request as SearchRequest;
+use Domain\Users\Actions\Search\Request as SearchRequest;
 
 interface UsersRepository
 {

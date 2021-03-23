@@ -9,7 +9,7 @@ declare (strict_types=1);
 
 namespace Web\People\Controllers;
 
-use Domain\People\UseCases\Search\Request as SearchRequest;
+use Domain\People\Actions\Search\Request as SearchRequest;
 use Web\People\Views\SearchView;
 use Web\Controller;
 use Web\View;
@@ -19,7 +19,7 @@ class ListController extends Controller
     public function __invoke(array $params): View
     {
 		$page     =  !empty($_GET['page']) ? (int)$_GET['page'] : 1;
-        $search   = $this->di->get('Domain\People\UseCases\Search\Command');
+        $search   = $this->di->get('Domain\People\Actions\Search\Command');
         $request  = new SearchRequest($_GET, null, parent::ITEMS_PER_PAGE, $page);
         $response = $search($request);
 
