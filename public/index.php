@@ -14,7 +14,7 @@ $startTime = microtime(true);
 include '../src/Web/bootstrap.php';
 
 
-$p = parse_url(rtrim($_SERVER['REQUEST_URI'], '/'), PHP_URL_PATH);
+$p     = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $route = $ROUTES->match($p, $_SERVER);
 if ($route) {
     if (isset($route->params['controller'])) {
