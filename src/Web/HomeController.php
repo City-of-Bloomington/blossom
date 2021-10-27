@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function __invoke(array $params): View
     {
-        return new Template('default');
+        return new Views\HomeView();
     }
 }
 

@@ -5,11 +5,19 @@
  */
 namespace Web;
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
+use Twig\TwigTest;
+
 abstract class View
 {
     protected $theme;
     protected $theme_config = [];
-	protected $vars         = [];
+    protected $vars         = ['APPLICATION_NAME' => APPLICATION_NAME,
+                               'VERSION'          => VERSION,
+                               'BASE_URL'         => BASE_URL,
+                               'BASE_URI'         => BASE_URI];
 
 	abstract public function render();
 
@@ -18,31 +26,47 @@ abstract class View
 	 */
 	public function __construct(array $vars=null)
 	{
+		if ($vars) {
+			foreach ($vars as $k=>$v) { $this->vars[$k] = $v; }
+		}
+        if (isset($_SESSION['USER'])) { $this->vars['USER'] = $_SESSION['USER']; }
+        $this->vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        
+        $templates = [];
         if (defined('THEME')) {
-            $dir = SITE_HOME.'/Themes/'.THEME;
+            $dir  = SITE_HOME.'/Themes/'.THEME;
+            $twig = $dir.'/twig';
 
             if (is_dir($dir)) {
                 $this->theme = $dir;
                 $config_file = $dir.'/theme_config.inc';
 
                 if (is_file($config_file)) { $this->theme_config = require $config_file; }
+                if (is_dir ($twig))        { $templates[] = $twig; }
             }
         }
+        $templates[] = APPLICATION_HOME.'/twig';
+        $loader      = new FilesystemLoader($templates);
+        $this->twig  = new Environment($loader, ['cache'            => false,
+                                                 'strict_variables' => true,
+                                                 'debug'            => true]);
+        $this->twig->addFunction(new TwigFunction('_'  ,   [$this, 'translate'  ]));
+        $this->twig->addFunction(new TwigFunction('uri',   [$this, 'generateUri']));
+        $this->twig->addFunction(new TwigFunction('url',   [$this, 'generateUrl']));
+        $this->twig->addTest    (new TwigTest('isAllowed', [$this, 'isAllowed'  ]));
+        
+        
 
-		if ($vars) {
-			foreach ($vars as $name=>$value) {
-				$this->vars[$name] = $value;
-			}
-		}
 
         $locale = LOCALE.'.utf8';
-
+        $this->vars['lang'] = strtolower(substr(LOCALE, 0, 2));
         putenv("LC_ALL=$locale");
         setlocale(LC_ALL, $locale);
         bindtextdomain('labels',   APPLICATION_HOME.'/language');
         bindtextdomain('messages', APPLICATION_HOME.'/language');
         bindtextdomain('errors',   APPLICATION_HOME.'/language');
         textdomain('labels');
+        
 	}
 
 	/**

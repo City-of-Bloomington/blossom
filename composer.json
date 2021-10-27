@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "aura/di":                         "@stable",
         "aura/router": "~2",
         "aura/sqlquery":                   "@stable",
@@ -8,7 +8,8 @@
         "guzzlehttp/guzzle":               "@stable",
         "graylog2/gelf-php":               "@stable",
         "laminas/laminas-log":             "@stable",
-        "laminas/laminas-permissions-acl": "@stable"
+        "laminas/laminas-permissions-acl": "@stable",
+        "twig/twig":                       "@stable"
     },
     "require-dev": {
         "phpunit/phpunit":                 "@stable"
