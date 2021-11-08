@@ -1,20 +1,18 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2021 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
 
 namespace Web\Users\Views;
 
-use Web\Block;
-use Web\Template;
-use Web\Paginator;
+use Web\View;
 
 use Domain\Users\Actions\Search\Request;
 use Domain\Users\Actions\Search\Response;
 
-class SearchView extends Template
+class SearchView extends View
 {
     public function __construct(Request  $request,
                                 Response $response,
@@ -23,22 +21,34 @@ class SearchView extends Template
                                 array    $roles,
                                 array    $authentication_methods)
     {
-        $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
-        parent::__construct('default', $format);
+        parent::__construct();
 
         if ($response->errors) {
             $_SESSION['errorMessages'] = $response->errors;
         }
-        $vars = [
+
+
+        $this->vars = array_merge((array)$request, [
             'users'                  => $response->users,
             'total'                  => $response->total,
             'roles'                  => $roles,
             'authentication_methods' => $authentication_methods,
-        ];
-        foreach ($request as $k=>$v) {
-            if (!is_array($v)) { $vars[$k] = parent::escape($v); }
+        ]);
+
+        $fields = array_keys((array)$request);
+        foreach ($_REQUEST as $k=>$v) {
+            if (!in_array($k, $fields)) {
+                $this->vars['additional_params'][$k] = $v;
+            }
         }
-        $block = $format == 'html' ? 'users/findForm.inc' : 'users/list.inc';
-        $this->blocks = [new Block($block, $vars)];
+    }
+
+    public function render(): string
+    {
+        $template = $this->outputFormat == 'html'
+                    ? "users/findForm.twig"
+                    : "users/list.twig";
+
+        return $this->twig->render($this->outputFormat."/$template", $this->vars);
     }
 }

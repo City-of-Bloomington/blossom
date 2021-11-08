@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2021 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -9,34 +9,30 @@ namespace Web\Users\Views;
 
 use Domain\Users\Actions\Update\Request;
 use Domain\Users\Actions\Update\Response;
-use Web\Block;
-use Web\Template;
+use Web\View;
 
-class UpdateView extends Template
+class UpdateView extends View
 {
     public function __construct(Request   $request,
                                 ?Response $response,
                                 array     $roles,
                                 array     $authentication_methods)
     {
-        $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
-        parent::__construct('default', $format);
+        parent::__construct();
 
         if ($response && $response->errors) {
             $_SESSION['errorMessages'] = $response->errors;
         }
 
-        $this->vars['title'] = $request->id ? $this->_('user_edit') : $this->_('user_add');
-
-        $vars = [
-            'title'                  => $this->vars['title'],
-            'request'                => $request,
+        $this->vars = array_merge((array)$request, [
+            'title'                  => $request->id ? $this->_('user_edit') : $this->_('user_add'),
             'roles'                  => $roles,
             'authentication_methods' => $authentication_methods
-        ];
+        ]);
+    }
 
-        $this->blocks = [
-            new Block('users/updateForm.inc', $vars)
-        ];
+    public function render(): string
+    {
+        return $this->twig->render('html/users/updateForm.twig', $this->vars);
     }
 }

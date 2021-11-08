@@ -10,9 +10,8 @@ use Web\View;
 
 class HomeView extends View
 {
-    public function render()
+    public function render(): string
     {
-        $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
-        echo $this->twig->render("index.$format.twig", $this->vars);
+        return $this->twig->render("{$this->outputFormat}/index.twig");
     }
 }

@@ -1,0 +1,25 @@
+{#
+ * @copyright 2009-2021 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @param Person person
+#}
+{% extends "html/layouts/default.twig" %}
+{% block content %}
+<section>
+    <header>
+        <h1>{{ person.firstname }} {{ person.lastname }}</h1>
+        {% if isAllowed('people', 'update') %}
+        <div class="tools">
+            <a href="{{ uri('people.update', {'id': person.id}) }}?return_url={{ current_url() }}"
+               class="edit button">
+                {{ _('edit') }}
+            </a>
+        </div>
+        {% endif %}
+    </header>
+
+	<table>
+        <tr><th>{{ _('email') }}</th><td>{{ person.email }}</td></tr>
+	</table>
+</section>
+{% endblock %}

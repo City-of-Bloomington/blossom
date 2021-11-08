@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2006-2018 City of Bloomington, Indiana
+ * @copyright 2006-2021 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 namespace Web;
@@ -12,92 +12,53 @@ use Twig\TwigTest;
 
 abstract class View
 {
-    protected $theme;
-    protected $theme_config = [];
-    protected $vars         = ['APPLICATION_NAME' => APPLICATION_NAME,
-                               'VERSION'          => VERSION,
-                               'BASE_URL'         => BASE_URL,
-                               'BASE_URI'         => BASE_URI];
+    protected $vars;
+    protected $twig;
+    public    $outputFormat = 'html';
 
-	abstract public function render();
+	abstract public function render(): string;
 
 	/**
 	 * Configures the gettext translations
 	 */
-	public function __construct(array $vars=null)
+	public function __construct()
 	{
-		if ($vars) {
-			foreach ($vars as $k=>$v) { $this->vars[$k] = $v; }
-		}
-        if (isset($_SESSION['USER'])) { $this->vars['USER'] = $_SESSION['USER']; }
-        $this->vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
-        
-        $templates = [];
+        $this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
+
+        $tpl = [];
         if (defined('THEME')) {
-            $dir  = SITE_HOME.'/Themes/'.THEME;
-            $twig = $dir.'/twig';
-
-            if (is_dir($dir)) {
-                $this->theme = $dir;
-                $config_file = $dir.'/theme_config.inc';
-
-                if (is_file($config_file)) { $this->theme_config = require $config_file; }
-                if (is_dir ($twig))        { $templates[] = $twig; }
+            if (is_dir ( SITE_HOME.'/Themes/'.THEME.'/templates')) {
+                $tpl[] = SITE_HOME.'/Themes/'.THEME.'/templates';
             }
         }
-        $templates[] = APPLICATION_HOME.'/twig';
-        $loader      = new FilesystemLoader($templates);
-        $this->twig  = new Environment($loader, ['cache'            => false,
+        $tpl[]      = APPLICATION_HOME.'/templates';
+        $loader     = new FilesystemLoader($tpl);
+        $this->twig = new Environment($loader, [ 'cache'            => false,
                                                  'strict_variables' => true,
                                                  'debug'            => true]);
-        $this->twig->addFunction(new TwigFunction('_'  ,   [$this, 'translate'  ]));
-        $this->twig->addFunction(new TwigFunction('uri',   [$this, 'generateUri']));
-        $this->twig->addFunction(new TwigFunction('url',   [$this, 'generateUrl']));
-        $this->twig->addTest    (new TwigTest('isAllowed', [$this, 'isAllowed'  ]));
-        
-        
+        $this->twig->addGlobal('APPLICATION_NAME', APPLICATION_NAME);
+        $this->twig->addGlobal('VERSION',          VERSION);
+        $this->twig->addGlobal('BASE_URL',         BASE_URL);
+        $this->twig->addGlobal('BASE_URI',         BASE_URI);
+        $this->twig->addGlobal('REQUEST_URI',      $_SERVER['REQUEST_URI']);
+        if (isset($_SESSION['USER'])) {
+            $this->twig->addGlobal('USER', $_SESSION['USER']);
+        }
 
+        $this->twig->addFunction(new TwigFunction('_'  ,         [$this, 'translate'  ]));
+        $this->twig->addFunction(new TwigFunction('uri',         [$this, 'generateUri']));
+        $this->twig->addFunction(new TwigFunction('url',         [$this, 'generateUrl']));
+        $this->twig->addFunction(new TwigFunction('isAllowed',   [$this, 'isAllowed'  ]));
+        $this->twig->addFunction(new TwigFunction('current_url', [$this, 'current_url']));
 
         $locale = LOCALE.'.utf8';
-        $this->vars['lang'] = strtolower(substr(LOCALE, 0, 2));
+        $this->twig->addGlobal('LANG', strtolower(substr(LOCALE, 0, 2)));
         putenv("LC_ALL=$locale");
         setlocale(LC_ALL, $locale);
         bindtextdomain('labels',   APPLICATION_HOME.'/language');
         bindtextdomain('messages', APPLICATION_HOME.'/language');
         bindtextdomain('errors',   APPLICATION_HOME.'/language');
         textdomain('labels');
-        
-	}
-
-	/**
-	 * Magic Method for setting object properties
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 */
-	public function __set($key,$value) {
-		$this->vars[$key] = $value;
-	}
-	/**
-	 * Magic method for getting object properties
-	 *
-	 * @param string $key
-	 * @return mixed
-	 */
-	public function __get($key)
-	{
-		if (isset($this->vars[$key])) {
-			return $this->vars[$key];
-		}
-		return null;
-	}
-
-	/**
-	 * @param string $key
-	 * @return boolean
-	 */
-	public function __isset($key) {
-		return array_key_exists($key,$this->vars);
 	}
 
 	/**
@@ -233,6 +194,10 @@ abstract class View
     public static function generateUrl($route_name, $params=[])
     {
         return "https://".BASE_HOST.self::generateUri($route_name, $params);
+    }
+    public static function current_url(): Url
+    {
+        return new Url(Url::current_url(BASE_HOST));
     }
 
 	public static function isAllowed(string $resource, ?string $action=null): bool

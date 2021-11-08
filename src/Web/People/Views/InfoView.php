@@ -1,31 +1,34 @@
 <?php
 /**
- * @copyright 2016-2019 City of Bloomington, Indiana
+ * @copyright 2016-2021 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
 namespace Web\People\Views;
 
-use Web\Block;
-use Web\Template;
+use Web\View;
 
 use Domain\People\Actions\Info\Response as InfoResponse;
 
-class InfoView extends Template
+class InfoView extends View
 {
     public function __construct(InfoResponse $response)
     {
-        $format = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
-        parent::__construct('default', $format);
+        parent::__construct();
 
         if ($response->errors) {
             $_SESSION['errorMessages'] = $response->errors;
         }
         $person = $response->person;
 
-        $this->vars['title'] = parent::escape("{$person->firstname} {$person->lastname}");
-		$this->blocks = [
-            new Block('people/info.inc', ['person'=>$person])
+        $this->vars = [
+            'title'  => "{$person->firstname} {$person->lastname}",
+            'person' => $person
         ];
+    }
+
+    public function render(): string
+    {
+        return $this->twig->render("{$this->outputFormat}/people/info.twig", $this->vars);
     }
 }
