@@ -1,0 +1,99 @@
+<?php
+/**
+ * @copyright 2020 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ */
+declare (strict_types=1);
+
+define('APPLICATION_NAME', 'Blossom');
+
+/**
+ * URL Generation settings
+ *
+ * Do NOT use trailing slashes
+ *
+ * If your site is being proxied, change BASE_HOST to the hostname
+ * used for the outside world.
+ */
+define('BASE_URI' , "{{ blossom_base_uri }}");
+define('BASE_HOST', isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+                        ? $_SERVER['HTTP_X_FORWARDED_HOST']
+                        : "{{ ansible_host }}");
+define('BASE_URL' , "https://".BASE_HOST.BASE_URI);
+
+/**
+ * Specify the theme directory
+ *
+ * Remember to create a symbolic link in public/css to the theme CSS
+ * that you declare here.
+ *
+ * A theme can consist of templates, blocks which will override core.
+ * The current theme's screen.css will be included in the HTML head.
+ */
+define('THEME', 'COB');
+
+/**
+ * Database Setup
+ */
+$DATABASES = [
+    'default' => [
+        'driver' => 'mysql',
+        'host'   => "{{ blossom_db.default.host }}",
+        'name'   => "{{ blossom_db.default.name }}",
+        'user'   => "{{ blossom_db.default.user }}",
+        'pass'   => "{{ blossom_db.default.pass }}",
+        'opts'   => []
+    ]
+];
+
+/**
+ * Ldap Authentication Configuration
+ *
+ * This supports doing user authentication from multiple external
+ * directories, such as LDAP or ADS. This is required since city staff
+ * are in a seperate LDAP directory from public user accounts.
+ * Classes that implement AuthenticationInterface should have an entry here.
+ *
+ * @see Domain\Auth
+ */
+$LDAP = [
+    'Employee' => [
+        'classname'          => 'Site\Employee',
+        'server'             => "{{ blossom_ldap.server             }}",
+        'base_dn'            => "{{ blossom_ldap.base_dn            }}",
+        'username_attribute' => "{{ blossom_ldap.username_attribute }}",
+        'user_binding'       => "{{ blossom_ldap.user_binding       }}",
+        'admin_binding'      => "{{ blossom_ldap.admin_binding      }}",
+        'admin_pass'         => "{{ blossom_ldap.admin_pass         }}",
+    ]
+];
+
+/**
+ * CAS authentication https://www.apereo.org/projects/cas
+ *
+ * https://github.com/apereo/phpCAS
+ *
+ * phpCAS is a PHP library for handling the calls to the CAS service
+ * It is the official library, part of the Apereo CAS project
+ */
+define('CAS_SERVER', "{{ blossom_cas_server }}");
+define('CAS_URI','cas');
+
+
+define('DATE_FORMAT',    'n/j/Y');
+define('TIME_FORMAT',    'g:i a');
+define('DATETIME_FORMAT', DATE_FORMAT.' '.TIME_FORMAT);
+define('LOCALE', 'en_US');
+
+define('PAGINATION_ITEMS_PER_PAGE', 20);
+
+
+/**
+ * Graylog is a centralized log manager
+ *
+ * This application supports sending errors and exceptions to a graylog instance.
+ * This is handy for notifying developers of a problem before users notice.
+ ** @see https://graylog.org
+ */
+// define('GRAYLOG_DOMAIN', 'graylog.example.org');
+// define('GRAYLOG_PORT',   12200);

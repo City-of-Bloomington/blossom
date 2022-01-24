@@ -1,0 +1,106 @@
+---
+- hosts: "blossom"
+  become: "yes"
+  roles:
+    - "City-of-Bloomington.php"
+    - "City-of-Bloomington.mysql"
+
+  tasks:
+    - name: "Install php and related packages"
+      apt:
+        name: "{{ packages }}"
+        state: "present"
+      vars:
+        packages:
+        - "php-mysql"
+
+    - name: "Create mysql database"
+      mysql_db:
+        config_file: "{{ mysql_defaults_extra_file }}"
+        name: "{{ blossom_db.default.name }}"
+        state: "present"
+      no_log: "True"
+
+    - name: "Create mysql user for site"
+      mysql_user:
+        name:     "{{ blossom_db.default.user }}"
+        password: "{{ blossom_db.default.pass }}"
+        priv:     "{{ blossom_db.default.name }}.*:ALL"
+        state: "present"
+        config_file: "{{ mysql_defaults_extra_file }}"
+      no_log: "True"
+
+    - name: "Extract release"
+      unarchive:
+        src: "{{ blossom_archive_path }}"
+        dest: "/usr/local/src"
+      register: "release"
+
+    - name: "Remove old release"
+      file:
+        path: "{{ blossom_install_path }}"
+        state: "absent"
+      when: "release.changed"
+
+    - name: "Create directories"
+      file:
+        path: "{{ item }}"
+        state: "directory"
+        owner: "www-data"
+        group: "staff"
+        mode:  "u=rwX,g=rwXs,o=rX"
+      with_items:
+        - "{{ blossom_install_path }}"
+        - "{{ blossom_backup_path  }}"
+        - "{{ blossom_site_home    }}"
+        - "/var/log/cron"
+
+    - name: "Install release"
+      command: "rsync -rl /usr/local/src/blossom/ {{ blossom_install_path }}/"
+      when: "release.changed"
+
+    - name: "Update site_home"
+      command: "rsync -rl /usr/local/src/blossom/data/ {{ blossom_site_home }}/"
+      when: "release.changed"
+
+    - name: "Apache configuration"
+      template:
+        src:  "apache.conf"
+        dest: "/etc/apache2/sites-enabled/conf.d/blossom.conf"
+      notify: "apache_restart"
+
+    - name: "Install CRON"
+      template:
+        src:  "cron.sh"
+        dest: "/etc/cron.daily/backup.d/blossom"
+        mode: "0755"
+
+    - name: "Configure backup credentials"
+      template:
+        src:  "backup.cnf"
+        dest: "/etc/cron.daily/backup.d/blossom.cnf"
+        mode: "0400"
+
+    - name: "Install site_config"
+      template:
+        src:  "site_config.j2"
+        dest: "{{ blossom_site_home }}/site_config.php"
+
+    - name: "Update directory ownership"
+      command: "chown -R www-data:staff {{ item }}"
+      args:
+        warn: "no"
+      with_items:
+        - "{{ blossom_install_path }}"
+        - "{{ blossom_backup_path  }}"
+        - "{{ blossom_site_home    }}"
+
+    - name: "Update directory permission"
+      command: "chmod -R u=rwX,g=rwX,o=rX {{ item }}"
+      args:
+        warn: "no"
+      with_items:
+        - "{{ blossom_install_path }}"
+        - "{{ blossom_backup_path  }}"
+        - "{{ blossom_site_home    }}"
+...
