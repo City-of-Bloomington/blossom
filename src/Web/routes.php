@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 City of Bloomington, Indiana
+ * @copyright 2020-2022 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -10,7 +10,7 @@ $ROUTES = $rf->newInstance();
 $ROUTES->setTokens(['id' => '\d+']);
 
 $ROUTES->add('home.index',    '/'       )->setValues(['controller' => 'Web\HomeController']);
-$ROUTES->add('login.login',   '/login'  )->setValues(['controller' => 'Web\Authentication\LoginController']);
+$ROUTES->add('login.login',   '/login'  )->setValues(['controller' => 'Web\Authentication\CasController']);
 $ROUTES->add('login.logout',  '/logout' )->setValues(['controller' => 'Web\Authentication\LogoutController']);
 
 $ROUTES->attach('people', '/people', function ($r) {

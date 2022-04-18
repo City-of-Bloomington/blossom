@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2022 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -13,7 +13,7 @@ use Web\Controller;
 use Web\Template;
 use Web\View;
 
-class LoginController extends Controller
+class CasController extends Controller
 {
 	private $return_url;
 	private $auth;
@@ -64,18 +64,5 @@ class LoginController extends Controller
         unset($_SESSION['return_url']);
         header("Location: $return_url");
         exit();
-    }
-
-    public function localAuth(array $params): View
-    {
-        if (isset($_POST['username'])) {
-
-        }
-		return new LoginView(['return_url'=>$this->return_url]);
-    }
-
-    public static function password_hash(string $password): string
-    {
-        return password_hash($password, PASSWORD_BCRYPT);
     }
 }
