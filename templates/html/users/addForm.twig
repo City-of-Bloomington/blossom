@@ -3,7 +3,6 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  *
  * Form field values
- * @param int    id
  * @param string firstname
  * @param string lastname
  * @param string email
@@ -24,7 +23,6 @@
 
 	<form method="post">
 		<fieldset><legend>{{ _('user_info') }}</legend>
-			<input name="id" type="hidden" value="{{ id }}" />
             <div><label   for="authentication_method">{{ _('authentication_method') }}</label>
                  <select name="authentication_method" id="authentication_method">
                     {% for o in authentication_methods %}<option {{ authentication_method==o ? 'selected="true"' : '' }}>{{ o }}</option>{% endfor %}

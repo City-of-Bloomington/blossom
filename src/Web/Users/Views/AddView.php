@@ -1,17 +1,17 @@
 <?php
 /**
- * @copyright 2019-2021 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @copyright 2022 City of Bloomington, Indiana
+ * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
 namespace Web\Users\Views;
 
-use Domain\Users\Actions\Update\Request;
-use Domain\Users\Actions\Update\Response;
+use Domain\Users\Actions\Add\Request;
+use Domain\Users\Actions\Add\Response;
+
 use Web\View;
 
-class UpdateView extends View
+class AddView extends View
 {
     public function __construct(Request   $request,
                                 ?Response $response,
@@ -25,7 +25,7 @@ class UpdateView extends View
         }
 
         $this->vars = array_merge((array)$request, [
-            'title'                  => $this->_('user_edit'),
+            'title'                  => $this->_('user_add'),
             'roles'                  => $roles,
             'authentication_methods' => $authentication_methods
         ]);
@@ -33,6 +33,6 @@ class UpdateView extends View
 
     public function render(): string
     {
-        return $this->twig->render('html/users/updateForm.twig', $this->vars);
+        return $this->twig->render('html/users/addForm.twig', $this->vars);
     }
 }

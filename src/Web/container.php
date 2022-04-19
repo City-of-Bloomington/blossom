@@ -46,9 +46,8 @@ foreach(['Info', 'Load', 'Search', 'Update'] as $a) {
 }
 
 // Users
-foreach (['Delete', 'Info', 'Search', 'Update'] as $a) {
+foreach (['Add', 'Delete', 'Info', 'Search', 'Update'] as $a) {
     $DI->params[ "Domain\\Users\\Actions\\$a\\Command"]["repository"] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
     $DI->set(    "Domain\\Users\\Actions\\$a\\Command",
     $DI->lazyNew("Domain\\Users\\Actions\\$a\\Command"));
 }
-$DI->params['Domain\Users\Actions\Update\Command']['auth'] = $DI->lazyGet('Web\Authentication\AuthenticationService');

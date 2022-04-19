@@ -21,14 +21,20 @@ class UpdateController extends Controller
 
     public function __invoke(array $params): View
     {
-        if (isset($_POST['firstname'])) {
-            $update   = $this->di->get('Domain\Users\Actions\Update\Command');
+        if (empty($_REQUEST['id'])) { return new \Web\Views\NotFoundView(); }
+
+        $update = $this->di->get('Domain\Users\Actions\Update\Command');
+        $auth   = $this->di->get('Web\Authentication\AuthenticationService');
+
+        if (isset($_POST['id'])) {
             $request  = new UpdateRequest($_POST);
             if (!$request->role                 ) { $request->role                  = self::DEFAULT_ROLE; }
             if (!$request->authentication_method) { $request->authentication_method = self::DEFAULT_AUTH; }
             $response = $update($request);
-
-            if (!count($response->errors)) {
+            if ($response->errors) {
+                $_SESSION['errorMessages'] = $response->errors;
+            }
+            else {
                 if (!empty($_REQUEST['format']) && $_REQUEST['format']!='html') {
                     $info = $this->di->get('Domain\Users\Actions\Info\Command');
                     $ir   = $info($response->id);
@@ -40,24 +46,17 @@ class UpdateController extends Controller
                 }
             }
         }
-        elseif (!empty($_REQUEST['id'])) {
+        else {
             $info = $this->di->get('Domain\Users\Actions\Info\Command');
             $res  = $info((int)$_REQUEST['id']);
             if ($res->errors) {
                 $_SESSION['errorMessages'] = $res->errors;
-                return new \Application\Views\NotFoundView();
+                return new \Web\Views\NotFoundView();
             }
             $request = new UpdateRequest((array)$res->user);
         }
-        else {
-            $request = new UpdateRequest([
-                'role'                  => self::DEFAULT_ROLE,
-                'authentication_method' => self::DEFAULT_AUTH
-            ]);
-        }
 
         global $ACL;
-        $auth = $this->di->get('Web\Authentication\AuthenticationService');
         return new UpdateView($request,
                               isset($response) ? $response : null,
                               $ACL->getRoles(),

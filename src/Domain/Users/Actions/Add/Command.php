@@ -1,10 +1,10 @@
 <?php
 /**
- * @copyright 2018-2022 City of Bloomington, Indiana
+ * @copyright 2022 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Domain\Users\Actions\Update;
+namespace Domain\Users\Actions\Add;
 
 use Domain\Users\Entities\User;
 use Domain\Users\DataStorage\UsersRepository;
@@ -38,7 +38,6 @@ class Command
     private function validate(Request $req): array
     {
         $errors = [];
-        if (!$req->id       ) { $errors[] = 'missingId';        }
         if (!$req->firstname) { $errors[] = 'missingFirstname'; }
         if (!$req->lastname ) { $errors[] = 'missingLastname';  }
         if (!$req->email    ) { $errors[] = 'missingEmail';     }

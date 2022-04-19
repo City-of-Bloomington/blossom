@@ -20,6 +20,7 @@ $ROUTES->attach('people', '/people', function ($r) {
 });
 
 $ROUTES->attach('users', '/users', function ($r) {
+    $r->add('add',    '/add'        ) ->setValues(['controller' => 'Web\Users\Controllers\AddController'   ]);
     $r->add('update', '/update{/id}') ->setValues(['controller' => 'Web\Users\Controllers\UpdateController']);
     $r->add('delete', '/delete/{id}') ->setValues(['controller' => 'Web\Users\Controllers\DeleteController']);
     $r->add('view',   '/{id}'       ) ->setValues(['controller' => 'Web\Users\Controllers\InfoController'  ]);
