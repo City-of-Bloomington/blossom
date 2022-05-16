@@ -5,24 +5,25 @@
  */
 declare (strict_types=1);
 
-$rf = new \Aura\Router\RouterFactory(BASE_URI);
-$ROUTES = $rf->newInstance();
-$ROUTES->setTokens(['id' => '\d+']);
+$ROUTES = new Aura\Router\RouterContainer(BASE_URI);
+$map    = $ROUTES->getMap();
 
-$ROUTES->add('home.index',    '/'       )->setValues(['controller' => 'Web\HomeController']);
-$ROUTES->add('login.login',   '/login'  )->setValues(['controller' => 'Web\Authentication\CasController']);
-$ROUTES->add('login.logout',  '/logout' )->setValues(['controller' => 'Web\Authentication\LogoutController']);
+$map->tokens(['id' => '\d+']);
 
-$ROUTES->attach('people', '/people', function ($r) {
-    $r->add('update', '/update{/id}') ->setValues(['controller' => 'Web\People\Controllers\UpdateController']);
-    $r->add('view',   '/{id}')        ->setValues(['controller' => 'Web\People\Controllers\ViewController'  ]);
-    $r->add('index',  '')             ->setValues(['controller' => 'Web\People\Controllers\ListController'  ]);
+$map->get('home.index',    '/'      , Web\HomeController::class);
+$map->get('login.login',   '/login' , Web\Authentication\CasController::class);
+$map->get('login.logout',  '/logout', Web\Authentication\LogoutController::class);
+
+$map->attach('people.', '/people', function ($r) {
+    $r->get('update', '/update{/id}', Web\People\Controllers\UpdateController::class);
+    $r->get('view',   '/{id}'       , Web\People\Controllers\ViewController::class);
+    $r->get('index',  ''            , Web\People\Controllers\ListController::class);
 });
 
-$ROUTES->attach('users', '/users', function ($r) {
-    $r->add('add',    '/add'        ) ->setValues(['controller' => 'Web\Users\Controllers\AddController'   ]);
-    $r->add('update', '/update{/id}') ->setValues(['controller' => 'Web\Users\Controllers\UpdateController']);
-    $r->add('delete', '/delete/{id}') ->setValues(['controller' => 'Web\Users\Controllers\DeleteController']);
-    $r->add('view',   '/{id}'       ) ->setValues(['controller' => 'Web\Users\Controllers\InfoController'  ]);
-    $r->add('index',  '')             ->setValues(['controller' => 'Web\Users\Controllers\ListController'  ]);
+$map->attach('users.', '/users', function ($r) {
+    $r->get('add',    '/add'        , Web\Users\Controllers\AddController::class);
+    $r->get('update', '/update{/id}', Web\Users\Controllers\UpdateController::class);
+    $r->get('delete', '/delete/{id}', Web\Users\Controllers\DeleteController::class);
+    $r->get('view',   '/{id}'       , Web\Users\Controllers\InfoController::class);
+    $r->get('index',  ''            , Web\Users\Controllers\ListController::class);
 });

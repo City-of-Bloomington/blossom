@@ -4,30 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e3a37a8785fa5e003247273dc89af86",
+    "content-hash": "fbccaac6da65f658e81f81680211eb38",
     "packages": [
         {
             "name": "apereo/phpcas",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apereo/phpCAS.git",
-                "reference": "ea27d122c4c7114006b33d15668c90f1904d53df"
+                "reference": "d6f5797fb568726f34c8e48741776d81e4a2646b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apereo/phpCAS/zipball/ea27d122c4c7114006b33d15668c90f1904d53df",
-                "reference": "ea27d122c4c7114006b33d15668c90f1904d53df",
+                "url": "https://api.github.com/repos/apereo/phpCAS/zipball/d6f5797fb568726f34c8e48741776d81e4a2646b",
+                "reference": "d6f5797fb568726f34c8e48741776d81e4a2646b",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": ">=7.0.0",
-                "psr/log": "^1.0.0"
+                "ext-dom": "*",
+                "php": ">=7.1.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
-                "monolog/monolog": "^1.0.0",
-                "phpunit/phpunit": ">=4.8.35 <8"
+                "monolog/monolog": "^1.0.0 || ^2.0.0",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": ">=7.5"
             },
             "type": "library",
             "extra": {
@@ -68,9 +70,9 @@
             ],
             "support": {
                 "issues": "https://github.com/apereo/phpCAS/issues",
-                "source": "https://github.com/apereo/phpCAS/tree/1.4.0"
+                "source": "https://github.com/apereo/phpCAS/tree/1.5.0"
             },
-            "time": "2021-05-30T19:53:34+00:00"
+            "time": "2022-05-03T21:12:54+00:00"
         },
         {
             "name": "aura/di",
@@ -131,42 +133,36 @@
         },
         {
             "name": "aura/router",
-            "version": "2.3.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Router.git",
-                "reference": "d8cb21b7fa8d2b2ae874093d5440688b3356f9c4"
+                "reference": "9c289935e873d6c41fa3e594e6fdfb9c6cffc588"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/d8cb21b7fa8d2b2ae874093d5440688b3356f9c4",
-                "reference": "d8cb21b7fa8d2b2ae874093d5440688b3356f9c4",
+                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/9c289935e873d6c41fa3e594e6fdfb9c6cffc588",
+                "reference": "9c289935e873d6c41fa3e594e6fdfb9c6cffc588",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.5.0",
+                "psr/http-message": "~1.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
-                "aura/di": "~2.0"
+                "guzzlehttp/psr7": "^1.0 || ^2.0",
+                "yoast/phpunit-polyfills": "~1.0"
             },
             "type": "library",
-            "extra": {
-                "aura": {
-                    "type": "library",
-                    "config": {
-                        "common": "Aura\\Router\\_Config\\Common"
-                    }
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Aura\\Router\\": "src/",
-                    "Aura\\Router\\_Config\\": "config/"
+                    "Aura\\Router\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-2-Clause"
+                "MIT"
             ],
             "authors": [
                 {
@@ -174,18 +170,19 @@
                     "homepage": "https://github.com/auraphp/Aura.Router/contributors"
                 }
             ],
-            "description": "A web router implementation; given a URI path and a copy of $_SERVER, it will extract path-info parameter values for a specific route.",
+            "description": "Powerful, flexible web routing for PSR-7 requests.",
             "homepage": "https://github.com/auraphp/Aura.Router",
             "keywords": [
+                "psr-7",
                 "route",
                 "router",
                 "routing"
             ],
             "support": {
                 "issues": "https://github.com/auraphp/Aura.Router/issues",
-                "source": "https://github.com/auraphp/Aura.Router/tree/2.x"
+                "source": "https://github.com/auraphp/Aura.Router/tree/3.2.0"
             },
-            "time": "2016-10-03T20:00:15+00:00"
+            "time": "2022-02-01T13:22:26+00:00"
         },
         {
             "name": "aura/sqlquery",
@@ -638,16 +635,16 @@
         },
         {
             "name": "laminas/laminas-log",
-            "version": "2.15.0",
+            "version": "2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-log.git",
-                "reference": "91964dd3afec183c09cca5bc2b21a930a56d5237"
+                "reference": "c46d9eb2ad226f9ed27ea3f5de4bbafa9b98368f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-log/zipball/91964dd3afec183c09cca5bc2b21a930a56d5237",
-                "reference": "91964dd3afec183c09cca5bc2b21a930a56d5237",
+                "url": "https://api.github.com/repos/laminas/laminas-log/zipball/c46d9eb2ad226f9ed27ea3f5de4bbafa9b98368f",
+                "reference": "c46d9eb2ad226f9ed27ea3f5de4bbafa9b98368f",
                 "shasum": ""
             },
             "require": {
@@ -722,7 +719,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-12-04T19:23:31+00:00"
+            "time": "2022-04-29T05:55:10+00:00"
         },
         {
             "name": "laminas/laminas-permissions-acl",
@@ -1308,25 +1305,25 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.5.1",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66"
+                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
-                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
+                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.0.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.5-dev"
+                    "dev-main": "3.0-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -1355,7 +1352,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.0.1"
             },
             "funding": [
                 {
@@ -1371,7 +1368,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:53:40+00:00"
+            "time": "2022-01-02T09:55:41+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -3637,6 +3634,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "aura/di": 0,
+        "aura/router": 0,
         "aura/sqlquery": 0,
         "apereo/phpcas": 0,
         "guzzlehttp/guzzle": 0,
@@ -3649,8 +3647,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4"
+        "php": ">=8"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

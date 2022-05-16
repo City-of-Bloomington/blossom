@@ -8,7 +8,7 @@ namespace Web;
 
 class Database
 {
-    public static function getConnection(string $name='default', array $config): \PDO
+    public static function getConnection(array $config, string $name='default'): \PDO
     {
         switch ($name) {
             default:

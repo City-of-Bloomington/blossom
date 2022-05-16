@@ -9,7 +9,7 @@ use Aura\Di\ContainerBuilder;
 $builder = new ContainerBuilder();
 $DI = $builder->newInstance();
 
-$DI->set('db.default', \Web\Database::getConnection('default', $DATABASES['default']));
+$DI->set('db.default', \Web\Database::getConnection($DATABASES['default'], 'default'));
 
 //---------------------------------------------------------
 // Declare database repositories

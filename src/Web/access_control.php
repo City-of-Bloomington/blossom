@@ -16,8 +16,8 @@ $ACL->addRole(new Role('Anonymous'))
 /**
  * Create resources for all the routes
  */
-foreach ($ROUTES->getRoutes() as $r) {
-    list($resource, $permission) = explode('.', $r->name);
+foreach (array_keys($ROUTES->getMap()->getRoutes()) as $r) {
+    list($resource, $permission) = explode('.', $r);
     if (!$ACL->hasResource($resource)) {
          $ACL->addResource(new Resource($resource));
     }

@@ -188,8 +188,12 @@ abstract class View
      */
     public static function generateUri($route_name, $params=[])
     {
-        global $ROUTES;
-        return $ROUTES->generate($route_name, $params);
+        static $helper = null;
+        if (!$helper) {
+            global $ROUTES;
+            $helper = $ROUTES->newRouteHelper();
+        }
+        return $helper($route_name, $params);
     }
     public static function generateUrl($route_name, $params=[])
     {
