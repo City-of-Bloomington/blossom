@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Web\\":    "src/Web/",
+            "Web\\":    "src/Web",
             "Domain\\": "src/Domain"
         }
     },

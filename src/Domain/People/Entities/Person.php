@@ -28,7 +28,7 @@ class Person implements \JsonSerializable
         return "{$this->firstname} {$this->lastname}";
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_merge((array)$this, ['fullname'=>$this->__toString()]);
     }

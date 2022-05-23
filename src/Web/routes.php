@@ -15,14 +15,14 @@ $map->get('login.login',   '/login' , Web\Authentication\CasController::class);
 $map->get('login.logout',  '/logout', Web\Authentication\LogoutController::class);
 
 $map->attach('people.', '/people', function ($r) {
-    $r->get('update', '/update{/id}', Web\People\Controllers\UpdateController::class);
+    $r->get('update', '/update{/id}', Web\People\Controllers\UpdateController::class)->allows(['POST']);
     $r->get('view',   '/{id}'       , Web\People\Controllers\ViewController::class);
     $r->get('index',  ''            , Web\People\Controllers\ListController::class);
 });
 
 $map->attach('users.', '/users', function ($r) {
-    $r->get('add',    '/add'        , Web\Users\Controllers\AddController::class);
-    $r->get('update', '/update{/id}', Web\Users\Controllers\UpdateController::class);
+    $r->get('add',    '/add'        , Web\Users\Controllers\AddController::class)->allows(['POST']);
+    $r->get('update', '/update{/id}', Web\Users\Controllers\UpdateController::class)->allows(['POST']);
     $r->get('delete', '/delete/{id}', Web\Users\Controllers\DeleteController::class);
     $r->get('view',   '/{id}'       , Web\Users\Controllers\InfoController::class);
     $r->get('index',  ''            , Web\Users\Controllers\ListController::class);
