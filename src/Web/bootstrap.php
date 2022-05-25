@@ -32,17 +32,6 @@ include APPLICATION_HOME.'/src/Web/container.php';
 include APPLICATION_HOME.'/src/Web/routes.php';
 include APPLICATION_HOME.'/src/Web/access_control.php';
 
-/**
- * Session Startup
- * Don't start a session for CLI usage.
- * We only want sessions when PHP code is executed from the webserver
- */
-if (!defined('STDIN')) {
-	ini_set('session.save_path', SITE_HOME.'/sessions');
-	ini_set('session.cookie_path', BASE_URI);
-	session_start();
-}
-
 if (defined('GRAYLOG_DOMAIN') && defined('GRAYLOG_PORT')) {
     $graylog = new Application\GraylogWriter(GRAYLOG_DOMAIN, GRAYLOG_PORT);
     $logger  = new Zend\Log\Logger();
