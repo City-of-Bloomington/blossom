@@ -48,7 +48,7 @@ $DATABASES = [
 ];
 
 /**
- * Ldap Authentication Configuration
+ * Ldap Configuration
  *
  * This supports doing user authentication from multiple external
  * directories, such as LDAP or ADS. This is required since city staff
@@ -67,6 +67,19 @@ $LDAP = [
       'admin_binding'      => 'admin@ldap.example.org',
       'admin_pass'         => 'secret password'
   ]
+];
+
+$AUTHENTICATION = [
+    'cas' => [
+        'host' => 'example.org',
+        'uri'  => 'cas'
+    ],
+    'oidc' => [
+        'server'         => 'example.org',
+        'client_id'      => '',
+        'client_secret'  => '',
+        'username_claim' => 'adfs1upn'
+    ]
 ];
 
 /**

@@ -7,6 +7,7 @@
         "apereo/phpcas":                   "@stable",
         "guzzlehttp/guzzle":               "@stable",
         "graylog2/gelf-php":               "@stable",
+        "jumbojett/openid-connect-php":    "@stable",
         "laminas/laminas-log":             "@stable",
         "laminas/laminas-permissions-acl": "@stable",
         "twig/twig":                       "@stable"
