@@ -17,7 +17,8 @@ clean:
 	for f in $(shell find public/css   -name '*-*.css'   ); do rm $$f; done
 	for f in $(shell find data/Themes  -name '*-*.css'   ); do rm $$f; done
 
-compile: $(LANGUAGES)
+compile:
+	cd ${LANGUAGES} && msgfmt -cv *.po
 	cd public/css                 && sassc -t compact -m screen.scss screen-${VERSION}.css
 	cd data/Themes/COB/public/css && sassc -t compact -m screen.scss screen-${VERSION}.css
 	for f in ${JAVASCRIPT}; do cp $$f $${f%.js}-${VERSION}.js; done
@@ -29,6 +30,3 @@ package:
 	[[ -d build ]] || mkdir build
 	rsync -rl --exclude-from=buildignore . build/${APPNAME}
 	cd build && tar czf ${APPNAME}-${VERSION}.tar.gz ${APPNAME}
-
-$(LANGUAGES):
-	cd $@ && msgfmt -cv *.po
