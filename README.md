@@ -14,7 +14,13 @@ Themable
 Speaking of themes.  All look and feel is provided via drop-in themes.  Any core template or block can be overridden by providing a matching file in your theme directory.
 
 ## Developing
+In order to actual work on an application using this, you'll need these dependencies installed on the machine you do you development on.
 
+* PHP        - This is a PHP application, after all
+* Composer   - Manages dependecies for the application
+* make       - In order to run the example Makefile
+* sassc      - Compiles sass into CSS
+* gettext    - Compiles i18n localization files
 
 ## Deployment
 
