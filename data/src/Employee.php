@@ -24,6 +24,8 @@ namespace Site;
 use Web\Authentication\AuthenticationInterface;
 use Web\Authentication\ExternalIdentity;
 
+#ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+
 class Employee implements AuthenticationInterface
 {
 	private static $connection;
