@@ -16,7 +16,8 @@ ini_set('session.save_path', SITE_HOME.'/sessions');
 ini_set('session.cookie_path', BASE_URI);
 session_start();
 
-$route = $ROUTES->getMatcher()->match(GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+$matcher = $ROUTES->getMatcher();
+$route   = $matcher->match(GuzzleHttp\Psr7\ServerRequest::fromGlobals());
 
 if ($route) {
     $controller = $route->handler;
@@ -54,12 +55,12 @@ if ($route) {
         }
     }
     else {
-        $f = $ROUTES->getFailedRoute();
+        $f = $matcher->getFailedRoute();
         $view = new \Web\Views\NotFoundView();
     }
 }
 else {
-    $f = $ROUTES->getFailedRoute();
+    $f = $matcher->getFailedRoute();
     $view = new \Web\Views\NotFoundView();
 }
 

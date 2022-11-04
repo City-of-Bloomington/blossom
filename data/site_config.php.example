@@ -82,18 +82,6 @@ $AUTHENTICATION = [
     ]
 ];
 
-/**
- * CAS authentication https://www.apereo.org/projects/cas
- *
- * https://github.com/apereo/phpCAS
- *
- * phpCAS is a PHP library for handling the calls to the CAS service
- * It is the official library, part of the Apereo CAS project
- */
-define('CAS_SERVER','example.org');
-define('CAS_URI','cas');
-
-
 define('DATE_FORMAT',    'n/j/Y');
 define('TIME_FORMAT',    'g:i a');
 define('DATETIME_FORMAT', DATE_FORMAT.' '.TIME_FORMAT);

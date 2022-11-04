@@ -40,7 +40,7 @@ class CasController extends Controller
 		}
 
 		$config = $AUTHENTICATION['cas'];
-		\phpCAS::client(CAS_VERSION_2_0, $config['host'], 443, $config['uri'], false);
+		\phpCAS::client(CAS_VERSION_2_0, $config['host'], 443, $config['uri'], 'https://'.BASE_HOST);
 		\phpCAS::setNoCasServerValidation();
 		\phpCAS::forceAuthentication();
 		// at this step, the user has been authenticated by the CAS server
