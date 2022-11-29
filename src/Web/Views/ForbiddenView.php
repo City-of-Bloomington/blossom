@@ -21,6 +21,6 @@ class ForbiddenView extends View
 
     public function render(): string
     {
-        return $this->twiw->render('html/403.twig');
+        return $this->twig->render('html/403.twig');
     }
 }
