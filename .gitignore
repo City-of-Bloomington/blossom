@@ -6,4 +6,4 @@ data/sessions/*
 *.cache
 *.css*
 *.mo
-
+make.conf

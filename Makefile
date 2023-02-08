@@ -1,7 +1,12 @@
+include make.conf
+# Variables from make.conf:
+#
+# DOCKER_REPO
+
 SHELL := /bin/bash
 APPNAME := blossom
 
-REQS := sassc msgfmt
+REQS := sassc msgfmt docker
 K := $(foreach r, ${REQS}, $(if $(shell command -v ${r} 2> /dev/null), '', $(error "${r} not installed")))
 
 LANGUAGES := $(wildcard language/*/LC_MESSAGES)
@@ -30,3 +35,7 @@ package:
 	[[ -d build ]] || mkdir build
 	rsync -rl --exclude-from=buildignore . build/${APPNAME}
 	cd build && tar czf ${APPNAME}-${VERSION}.tar.gz ${APPNAME}
+
+dockerfile:
+	docker build build/blossom -t ${DOCKER_REPO}/${APPNAME}:${VERSION}-${COMMIT}
+	docker push ${DOCKER_REPO}/${APPNAME}:${VERSION}-${COMMIT}
