@@ -8,6 +8,7 @@ declare (strict_types=1);
 namespace Web\Authentication\Controllers;
 
 use Aura\Di\Container;
+use Domain\Users\Entities\User;
 use Jumbojett\OpenIDConnectClient;
 
 use Web\Controller;
@@ -43,12 +44,14 @@ class OidcController extends Controller
         $oidc   = new OpenIDConnectClient($config['server'], $config['client_id'], $config['client_secret']);
         $oidc->addScope(['openid', 'allatclaims', 'profile']);
         $oidc->setAllowImplicitFlow(true);
+        $oidc->setRedirectURL(View::generateUrl('login.oidc'));
         $success = $oidc->authenticate();
         if (!$success) {
             echo 'Failed to authenticate';
             exit();
         }
         $info     = $oidc->getVerifiedClaims();
+
         $username = $info->{$config['username_claim']};
         if (!$username) {
             echo 'No username returned';
