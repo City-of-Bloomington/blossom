@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019-2022 City of Bloomington, Indiana
+ * @copyright 2019-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -47,38 +47,41 @@ class OidcController extends Controller
         $oidc->setRedirectURL(View::generateUrl('login.oidc'));
         $success = $oidc->authenticate();
         if (!$success) {
-            echo 'Failed to authenticate';
-            exit();
-        }
-        $info     = $oidc->getVerifiedClaims();
-
-        $username = $info->{$config['username_claim']};
-        if (!$username) {
-            echo 'No username returned';
-            exit();
+            return $this->failure('Failed to authenticate');
         }
 
         // at this step, the user has been authenticated by the OIDC server
+        $info = $oidc->getVerifiedClaims();
 
-        // They may be authenticated according to OIDC,
-        // but that doesn't mean they have person record
-        // and even if they have a person record, they may not
-        // have a user account for that person record.
-        try { $user = $this->auth->identify($username); }
-        catch (\Exception $e) {
-            $_SESSION['errorMessages'][] = $e;
-            return new \Web\Views\ForbiddenView();
+        if (!$info->{$config['claims']['username']}) {
+            return $this->failure('No username returned');
         }
 
-        if (isset($user) && $user) { $_SESSION['USER'] = $user; }
-        else {
-            $_SESSION['errorMessages'][] = 'users/unknownUser';
-            return new \Web\Views\ForbiddenView();
-        }
+        $_SESSION['USER'] = new User([
+            'username'  => $info->{$config['claims']['username' ]},
+            'firstname' => $info->{$config['claims']['firstname']},
+            'lastname'  => $info->{$config['claims']['lastname' ]},
+            'email'     => $info->{$config['claims']['email'    ]},
+            'role'      => $this->role($info->{$config['claims']['groups']}, $config['claims']['groupmap']),
+        ]);
 
         $return_url = $_SESSION['return_url'];
         unset($_SESSION['return_url']);
         header("Location: $return_url");
         exit();
+    }
+
+    private function role(array $groups, array $mapping): ?string
+    {
+        foreach ($mapping as $role=>$g) {
+            if (in_array($g, $groups)) { return $role; }
+        }
+        return null;
+    }
+
+    private function failure(string $error): View
+    {
+        $_SESSION['errorMessages'][] = $error;
+        return new \Web\Views\ForbiddenView();
     }
 }
