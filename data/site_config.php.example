@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 City of Bloomington, Indiana
+ * @copyright 2020-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -80,12 +80,13 @@ $AUTHENTICATION = [
         'client_secret'  => '',
         'claims' => [
             // Blossom field => OIDC Claim
-            'username'  => 'adfs1upn',
-            'firstname' => 'given_name',
-            'lastname'  => 'family_name',
-            'email'     => 'upn',
-            'groups'    => 'group',
-            'groupmap'  => [
+            'username'    => 'adfs1upn',
+            'displayname' => 'commonname',
+            'firstname'   => 'given_name',
+            'lastname'    => 'family_name',
+            'email'       => 'upn',
+            'groups'      => 'group',
+            'groupmap'    => [
                 // Blossom Role => OIDC Group
                 'Administrator' => 'Blossom Administrators',
                 'Supervisor'    => 'Blossom Supervisors',

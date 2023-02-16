@@ -58,11 +58,12 @@ class OidcController extends Controller
         }
 
         $_SESSION['USER'] = new User([
-            'username'  => $info->{$config['claims']['username' ]},
-            'firstname' => $info->{$config['claims']['firstname']},
-            'lastname'  => $info->{$config['claims']['lastname' ]},
-            'email'     => $info->{$config['claims']['email'    ]},
-            'role'      => $this->role($info->{$config['claims']['groups']}, $config['claims']['groupmap']),
+            'username'    => $info->{$config['claims']['username' ]},
+            'displayname' => $info->{$config['claims']['displayname']},
+            'firstname'   => $info->{$config['claims']['firstname']},
+            'lastname'    => $info->{$config['claims']['lastname' ]},
+            'email'       => $info->{$config['claims']['email'    ]},
+            'role'        => $this->role($info->{$config['claims']['groups']}, $config['claims']['groupmap']),
         ]);
 
         $return_url = $_SESSION['return_url'];
