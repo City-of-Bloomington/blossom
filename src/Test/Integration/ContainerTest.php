@@ -23,6 +23,6 @@ class ContainerTest extends TestCase
         $sql    = 'select count(*) from people';
         $result = $pdo->query($sql);
         $count  = $result->fetchColumn();
-        $this->assertGreaterThan(1, $count);
+        $this->assertGreaterThanOrEqual(1, $count, 'No people in the database');
     }
 }
