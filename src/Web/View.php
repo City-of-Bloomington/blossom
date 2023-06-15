@@ -1,11 +1,12 @@
 <?php
 /**
- * @copyright 2006-2021 City of Bloomington, Indiana
+ * @copyright 2006-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 namespace Web;
 
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -44,6 +45,7 @@ abstract class View
         if (isset($_SESSION['USER'])) {
             $this->twig->addGlobal('USER', $_SESSION['USER']);
         }
+        $this->twig->addExtension(new DebugExtension());
 
         $this->twig->addFunction(new TwigFunction('_'  ,         [$this, 'translate'  ]));
         $this->twig->addFunction(new TwigFunction('uri',         [$this, 'generateUri']));
