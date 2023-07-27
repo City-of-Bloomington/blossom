@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2019 City of Bloomington, Indiana
+ * @copyright 2017-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -80,7 +80,7 @@ abstract class PdoRepository
             unset($data[$pk]);
 
             $update = $this->queryFactory->newUpdate();
-            $update->table($table)->cols($data)->where("$pk=?", $id);
+            $update->table($table)->cols($data)->where("$pk=:$pk", [$pk => $id]);
             $query = $this->pdo->prepare($update->getStatement());
             $query->execute($update->getBindValues());
             return $id;
@@ -123,7 +123,7 @@ abstract class PdoRepository
         $select->cols(['count(*)'])
                ->from($table);
         foreach ($fields as $k=>$v) {
-            if ($v) { $select->where("$k=?", $v); }
+            if ($v) { $select->where("$k=:$k", [$k=>$v]); }
             else    { $select->where("$k is null"); }
         }
 

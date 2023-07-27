@@ -6,7 +6,7 @@ include make.conf
 SHELL := /bin/bash
 APPNAME := blossom
 
-REQS := sassc msgfmt docker
+REQS := sassc msgfmt
 K := $(foreach r, ${REQS}, $(if $(shell command -v ${r} 2> /dev/null), '', $(error "${r} not installed")))
 
 LANGUAGES := $(wildcard language/*/LC_MESSAGES)

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018-2019 City of Bloomington, Indiana
+ * @copyright 2018-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -33,7 +33,7 @@ class PdoUsersRepository extends PdoRepository implements UsersRepository
     private function loadByKey(string $key, $value): ?User
     {
         $select = $this->getBaseSelect();
-        $select->where("$key=?", $value);
+        $select->where("$key=:$key", [$key => $value]);
         $result = $this->performSelect($select);
         return count($result['rows']) ? new User($result['rows'][0]) : null;
     }
@@ -50,7 +50,7 @@ class PdoUsersRepository extends PdoRepository implements UsersRepository
 
         foreach ($this->columns() as $f) {
             if (!empty($req->$f)) {
-                $select->where("$f=?", $req->$f);
+                $select->where("$f=:$f", [$f => $req->$f]);
             }
         }
 

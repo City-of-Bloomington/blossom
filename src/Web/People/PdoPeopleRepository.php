@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018-2019 City of Bloomington, Indiana
+ * @copyright 2018-2023 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -29,7 +29,7 @@ class PdoPeopleRepository extends PdoRepository implements PeopleRepository
     {
         $select = $this->queryFactory->newSelect();
         $select->cols($this->columns())->from(self::TABLE);
-        $select->where('id=?', $person_id);
+        $select->where('id=:id', ['id' => $person_id]);
         $result = $this->performSelect($select);
         if (count($result['rows'])) {
             return new Person($result['rows'][0]);
