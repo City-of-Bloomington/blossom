@@ -31,7 +31,9 @@ class OidcController extends Controller
      */
     public function __invoke(array $params): View
     {
-        $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
+        if (empty($_SESSION['return_url'])) {
+            $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
+        }
 
         // If they don't have OpenID configured, send them onto the application's
         // internal authentication system

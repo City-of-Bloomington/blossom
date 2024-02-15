@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2015-2022 City of Bloomington, Indiana
+ * @copyright 2015-2024 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 /**
@@ -49,7 +49,7 @@ if ($route) {
                 $view = new \Web\Views\ForbiddenView();
             }
             else {
-                header('Location: '.\Web\View::generateUrl('login.login'));
+                header('Location: '.\Web\View::generateUrl('login.oidc')."?return_url=$_SERVER[REQUEST_URI]");
                 exit();
             }
         }
