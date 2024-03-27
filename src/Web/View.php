@@ -42,6 +42,11 @@ abstract class View
         $this->twig->addGlobal('BASE_URL',         BASE_URL);
         $this->twig->addGlobal('BASE_URI',         BASE_URI);
         $this->twig->addGlobal('REQUEST_URI',      $_SERVER['REQUEST_URI']);
+        $this->twig->addGlobal('ROUTE_NAME',       $route->name);
+        $this->twig->addGlobal('DATE_FORMAT',      DATE_FORMAT);
+        $this->twig->addGlobal('TIME_FORMAT',      TIME_FORMAT);
+        $this->twig->addGlobal('DATETIME_FORMAT',  DATETIME_FORMAT);
+        $this->twig->addGlobal('LANG',             strtolower(substr(LOCALE, 0, 2)));
         if (isset($_SESSION['USER'])) {
             $this->twig->addGlobal('USER', $_SESSION['USER']);
         }
@@ -183,7 +188,7 @@ abstract class View
      * This imports the $ROUTES global variable and calls the
      * generate function on it.
      *
-     * @see https://github.com/auraphp/Aura.Router/tree/2.x
+     * @see https://github.com/auraphp/Aura.Router/tree/3.x
      * @param string $route_name
      * @param array $params
      * @return string
