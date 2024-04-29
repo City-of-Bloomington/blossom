@@ -1,14 +1,13 @@
 #!/bin/bash
 # Creates a tarball containing a full snapshot of the data in the site
 #
-# @copyright Copyright 2011-2018 City of Bloomington, Indiana
+# @copyright Copyright 2011-2024 City of Bloomington, Indiana
 # @license https://www.gnu.org/licenses/agpl-3.0.txt GNU/AGPL, see LICENSE
 APPLICATION_NAME="blossom"
 APPLICATION_HOME="{{ blossom_install_path }}"
 BACKUP_DIR="{{ blossom_backup_path }}"
 SITE_HOME="{{ blossom_site_home }}"
-CRON_LOG="/var/log/cron/${APPLICATION_NAME}"
-MYSQL_CREDENTIALS="/etc/cron.daily/backup.d/${APPLICATION_NAME}.cnf"
+MYSQL_CREDENTIALS="/etc/mysql/debian.cnf"
 MYSQL_DBNAME="{{ blossom_db.default.name }}"
 
 #----------------------------------------------------------

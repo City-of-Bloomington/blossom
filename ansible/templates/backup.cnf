@@ -1,3 +1,0 @@
-[mysqldump]
-user={{ blossom_db.default.user }}
-password={{ blossom_db.default.pass }}

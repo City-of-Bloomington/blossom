@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 City of Bloomington, Indiana
+ * @copyright 2020-2024 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -76,8 +76,8 @@ $LDAP = [
  * phpCAS is a PHP library for handling the calls to the CAS service
  * It is the official library, part of the Apereo CAS project
  */
-define('CAS_SERVER', "{{ blossom_cas_server }}");
-define('CAS_URI','cas');
+define('CAS_SERVER', "{{ blossom_cas.host }}");
+define('CAS_URI',    "{{ blossom_cas.uri  }}");
 
 
 define('DATE_FORMAT',    'n/j/Y');
@@ -95,5 +95,5 @@ define('PAGINATION_ITEMS_PER_PAGE', 20);
  * This is handy for notifying developers of a problem before users notice.
  ** @see https://graylog.org
  */
-// define('GRAYLOG_DOMAIN', 'graylog.example.org');
-// define('GRAYLOG_PORT',   12200);
+// define('GRAYLOG_DOMAIN', '{{ blossom_graylog.host }}');
+// define('GRAYLOG_PORT',    {{ blossom_graylog.port }});
