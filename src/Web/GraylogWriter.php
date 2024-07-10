@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 City of Bloomington, Indiana
+ * @copyright 2020-2024 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -18,8 +18,6 @@ class GraylogWriter extends AbstractWriter
 
     public function __construct(string $url, int $port)
     {
-        $this->url = $url;
-
         $transport = new UdpTransport($url, $port, UdpTransport::CHUNK_SIZE_LAN);
         $this->publisher = new Publisher();
         $this->publisher->addTransport($transport);
@@ -37,6 +35,7 @@ class GraylogWriter extends AbstractWriter
         if (!empty($event['extra']['file'])) { $message->setFile ($event['extra']['file']); }
         if (!empty($event['extra']['line'])) { $message->setLine ($event['extra']['line']); }
         $message->setAdditional('base_uri', BASE_URI);
+        $message->setAdditional('request_uri', $_SERVER['REQUEST_URI'] ?? 'command line');
         $message->setFullMessage(print_r($event, true));
 
         $this->publisher->publish($message);
