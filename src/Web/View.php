@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2006-2023 City of Bloomington, Indiana
+ * @copyright 2006-2024 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 namespace Web;
@@ -24,7 +24,9 @@ abstract class View
 	 */
 	public function __construct()
 	{
-        $this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
+        $this->outputFormat = (!empty($_REQUEST['format']) && self::isValidFormat($_REQUEST['format']))
+                            ? $_REQUEST['format']
+                            : 'html';
 
         $tpl = [];
         if (defined('THEME')) {
@@ -42,11 +44,6 @@ abstract class View
         $this->twig->addGlobal('BASE_URL',         BASE_URL);
         $this->twig->addGlobal('BASE_URI',         BASE_URI);
         $this->twig->addGlobal('REQUEST_URI',      $_SERVER['REQUEST_URI']);
-        $this->twig->addGlobal('ROUTE_NAME',       $route->name);
-        $this->twig->addGlobal('DATE_FORMAT',      DATE_FORMAT);
-        $this->twig->addGlobal('TIME_FORMAT',      TIME_FORMAT);
-        $this->twig->addGlobal('DATETIME_FORMAT',  DATETIME_FORMAT);
-        $this->twig->addGlobal('LANG',             strtolower(substr(LOCALE, 0, 2)));
         if (isset($_SESSION['USER'])) {
             $this->twig->addGlobal('USER', $_SESSION['USER']);
         }
@@ -67,6 +64,19 @@ abstract class View
         bindtextdomain('errors',   APPLICATION_HOME.'/language');
         textdomain('labels');
 	}
+
+	/**
+     * Twig templates are organized by output format.  So, a format is valid
+     * if there is a directory of twig templates matching the format name.
+     */
+	private static function isValidFormat(string $format): bool
+    {
+        $dir = glob(APPLICATION_HOME.'/templates/*', GLOB_ONLYDIR);
+        foreach ($dir as $d) {
+            if ($format == basename($d)) { return true; }
+        }
+        return false;
+    }
 
 	/**
 	 * Cleans strings for output
@@ -188,7 +198,7 @@ abstract class View
      * This imports the $ROUTES global variable and calls the
      * generate function on it.
      *
-     * @see https://github.com/auraphp/Aura.Router/tree/3.x
+     * @see https://github.com/auraphp/Aura.Router/tree/2.x
      * @param string $route_name
      * @param array $params
      * @return string
