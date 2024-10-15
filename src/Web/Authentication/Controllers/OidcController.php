@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019-2023 City of Bloomington, Indiana
+ * @copyright 2019-2024 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -47,7 +47,10 @@ class OidcController extends Controller
         $oidc->addScope(['openid', 'allatclaims', 'profile']);
         $oidc->setAllowImplicitFlow(true);
         $oidc->setRedirectURL(View::generateUrl('login.oidc'));
-        $success = $oidc->authenticate();
+
+        $success = null;
+        try { $success = $oidc->authenticate(); }
+        catch (\Exception $e) { }
         if (!$success) {
             return $this->failure('Failed to authenticate');
         }
