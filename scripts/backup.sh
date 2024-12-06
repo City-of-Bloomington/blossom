@@ -1,14 +1,15 @@
 #!/bin/bash
 # Creates a tarball containing a full snapshot of the data in the site
 #
-# @copyright Copyright 2011-2013 City of Bloomington, Indiana
-# @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
-# @author Cliff Ingham <inghamn@bloomington.in.gov>
-MYSQLDUMP=/usr/local/mysql/bin/mysqldump
-BACKUP_DIR=/var/www/backups/application_name
-APPLICATION_HOME=/var/www/sites/application_name
+# @copyright Copyright 2011-2024 City of Bloomington, Indiana
+# @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE
+APPLICATION_NAME=blossom
 
-MYSQL_DBNAME=application_name
+BACKUP_DIR=/srv/backups/$APPLICATION_NAME
+APPLICATION_HOME=/srv/sites/$APPLICATION_NAME
+SITE_HOME=/srv/data/$APPLICATION_NAME
+MYSQL_AUTH=/etc/mysql/debian.cnf
+MYSQL_DBNAME=$APPLICATION_NAME
 
 # How many days worth of tarballs to keep around
 num_days_to_keep=5
@@ -26,7 +27,7 @@ cd $BACKUP_DIR
 mkdir $today
 
 # Dump the database
-$MYSQLDUMP --defaults-extra-file=$APPLICATION_HOME/scripts/backup.cnf $MYSQL_DBNAME > $today/$MYSQL_DBNAME.sql
+mysqldump --defaults-extra-file=$MYSQL_AUTH $MYSQL_DBNAME > $today/$MYSQL_DBNAME.sql
 
 # Copy any data directories into this directory, so they're backed up, too.
 # For example, if we had a media directory....
