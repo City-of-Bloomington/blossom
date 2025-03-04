@@ -8,7 +8,6 @@
         "guzzlehttp/guzzle":               "@stable",
         "graylog2/gelf-php":               "^1",
         "jumbojett/openid-connect-php":    "@stable",
-        "laminas/laminas-log":             "@stable",
         "laminas/laminas-permissions-acl": "@stable",
         "twig/twig":                       "@stable"
     },
