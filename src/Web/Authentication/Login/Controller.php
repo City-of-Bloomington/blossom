@@ -1,20 +1,14 @@
 <?php
 /**
- * @copyright 2022 City of Bloomington, Indiana
+ * @copyright 2022-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\Authentication\Controllers;
+namespace Web\Authentication\Login;
 
 use Aura\Di\Container;
 
-use Web\Authentication\Views\LoginView;
-use Web\Controller;
-use Web\Template;
-use Web\View;
-
-class LoginController extends Controller
+class Controller extends \Web\Controller
 {
     private $return_url;
     private $auth;
@@ -28,9 +22,9 @@ class LoginController extends Controller
     /**
      * Try to do CAS authentication
      */
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
-        return new LoginView();
+        return new View();
     }
 }

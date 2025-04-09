@@ -1,18 +1,17 @@
 <?php
 /**
- * @copyright 2017-2021 City of Bloomington, Indiana
+ * @copyright 2017-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\People\Views;
+namespace Web\People\List;
 
 use Web\Paginator;
-use Web\View;
 
 use Domain\People\Actions\Search\Request;
 use Domain\People\Actions\Search\Response;
 
-class SearchView extends View
+class View extends \Web\View
 {
     public function __construct(Request  $request,
                                 Response $response,

@@ -1,21 +1,16 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\Users\Controllers;
+namespace Web\Users\List;
 
 use Domain\Users\Actions\Search\Request;
-use Web\Users\Views\SearchView;
-use Web\Controller;
-use Web\View;
 
-
-class ListController extends Controller
+class Controller extends \Web\Controller
 {
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         global $ACL;
         $search   = $this->di->get('Domain\Users\Actions\Search\Command');
@@ -24,11 +19,11 @@ class ListController extends Controller
         $request  = new Request($_GET, null, parent::ITEMS_PER_PAGE, $page);
         $response = $search($request);
 
-        return new SearchView($request,
-                              $response,
-                              parent::ITEMS_PER_PAGE,
-                              $page,
-                              $ACL->getRoles(),
-                              $auth->getAuthenticationMethods());
+        return new View($request,
+                        $response,
+                        parent::ITEMS_PER_PAGE,
+                        $page,
+                        $ACL->getRoles(),
+                        $auth->getAuthenticationMethods());
     }
 }

@@ -1,21 +1,16 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\People\Controllers;
+namespace Web\People\Update;
 
 use Domain\People\Actions\Update\Request as UpdateRequest;
-use Web\People\Views\UpdateView;
-use Web\Controller;
-use Web\View;
 
-
-class UpdateController extends Controller
+class Controller extends \Web\Controller
 {
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         $person_id = !empty($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
         $_SESSION['return_url'] = self::defaultReturnUrl($person_id);
@@ -45,7 +40,7 @@ class UpdateController extends Controller
             $req = new UpdateRequest();
         }
 
-        return new UpdateView($req, isset($res) ? $res : null, $_SESSION['return_url']);
+        return new View($req, isset($res) ? $res : null, $_SESSION['return_url']);
     }
 
     private static function defaultReturnUrl(?int $resource_id=null): string
@@ -53,7 +48,7 @@ class UpdateController extends Controller
         return !empty  ($_REQUEST['return_url'])
             ? urldecode($_REQUEST['return_url'])
             : ($resource_id
-                ? View::generateUrl('resources.view', ['id'=>$resource_id])
-                : View::generateUrl('resources.index'));
+                ? \Web\View::generateUrl('resources.view', ['id'=>$resource_id])
+                : \Web\View::generateUrl('resources.index'));
     }
 }

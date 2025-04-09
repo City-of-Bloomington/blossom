@@ -1,23 +1,19 @@
 <?php
 /**
- * @copyright 2022 City of Bloomington, Indiana
+ * @copyright 2022-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Users\Controllers;
+namespace Web\Users\Add;
 
 use Domain\Users\Actions\Add\Request as AddRequest;
-use Web\Controller;
-use Web\View;
-use Web\Users\Views\AddView;
-use Web\Users\Views\InfoView;
 
-class AddController extends Controller
+class Controller extends \Web\Controller
 {
     const DEFAULT_ROLE   = 'Employee';
     const DEFAULT_AUTH   = 'Ldap';
 
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         $add  = $this->di->get('Domain\Users\Actions\Add\Command');
         $auth = $this->di->get('Web\Authentication\AuthenticationService');
@@ -47,10 +43,10 @@ class AddController extends Controller
                 if (!empty($_REQUEST['format']) && $_REQUEST['format']!='html') {
                     $info = $this->di->get('Domain\Users\Actions\Info\Command');
                     $ir   = $info($response->id);
-                    return new InfoView($ir->user);
+                    return new \Web\Users\Info\View($ir->user);
                 }
                 else {
-                    header('Location: '.View::generateUrl('users.index'));
+                    header('Location: '.\Web\View::generateUrl('users.index'));
                     exit();
                 }
             }
@@ -63,9 +59,9 @@ class AddController extends Controller
         }
 
         global $ACL;
-        return new AddView($request,
-                           isset($response) ? $response : null,
-                           $ACL->getRoles(),
-                           $auth->getAuthenticationMethods());
+        return new View($request,
+                        isset($response) ? $response : null,
+                        $ACL->getRoles(),
+                        $auth->getAuthenticationMethods());
     }
 }

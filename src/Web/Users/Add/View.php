@@ -1,17 +1,16 @@
 <?php
 /**
- * @copyright 2022 City of Bloomington, Indiana
+ * @copyright 2022-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Users\Views;
+namespace Web\Users\Add;
 
 use Domain\Users\Actions\Add\Request;
 use Domain\Users\Actions\Add\Response;
 
-use Web\View;
 
-class AddView extends View
+class View extends \Web\View
 {
     public function __construct(Request   $request,
                                 ?Response $response,

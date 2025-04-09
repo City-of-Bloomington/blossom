@@ -1,21 +1,16 @@
 <?php
 /**
- * @copyright 2019-2024 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\Authentication\Controllers;
+namespace Web\Authentication\OIDC;
 
 use Aura\Di\Container;
 use Domain\Users\Entities\User;
 use Jumbojett\OpenIDConnectClient;
 
-use Web\Controller;
-use Web\Template;
-use Web\View;
-
-class OidcController extends Controller
+class Controller extends \Web\Controller
 {
     private $return_url;
     private $auth;
@@ -29,7 +24,7 @@ class OidcController extends Controller
     /**
      * Try to do OpenID Connect authentication
      */
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         if (empty($_SESSION['return_url'])) {
             $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
@@ -46,7 +41,7 @@ class OidcController extends Controller
         $oidc   = new OpenIDConnectClient($config['server'], $config['client_id'], $config['client_secret']);
         $oidc->addScope(['openid', 'allatclaims', 'profile']);
         $oidc->setAllowImplicitFlow(true);
-        $oidc->setRedirectURL(View::generateUrl('login.oidc'));
+        $oidc->setRedirectURL(\Web\View::generateUrl('login.oidc'));
 
         $success = null;
         try { $success = $oidc->authenticate(); }
@@ -85,7 +80,7 @@ class OidcController extends Controller
         return null;
     }
 
-    private function failure(string $error): View
+    private function failure(string $error): \Web\View
     {
         $_SESSION['errorMessages'][] = $error;
         return new \Web\Views\ForbiddenView();

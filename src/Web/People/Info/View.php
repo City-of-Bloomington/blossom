@@ -1,16 +1,14 @@
 <?php
 /**
- * @copyright 2016-2021 City of Bloomington, Indiana
+ * @copyright 2016-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\People\Views;
-
-use Web\View;
+namespace Web\People\Info;
 
 use Domain\People\Actions\Info\Response as InfoResponse;
 
-class InfoView extends View
+class View extends \Web\View
 {
     public function __construct(InfoResponse $response)
     {

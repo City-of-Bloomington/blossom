@@ -39,6 +39,7 @@
         - "{{ blossom_install_path }}"
         - "{{ blossom_backup_path  }}"
         - "{{ blossom_site_home    }}"
+        - "{{ blossom_site_home    }}/sessions"
         - "/var/log/cron"
 
     - name: "Extract release"

@@ -1,25 +1,20 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
+namespace Web\Users\Info;
 
-namespace Web\Users\Controllers;
-
-use Web\Controller;
-use Web\View;
-use Web\Users\Views\InfoView;
-
-class InfoController extends Controller
+class Controller extends \Web\Controller
 {
-    public function __invoke(array $params): View
+    public function __invoke(array $params): \Web\View
     {
         if (!empty($_REQUEST['id'])) {
             $info = $this->di->get('Domain\Users\Actions\Info\Command');
             $res  = $info((int)$_REQUEST['id']);
             if ($res->user) {
-                return new InfoView($res->user);
+                return new View($res->user);
             }
             else {
                 $_SESSION['errorMessages'] = $res->errors;

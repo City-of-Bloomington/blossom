@@ -68,16 +68,12 @@ $LDAP = [
     ]
 ];
 
-/**
- * CAS authentication https://www.apereo.org/projects/cas
- *
- * https://github.com/apereo/phpCAS
- *
- * phpCAS is a PHP library for handling the calls to the CAS service
- * It is the official library, part of the Apereo CAS project
- */
-define('CAS_SERVER', "{{ blossom_cas.host }}");
-define('CAS_URI',    "{{ blossom_cas.uri  }}");
+$AUTHENTICATION = [
+    'cas' => [
+        'host' => "{{ blossom_cas.host }}",
+        'uri'  => "{{ blossom_cas.uri  }}"
+    ]
+];
 
 
 define('DATE_FORMAT',    'n/j/Y');

@@ -1,18 +1,15 @@
 <?php
 /**
- * @copyright 2019-2021 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\People\Views;
+namespace Web\People\Update;
 
 use Domain\People\Actions\Update\Request;
 use Domain\People\Actions\Update\Response;
 
-use Web\View;
-
-class UpdateView extends View
+class View extends \Web\View
 {
     public function __construct(Request $request, ?Response $response, string $return_url)
     {

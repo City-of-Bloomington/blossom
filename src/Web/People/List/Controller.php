@@ -2,19 +2,15 @@
 /**
  * Returns a list of people
  *
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-
-namespace Web\People\Controllers;
+namespace Web\People\List;
 
 use Domain\People\Actions\Search\Request as SearchRequest;
-use Web\People\Views\SearchView;
-use Web\Controller;
-use Web\View;
 
-class ListController extends Controller
+class Controller extends \Web\Controller
 {
     public function __invoke(array $params): View
     {
@@ -23,6 +19,6 @@ class ListController extends Controller
         $request  = new SearchRequest($_GET, null, parent::ITEMS_PER_PAGE, $page);
         $response = $search($request);
 
-        return new SearchView($request, $response, parent::ITEMS_PER_PAGE, $page);
+        return new View($request, $response, parent::ITEMS_PER_PAGE, $page);
     }
 }
