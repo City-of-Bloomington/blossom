@@ -72,6 +72,26 @@ $AUTHENTICATION = [
     'cas' => [
         'host' => "{{ blossom_cas.host }}",
         'uri'  => "{{ blossom_cas.uri  }}"
+    ],
+    'oidc' => [
+        'server'         => "{{ blossom_oidc.server        }}",
+        'client_id'      => "{{ blossom_oidc.client_id     }}",
+        'client_secret'  => "{{ blossom_oidc.client_secret }}",
+        'claims' => [
+            // Blossom field => OIDC Claim
+            'username'    => 'preferred_username',
+            'displayname' => 'commonname',
+            'firstname'   => 'given_name',
+            'lastname'    => 'family_name',
+            'email'       => 'email',
+            'groups'      => 'group',
+            'groupmap'    => [
+                // Blossom Role => OIDC Group
+                'Administrator' => 'Blossom Administrators',
+                'Supervisor'    => 'Blossom Supervisors',
+                'Staff'         => 'Blossom Staff'
+            ]
+        ],
     ]
 ];
 
