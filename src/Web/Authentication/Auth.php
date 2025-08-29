@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -39,7 +39,9 @@ class Auth
     {
         global $ACL;
 
-        list($resource, $permission) = explode('.', $routeName);
+        $p = pathinfo($routeName);
+        $resource   = $p['filename'];
+        $permission = $p['extension'];
         $role = $user ? $user->role : 'Anonymous';
 
         return $ACL->hasResource($resource)

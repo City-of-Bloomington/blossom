@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 City of Bloomington, Indiana
+ * @copyright 2020-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -17,7 +17,8 @@ $ACL->addRole(new Role('Anonymous'))
  * Create resources for all the routes
  */
 foreach (array_keys($ROUTES->getMap()->getRoutes()) as $r) {
-    list($resource, $permission) = explode('.', $r);
+    $p = pathinfo($r->name);
+    $resource = $p['filename'];
     if (!$ACL->hasResource($resource)) {
          $ACL->addResource(new Resource($resource));
     }
