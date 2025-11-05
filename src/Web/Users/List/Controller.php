@@ -12,7 +12,6 @@ class Controller extends \Web\Controller
 {
     public function __invoke(array $params): \Web\View
     {
-        global $ACL;
         $search   = $this->di->get('Domain\Users\Actions\Search\Command');
         $auth     = $this->di->get('Web\Auth\AuthenticationService');
 		$page     =  !empty($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -22,8 +21,6 @@ class Controller extends \Web\Controller
         return new View($request,
                         $response,
                         parent::ITEMS_PER_PAGE,
-                        $page,
-                        $ACL->getRoles(),
-                        $auth->getAuthenticationMethods());
+                        $page);
     }
 }

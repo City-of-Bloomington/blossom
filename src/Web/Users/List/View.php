@@ -14,9 +14,7 @@ class View extends \Web\View
     public function __construct(Request  $request,
                                 Response $response,
                                 int      $itemsPerPage,
-                                int      $currentPage,
-                                array    $roles,
-                                array    $authentication_methods)
+                                int      $currentPage)
     {
         parent::__construct();
 
@@ -26,10 +24,9 @@ class View extends \Web\View
 
 
         $this->vars = array_merge((array)$request, [
-            'users'                  => $response->users,
-            'total'                  => $response->total,
-            'roles'                  => $roles,
-            'authentication_methods' => $authentication_methods,
+            'users' => $response->users,
+            'total' => $response->total,
+            'roles' => self::roles(),
         ]);
 
         $fields = array_keys((array)$request);
@@ -42,10 +39,12 @@ class View extends \Web\View
 
     public function render(): string
     {
-        $template = $this->outputFormat == 'html'
-                    ? "users/findForm.twig"
-                    : "users/list.twig";
+        return $this->twig->render('html/users/findForm.twig', $this->vars);
+    }
 
-        return $this->twig->render($this->outputFormat."/$template", $this->vars);
+    private static function roles(): array
+    {
+        global $ACL;
+        return $ACL->getRoles();
     }
 }

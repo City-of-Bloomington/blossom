@@ -1,5 +1,5 @@
 {#
- * @copyright 2018-2021 City of Bloomington, Indiana
+ * @copyright 2018-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  *
  * @param array  users  Search Results
@@ -10,7 +10,6 @@
  * @param string lastname
  * @param string email
  * @param string role
- * @param string authentication_method
  *
  * Pagination
  * @param int    total
@@ -48,12 +47,6 @@
                  <select name="role" id="role">
                     <option value=""></option>
                     {% for o in roles %}<option {{ role==o ? 'selected="true"' : '' }}>{{ o }}</option>{% endfor %}
-                 </select>
-            </div>
-            <div><label   for="authentication_method">{{ _('authentication_method') }}</label>
-                 <select name="authentication_method" id="authentication_method">
-                    <option value=""></option>
-                    {% for o in authentication_methods %}<option {{ authentication_method==o ? 'selected="true"' : '' }}>{{ o }}</option>{% endfor %}
                  </select>
             </div>
             {% if additional_params is defined %}

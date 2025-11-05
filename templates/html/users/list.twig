@@ -1,5 +1,5 @@
 {#
- * @copyright 2007-2021 City of Bloomington, Indiana
+ * @copyright 2007-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  * @param array users
 #}
@@ -14,10 +14,9 @@
 
 	<table>
 		<thead>
-			<tr><th>{{ _('username'             ) }}</th>
-				<th>{{ _('name'                 ) }}</th>
-				<th>{{ _('authentication_method') }}</th>
-				<th>{{ _('role'                 ) }}</th>
+			<tr><th>{{ _('username') }}</th>
+				<th>{{ _('name'    ) }}</th>
+				<th>{{ _('role'    ) }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +24,6 @@
             {% set link=uri('users.view', {'id':user.id }) %}
             <tr><td><a href="{{ link }}">{{ user.username }}</a></td>
                 <td><a href="{{ link }}">{{ user.firstname }} {{ user.lastname }}</a></td>
-                <td><a href="{{ link }}">{{ user.authentication_method }}</a></td>
                 <td><a href="{{ link }}">{{ user.role }}</a></td>
             </tr>
         {% endfor %}

@@ -11,8 +11,8 @@ use Domain\Users\Actions\Update\Request as UpdateRequest;
 
 class Controller extends \Web\Controller
 {
-    const DEFAULT_ROLE   = 'Employee';
-    const DEFAULT_AUTH   = 'Ldap';
+    const DEFAULT_ROLE   = 'Staff';
+    const DEFAULT_AUTH   = 'Employee';
 
     public function __invoke(array $params): \Web\View
     {
@@ -23,8 +23,7 @@ class Controller extends \Web\Controller
 
         if (isset($_POST['id'])) {
             $request  = new UpdateRequest($_POST);
-            if (!$request->role                 ) { $request->role                  = self::DEFAULT_ROLE; }
-            if (!$request->authentication_method) { $request->authentication_method = self::DEFAULT_AUTH; }
+            if (!$request->role) { $request->role = self::DEFAULT_ROLE; }
             $response = $update($request);
             if ($response->errors) {
                 $_SESSION['errorMessages'] = $response->errors;
@@ -52,9 +51,6 @@ class Controller extends \Web\Controller
         }
 
         global $ACL;
-        return new View($request,
-                        isset($response) ? $response : null,
-                        $ACL->getRoles(),
-                        $auth->getAuthenticationMethods());
+        return new View($request, $response ?? null);
     }
 }

@@ -1,5 +1,5 @@
 {#
- * @copyright 2006-2021 City of Bloomington, Indiana
+ * @copyright 2006-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  *
  * Form field values
@@ -9,13 +9,10 @@
  * @param string email
  * @param string username
  * @param string role
- * @param string password
- * @param string authentication_method
  *
  * Metadata
  * @param string title
  * @param array  roles
- * @param array  authentication_methods
 #}
 {% extends "html/layouts/default.twig" %}
 {% block content %}
@@ -25,16 +22,9 @@
 	<form method="post">
 		<fieldset><legend>{{ _('user_info') }}</legend>
 			<input name="id" type="hidden" value="{{ id }}" />
-            <div><label   for="authentication_method">{{ _('authentication_method') }}</label>
-                 <select name="authentication_method" id="authentication_method">
-                    {% for o in authentication_methods %}<option {{ authentication_method==o ? 'selected="true"' : '' }}>{{ o }}</option>{% endfor %}
-                 </select>
-            </div>
+
             <div><label  for="username">{{ _('username') }}</label>
                  <input name="username" id="username" value="{{ username }}" />
-            </div>
-            <div><label  for="password">{{ _('password') }}</label>
-                 <input name="password" id="password" value="{{ password }}" type="password" />
             </div>
             <div><label   for="role">{{ _('role') }}</label>
                  <select name="role" id="role">

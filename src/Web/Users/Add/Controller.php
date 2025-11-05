@@ -10,8 +10,8 @@ use Domain\Users\Actions\Add\Request as AddRequest;
 
 class Controller extends \Web\Controller
 {
-    const DEFAULT_ROLE   = 'Employee';
-    const DEFAULT_AUTH   = 'Ldap';
+    const DEFAULT_ROLE   = 'Staff';
+    const DEFAULT_AUTH   = 'Employee';
 
     public function __invoke(array $params): \Web\View
     {
@@ -19,21 +19,18 @@ class Controller extends \Web\Controller
         $auth = $this->di->get('Web\Auth\AuthenticationService');
 
         if (isset($_POST['username'])) {
-            if ($_POST['authentication_method'] != 'local') {
-                $o = $auth->externalIdentify($_POST['authentication_method'], $_POST['username']);
-                if ($o) {
-                    if (empty($_POST['firstname'])) { $_POST['firstname'] = $o->firstname; }
-                    if (empty($_POST['lastname' ])) { $_POST['lastname' ] = $o->lastname;  }
-                    if (empty($_POST['email'    ])) { $_POST['email'    ] = $o->email;     }
-                }
+            $o = $auth->externalIdentify(self::DEFAULT_AUTH, $_POST['username']);
+            if ($o) {
+                if (empty($_POST['firstname'])) { $_POST['firstname'] = $o->firstname; }
+                if (empty($_POST['lastname' ])) { $_POST['lastname' ] = $o->lastname;  }
+                if (empty($_POST['email'    ])) { $_POST['email'    ] = $o->email;     }
             }
 
             if (!empty($_POST['password'])) {
                 $_POST['password'] = $auth->password_hash($_POST['password']);
             }
             $request  = new AddRequest($_POST);
-            if (!$request->role                 ) { $request->role                  = self::DEFAULT_ROLE; }
-            if (!$request->authentication_method) { $request->authentication_method = self::DEFAULT_AUTH; }
+            if (!$request->role) { $request->role = self::DEFAULT_ROLE; }
             $response = $add($request);
 
             if ($response->errors) {
@@ -52,16 +49,9 @@ class Controller extends \Web\Controller
             }
         }
         else {
-            $request = new AddRequest([
-                'role'                  => self::DEFAULT_ROLE,
-                'authentication_method' => self::DEFAULT_AUTH
-            ]);
+            $request = new AddRequest(['role' => self::DEFAULT_ROLE]);
         }
 
-        global $ACL;
-        return new View($request,
-                        isset($response) ? $response : null,
-                        $ACL->getRoles(),
-                        $auth->getAuthenticationMethods());
+        return new View($request, $response ?? null);
     }
 }

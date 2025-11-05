@@ -13,9 +13,7 @@ use Domain\Users\Actions\Add\Response;
 class View extends \Web\View
 {
     public function __construct(Request   $request,
-                                ?Response $response,
-                                array     $roles,
-                                array     $authentication_methods)
+                                ?Response $response)
     {
         parent::__construct();
 
@@ -24,14 +22,19 @@ class View extends \Web\View
         }
 
         $this->vars = array_merge((array)$request, [
-            'title'                  => $this->_('user_add'),
-            'roles'                  => $roles,
-            'authentication_methods' => $authentication_methods
+            'title' => $this->_('user_add'),
+            'roles' => self::roles(),
         ]);
     }
 
     public function render(): string
     {
         return $this->twig->render('html/users/addForm.twig', $this->vars);
+    }
+
+    private static function roles(): array
+    {
+        global $ACL;
+        return $ACL->getRoles();
     }
 }

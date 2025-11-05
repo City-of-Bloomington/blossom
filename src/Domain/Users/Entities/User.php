@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018-2023 City of Bloomington, Indiana
+ * @copyright 2018-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -16,7 +16,6 @@ class User
 
     public $username;
     public $role;
-    public $authentication_method;
 
     public function __construct(?array $data=null)
     {
@@ -29,7 +28,6 @@ class User
 
             if (!empty($data['username'   ])) { $this->username    = $data['username'   ]; }
             if (!empty($data['role'       ])) { $this->role        = $data['role'       ]; }
-            if (!empty($data['authentication_method'])) { $this->authentication_method = $data['authentication_method']; }
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2022 City of Bloomington, Indiana
+ * @copyright 2022-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -43,7 +43,6 @@ class Command
         if (!$req->email    ) { $errors[] = 'missingEmail';     }
         if (!$req->username ) { $errors[] = 'missingUsername';  }
         if (!$req->role     ) { $errors[] = 'missingRole';      }
-        if (!$req->authentication_method ) { $errors[] = 'missingAuthenticationMethod'; }
         return $errors;
     }
 }
