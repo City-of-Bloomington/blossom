@@ -4,14 +4,12 @@
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Auth\Views;
+namespace Web\Auth\Login;
 
-use Web\View;
-
-class LoginView extends View
+class View extends \Web\View
 {
     public function render(): string
     {
-        return $this->twig->render("{$this->outputFormat}/authentication/login.twig");
+        return $this->twig->render("html/auth/login.twig");
     }
 }
