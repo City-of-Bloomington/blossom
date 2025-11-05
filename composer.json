@@ -4,7 +4,6 @@
         "aura/di":                         "@stable",
         "aura/router":                     "@stable",
         "aura/sqlquery":                   "@stable",
-        "apereo/phpcas":                   "@stable",
         "guzzlehttp/guzzle":               "@stable",
         "graylog2/gelf-php":               "^1",
         "jumbojett/openid-connect-php":    "@stable",

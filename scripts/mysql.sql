@@ -5,7 +5,5 @@ create table people (
 	displayName varchar(128),
 	email       varchar(128) unique,
 	username    varchar(40)  unique,
-	password    varchar(40),
 	role        varchar(30),
-	authentication_method varchar(40)
 );

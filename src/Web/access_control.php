@@ -16,7 +16,7 @@ $ACL->addRole(new Role('Anonymous'))
 /**
  * Create resources for all the routes
  */
-foreach (array_keys($ROUTES->getMap()->getRoutes()) as $r) {
+foreach ($ROUTES->getMap()->getRoutes() as $r) {
     $p = pathinfo($r->name);
     $resource = $p['filename'];
     if (!$ACL->hasResource($resource)) {

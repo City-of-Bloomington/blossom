@@ -13,7 +13,6 @@ $map->tokens(['id' => '\d+']);
 $map->get('home.index',    '/'      , Web\HomeController::class);
 
 $map->attach('login.', '/login', function ($r) {
-    $r->get('cas',   '/cas',  Web\Auth\CAS\Controller::class);
     $r->get('oidc',  '/oidc', Web\Auth\OIDC\Controller::class);
     $r->get('login', '',      Web\Auth\Login\Controller::class);
 });

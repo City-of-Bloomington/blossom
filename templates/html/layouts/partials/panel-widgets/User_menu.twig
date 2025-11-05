@@ -3,7 +3,6 @@
         <header><h2>{{ USER.getFullname() }}</h2></header>
         <a href="{{ uri('login.logout') }}">{{ _('logout') }}</a>
     {% else %}
-        <a href="{{ url('login.cas' ) ~ '?return_url=' ~ REQUEST_URI }}">CAS  {{ _('login') }}</a>
         <a href="{{ url('login.oidc') ~ '?return_url=' ~ REQUEST_URI }}">OIDC {{ _('login') }}</a>
     {% endif %}
 </nav>
