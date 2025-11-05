@@ -19,13 +19,11 @@ default: clean compile package
 
 clean:
 	rm -Rf build/${APPNAME}*
-	for f in $(shell find public/css   -name '*-*.css'   ); do rm $$f; done
-	for f in $(shell find data/Themes  -name '*-*.css'   ); do rm $$f; done
+	for f in $(shell find public/css -name '*-*.css'); do rm $$f; done
 
 compile:
 	cd ${LANGUAGES} && msgfmt -cv *.po
-	cd public/css                 && sassc -t compact -m screen.scss screen-${VERSION}.css
-	cd data/Themes/COB/public/css && sassc -t compact -m screen.scss screen-${VERSION}.css
+	cd public/css && sassc -t compact -m screen.scss screen-${VERSION}.css
 	for f in ${JAVASCRIPT}; do cp $$f $${f%.js}-${VERSION}.js; done
 
 test:
