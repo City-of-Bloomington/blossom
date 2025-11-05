@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright 2015-2025 City of Bloomington, Indiana
+ * @copyright 2012-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
-/**
- * Grab a timestamp for calculating process time
- */
 declare (strict_types=1);
-use Web\Auth\Auth;
+
+use GuzzleHttp\Psr7\ServerRequest;
+use Web\Template;
+use Web\Block;
 
 $startTime = microtime(true);
 
@@ -16,67 +16,53 @@ ini_set('session.save_path', SITE_HOME.'/sessions');
 ini_set('session.cookie_path', BASE_URI);
 session_start();
 
+// Check for routes
+$request = ServerRequest::fromGlobals();
 $matcher = $ROUTES->getMatcher();
-$route   = $matcher->match(GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+$ROUTE   = $matcher->match($request);
 
-if ($route) {
-    $controller = $route->handler;
-    $c = new $controller($DI);
-    if (is_callable($c)) {
-        $user = Auth::getAuthenticatedUser($DI->get('Web\Auth\AuthenticationService'));
-        if (Auth::isAuthorized($route->name, $user)) {
-            // Convenience:
-            // Most of our applications are just basic form processing.
-            // Thus, the controllers typically read directly from the PHP
-            // global SERVER variables.
-            //
-            // 'id' is the standard name for primary key in tables.
-            // Most routes, by default, allow for a fancy treatment of {id} in the URL.
-            // If it the id param comes from the route handling, we copy
-            // it to the PHP Server variables, so we don't have to have
-            // special parameter handling code for the common case of checking
-            // for an id parameter.
-            if (!empty($route->attributes['id'])) {
-                    $_GET['id'] = $route->attributes['id'];
-                $_REQUEST['id'] = $route->attributes['id'];
-            }
+if ($ROUTE) {
+    foreach ($ROUTE->attributes as $k=>$v) { $_REQUEST[$k] = $v; }
 
-            $view = $c($route->attributes);
-        }
-        else {
-            if     ( isset($_SESSION['USER'])
-                || (!empty($_REQUEST['format']) && $_REQUEST['format'] != 'html')) {
-                $view = new \Web\Views\ForbiddenView();
-            }
-            else {
-                header('Location: '.\Web\View::generateUrl('login.oidc')."?return_url=$_SERVER[REQUEST_URI]");
-                exit();
-            }
+    $p = pathinfo($ROUTE->name);
+    $resource   = $p['filename'];
+    $permission = $p['extension'];
+    $role       = isset($_SESSION['USER']) ? $_SESSION['USER']->role : 'Anonymous';
+    if (   $ACL->hasResource($resource)
+        && $ACL->isAllowed($role, $resource, $permission)) {
+
+        $controller = $ROUTE->handler;
+        $c = new $controller($DI);
+        // Modern twig controllers returning a View
+        if (is_callable($c)) {
+            $template = $c($ROUTE->attributes);
         }
     }
     else {
-        $f = $matcher->getFailedRoute();
-        $view = new \Web\Views\NotFoundView();
+        if (!isset($_SESSION['USER'])) {
+            $return_url = \Web\View::current_url();
+            $login      = \Web\View::generateUrl('login.index')."?return_url=$return_url";
+            header("Location: $login");
+            exit();
+        }
+        else {
+            header('HTTP/1.1 403 Forbidden', true, 403);
+            $_SESSION['errorMessages'][] = 'noAccessAllowed';
+            $template = new \Web\Views\ForbiddenView();
+        }
     }
 }
-else {
-    $f = $matcher->getFailedRoute();
-    $view = new \Web\Views\NotFoundView();
+
+if (!isset($template)) {
+    header('HTTP/1.1 404 Not Found', true, 404);
+    $template = new \Web\Views\NotFoundView();
 }
 
+echo $template->render();
 
-echo $view->render();
-
-// Append some useful stats to the output of HTML pages
-if ($view->outputFormat === 'html') {
+if ($template->outputFormat === 'html') {
     # Calculate the process time
     $endTime = microtime(true);
     $processTime = $endTime - $startTime;
-    echo "<!-- Process Time: $processTime -->\n";
-
-    $size   = ['B','kB','MB','GB','TB','PB','EB','ZB','YB'];
-    $bytes  = memory_get_peak_usage();
-    $factor = floor( (strlen("$bytes") - 1) / 3);
-    $memory = sprintf("%.2f", $bytes / pow(1024, $factor)) . @$size[$factor];
-    echo "<!-- Memory: $memory -->";
+    echo "<!-- Process Time: $processTime -->";
 }
