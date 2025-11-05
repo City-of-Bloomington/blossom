@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright 2015-2024 City of Bloomington, Indiana
+ * @copyright 2015-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 /**
  * Grab a timestamp for calculating process time
  */
 declare (strict_types=1);
-use Web\Authentication\Auth;
+use Web\Auth\Auth;
 
 $startTime = microtime(true);
 
@@ -23,7 +23,7 @@ if ($route) {
     $controller = $route->handler;
     $c = new $controller($DI);
     if (is_callable($c)) {
-        $user = Auth::getAuthenticatedUser($DI->get('Web\Authentication\AuthenticationService'));
+        $user = Auth::getAuthenticatedUser($DI->get('Web\Auth\AuthenticationService'));
         if (Auth::isAuthorized($route->name, $user)) {
             // Convenience:
             // Most of our applications are just basic form processing.

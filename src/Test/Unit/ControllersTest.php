@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2019-2023 City of Bloomington, Indiana
+ * @copyright 2019-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
@@ -15,7 +15,7 @@ class ControllersTest extends TestCase
     {
         $builder = new ContainerBuilder();
         self::$container = $builder->newInstance();
-        self::$container->set('Web\Authentication\AuthenticationService',
+        self::$container->set('Web\Auth\AuthenticationService',
         self::$container->lazyNew('Test\DataStorage\StubAuthenticationService'));
     }
 

@@ -16,7 +16,7 @@ class Controller extends \Web\Controller
     public function __invoke(array $params): \Web\View
     {
         $add  = $this->di->get('Domain\Users\Actions\Add\Command');
-        $auth = $this->di->get('Web\Authentication\AuthenticationService');
+        $auth = $this->di->get('Web\Auth\AuthenticationService');
 
         if (isset($_POST['username'])) {
             if ($_POST['authentication_method'] != 'local') {

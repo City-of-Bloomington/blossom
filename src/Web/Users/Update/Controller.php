@@ -19,7 +19,7 @@ class Controller extends \Web\Controller
         if (empty($_REQUEST['id'])) { return new \Web\Views\NotFoundView(); }
 
         $update = $this->di->get('Domain\Users\Actions\Update\Command');
-        $auth   = $this->di->get('Web\Authentication\AuthenticationService');
+        $auth   = $this->di->get('Web\Auth\AuthenticationService');
 
         if (isset($_POST['id'])) {
             $request  = new UpdateRequest($_POST);

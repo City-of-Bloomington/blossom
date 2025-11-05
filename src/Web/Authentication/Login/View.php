@@ -1,10 +1,10 @@
 <?php
 /**
- * @copyright 2022 City of Bloomington, Indiana
+ * @copyright 2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Authentication\Views;
+namespace Web\Auth\Views;
 
 use Web\View;
 

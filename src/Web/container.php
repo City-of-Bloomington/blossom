@@ -30,10 +30,10 @@ foreach ($repos as $t) {
 //---------------------------------------------------------
 // Services
 //---------------------------------------------------------
-$DI->params[ 'Web\Authentication\AuthenticationService']['repository'] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
-$DI->params[ 'Web\Authentication\AuthenticationService']['config'    ] = $LDAP;
-$DI->set(    'Web\Authentication\AuthenticationService',
-$DI->lazyNew('Web\Authentication\AuthenticationService'));
+$DI->params[ 'Web\Auth\AuthenticationService']['repository'] = $DI->lazyGet('Domain\Users\DataStorage\UsersRepository');
+$DI->params[ 'Web\Auth\AuthenticationService']['config'    ] = $LDAP;
+$DI->set(    'Web\Auth\AuthenticationService',
+$DI->lazyNew('Web\Auth\AuthenticationService'));
 
 //---------------------------------------------------------
 // Use Cases

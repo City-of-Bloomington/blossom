@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-namespace Web\Authentication\OIDC;
+namespace Web\Auth\OIDC;
 
 use Aura\Di\Container;
 use Domain\Users\Entities\User;
@@ -18,7 +18,7 @@ class Controller extends \Web\Controller
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->auth = $this->di->get('Web\Authentication\AuthenticationService');
+        $this->auth = $this->di->get('Web\Auth\AuthenticationService');
     }
 
     /**

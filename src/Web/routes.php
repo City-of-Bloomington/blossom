@@ -13,12 +13,12 @@ $map->tokens(['id' => '\d+']);
 $map->get('home.index',    '/'      , Web\HomeController::class);
 
 $map->attach('login.', '/login', function ($r) {
-    $r->get('cas',   '/cas',  Web\Authentication\CAS\Controller::class);
-    $r->get('oidc',  '/oidc', Web\Authentication\OIDC\Controller::class);
-    $r->get('login', '',      Web\Authentication\Login\Controller::class);
+    $r->get('cas',   '/cas',  Web\Auth\CAS\Controller::class);
+    $r->get('oidc',  '/oidc', Web\Auth\OIDC\Controller::class);
+    $r->get('login', '',      Web\Auth\Login\Controller::class);
 });
 
-$map->get('login.logout',  '/logout', Web\Authentication\Logout\Controller::class);
+$map->get('login.logout',  '/logout', Web\Auth\Logout\Controller::class);
 
 $map->attach('people.', '/people', function ($r) {
     $r->get('update', '/update{/id}', Web\People\Update\Controller::class)->allows(['POST']);

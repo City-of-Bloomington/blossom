@@ -5,7 +5,7 @@
  */
 declare (strict_types=1);
 
-namespace Web\Authentication;
+namespace Web\Auth;
 
 use COB\HttpSignature\Context;
 use Domain\Users\Entities\User;

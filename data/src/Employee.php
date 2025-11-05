@@ -16,13 +16,13 @@
  * You will ned to change the namespace to Site\Classes.  You might also
  * want to change the name of the class to suit your own needs.
  *
- * @copyright 2011-2019 City of Bloomington, Indiana
+ * @copyright 2011-2025 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 namespace Site;
 
-use Web\Authentication\AuthenticationInterface;
-use Web\Authentication\ExternalIdentity;
+use Web\Auth\AuthenticationInterface;
+use Web\Auth\ExternalIdentity;
 
 #ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 

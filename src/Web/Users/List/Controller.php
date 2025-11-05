@@ -14,7 +14,7 @@ class Controller extends \Web\Controller
     {
         global $ACL;
         $search   = $this->di->get('Domain\Users\Actions\Search\Command');
-        $auth     = $this->di->get('Web\Authentication\AuthenticationService');
+        $auth     = $this->di->get('Web\Auth\AuthenticationService');
 		$page     =  !empty($_GET['page']) ? (int)$_GET['page'] : 1;
         $request  = new Request($_GET, null, parent::ITEMS_PER_PAGE, $page);
         $response = $search($request);
