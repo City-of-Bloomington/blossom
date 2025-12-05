@@ -55,6 +55,7 @@ class AuthenticationService
                     }
             }
         }
+        return null;
     }
 
     public static function password_hash(string $password): string

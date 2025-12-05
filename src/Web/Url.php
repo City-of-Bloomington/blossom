@@ -177,15 +177,9 @@ class Url
 		return array_filter($input);
 	}
 
-	/**
-	 * @param string $key
-	 * @return string
-	 */
-	public function __get($key)
+	public function __get(string $key): string
 	{
-		if (isset($this->parameters[$key])) {
-			return $this->parameters[$key];
-		}
+		return $this->parameters[$key] ?? '';
 	}
 
 	/**
