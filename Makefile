@@ -27,7 +27,8 @@ compile:
 	for f in ${JAVASCRIPT}; do cp $$f $${f%.js}-${VERSION}.js; done
 
 test:
-	vendor/phpunit/phpunit/phpunit -c src/Test/Unit.xml
+	vendor/bin/phpunit -c src/Test/phpunit.xml --testsuite Unit
+	vendor/bin/phpstan analyse -l 0
 
 package:
 	[[ -d build ]] || mkdir build

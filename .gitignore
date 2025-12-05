@@ -1,6 +1,6 @@
 build
 vendor
-site_config.php
+data/site_config.php
 ansible/roles
 data/sessions/*
 *.cache

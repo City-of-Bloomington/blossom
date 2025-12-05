@@ -27,12 +27,10 @@ define('BASE_URL' , "$_SERVER[REQUEST_SCHEME]://".BASE_HOST.BASE_URI);
  */
 $DATABASES = [
     'default' => [
-        'driver' => 'mysql',
-        'host'   => 'localhost',
-        'name'   => 'blossom',
-        'user'   => 'blossom',
-        'pass'   => 'secret password',
-        'opts'   => []
+        'dsn'  => 'mysql:dbname=blossom;host=localhost',
+        'user' => "blossom",
+        'pass' => "something secret",
+        'opts' => []
     ]
 ];
 

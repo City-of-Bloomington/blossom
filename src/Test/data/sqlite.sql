@@ -1,5 +1,5 @@
 create table people (
-	id          int unsigned not null primary key auto_increment,
+	id          integer primary key autoincrement,
 	firstname   varchar(128) not null,
 	lastname    varchar(128) not null,
 	displayName varchar(128),
